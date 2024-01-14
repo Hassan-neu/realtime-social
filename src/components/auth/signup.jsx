@@ -19,7 +19,7 @@ export const Signup = () => {
     const handleSignUp = async () => {
         try {
             setLoading(true);
-            const res = await fetch("/api/auth/signin", {
+            const res = await fetch("/api/auth/signup", {
                 method: "POST",
                 body: JSON.stringify(user),
             });
