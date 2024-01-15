@@ -41,9 +41,9 @@ export const SignIn = () => {
     };
     return (
         <div className="w-screen h-screen flex flex-col justify-center items-center bg-slate-200">
-            <div className="flex justify-center items-center w-96 h-96 px-4 py-2 bg-white rounded-2xl">
-                <div className="flex flex-col items-center justify-center gap-3 w-3/4">
-                    <div className="text-lg font-semibold">
+            <div className="flex justify-center items-center w-[600px] h-[650px] px-4 py-2 bg-white rounded-2xl">
+                <div className="flex flex-col items-center justify-center gap-3 w-3/5 h-4/5">
+                    <div className="text-2xl font-semibold self-start">
                         <h2>Sign In to your account</h2>
                     </div>
                     <div className="flex flex-col gap-4 w-full">
@@ -52,7 +52,7 @@ export const SignIn = () => {
                                 type="email"
                                 name="email"
                                 id="email"
-                                className="border-2 h-10 bg-transparent text-sm border-slate-200 rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none"
+                                className="border-2 h-12 bg-transparent text-sm border-slate-200 rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none"
                                 placeholder="Email"
                                 value={user.email}
                                 onChange={handleChange}
@@ -64,14 +64,14 @@ export const SignIn = () => {
                                 type="password"
                                 name="password"
                                 id="password"
-                                className="border-2 h-10 border-slate-200 bg-transparent text-sm rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none"
+                                className="border-2 h-12 border-slate-200 bg-transparent text-sm rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none"
                                 placeholder="Password"
                                 value={user.password}
                                 onChange={handleChange}
                             />
                         </label>
                         <Button
-                            className={`px-3 py-1 bg-blue-500 rounded-full self-stretch text-white h-9`}
+                            className={`px-3 py-1 bg-blue-500 rounded-full self-stretch text-white h-10`}
                             type="submit"
                             onClick={handleSignIn}
                         >
