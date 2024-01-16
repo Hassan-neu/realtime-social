@@ -32,9 +32,9 @@ model Post {
   bookmarks  Int      @default(0)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt @db.Timestamptz()
-  user       Profile  @relation(fields: [user_id], references: [email])
-  user_id    String
-  reply_to   String
+  user       Profile  @relation(fields: [user_id], references: [id])
+  user_id    String   @db.Uuid()
+  reply_to   String?
   comment    Json[]
 
   @@map("posts")

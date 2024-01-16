@@ -13,6 +13,8 @@ export async function POST(req) {
 
     if (user) {
         await supabase.auth.signOut();
+    } else {
+        await supabase.auth.signOut();
     }
 
     return NextResponse.redirect(new URL("/", req.url), { status: 302 });

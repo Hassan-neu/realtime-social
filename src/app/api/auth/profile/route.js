@@ -46,6 +46,7 @@ export async function POST(req) {
                     id: user.id,
                 },
                 data: {
+                    email: user.email,
                     username,
                     full_name,
                     birth_date,
