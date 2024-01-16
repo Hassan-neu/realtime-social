@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import { Button } from "../shared/btn";
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { UpdateComponent } from "./updateProfile";
 import { IoArrowBack } from "react-icons/io5";
 export const Signup = () => {
     const { push } = useRouter();
@@ -11,6 +9,9 @@ export const Signup = () => {
     const [user, setUser] = useState({
         email: "",
         password: "",
+        full_name: "",
+        username: "",
+        birth_date: "",
     });
     const [loading, setLoading] = useState(false);
     const handleChange = (e) => {
@@ -37,6 +38,9 @@ export const Signup = () => {
             setUser({
                 email: "",
                 password: "",
+                full_name: "",
+                username: "",
+                birth_date: "",
             });
         }
     };
@@ -45,7 +49,7 @@ export const Signup = () => {
             <div className="flex flex-col w-[600px] h-[650px] p-5 bg-white rounded-2xl relative overflow-clip">
                 <div className="flex gap-1 items-center text-lg font-semibold w-4/5 self-center mt-8">
                     <Button
-                        className={`w-8 h-8 rounded-full hover:bg-slate-200 flex justify-center items-center disabled:cursor-default`}
+                        className="w-9 h-9 rounded-full flex justify-center items-center hover:bg-slate-200 disabled:hover:bg-transparent"
                         disabled={activeIndex === 0}
                         onClick={() => setActiveIndex(0)}
                     >
@@ -54,7 +58,7 @@ export const Signup = () => {
                     <div>Step {activeIndex + 1} of 2</div>
                 </div>
                 <div
-                    className={`flex flex-col items-center justify-center gap-3 w-3/4 h-4/5 absolute top-1/2 -translate-y-1/2  transition-[left,opacity] -translate-x-1/2 duration-1000 ${
+                    className={`flex flex-col items-center justify-center gap-3 w-3/4 h-3/5 absolute top-1/2 -translate-y-1/2  transition-[left,opacity] -translate-x-1/2 duration-1000 ${
                         activeIndex == 0
                             ? "left-1/2 visible"
                             : "left-0 opacity-0 invisible"
@@ -104,7 +108,7 @@ export const Signup = () => {
                     </div>
                 </div>
                 <div
-                    className={`flex flex-col items-center justify-center gap-3 w-3/4 h-4/5 absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-[left,opacity] duration-1000 ${
+                    className={`flex flex-col items-center justify-center gap-3 w-3/4 h-3/5 absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-[left,opacity] duration-1000 ${
                         activeIndex == 1
                             ? "left-1/2 visible"
                             : "left-full invisible opacity-0"
@@ -121,8 +125,8 @@ export const Signup = () => {
                                 id="full_name"
                                 className="border-2 h-12 bg-transparent text-sm border-slate-200 rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none focus-visible:bg-transparent"
                                 placeholder="Full Name"
-                                // value={user.full_name}
-                                // onChange={handleChange}
+                                value={user.full_name}
+                                onChange={handleChange}
                             />
                         </label>
                         <label htmlFor="username">
@@ -132,8 +136,8 @@ export const Signup = () => {
                                 id="username"
                                 className="border-2 h-12 border-slate-200 bg-transparent text-sm rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none"
                                 placeholder="Username"
-                                // value={user.username}
-                                // onChange={handleChange}
+                                value={user.username}
+                                onChange={handleChange}
                             />
                         </label>
                         <div className="flex flex-col">
@@ -153,20 +157,20 @@ export const Signup = () => {
                                 id="birth_date"
                                 className="border-2 h-12 border-slate-200 bg-transparent text-sm rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none"
                                 placeholder="Birth date"
-                                // value={user.birth_date}
-                                // onChange={handleChange}
+                                value={user.birth_date}
+                                onChange={handleChange}
                             />
                         </label>
                         <Button
                             className={`px-3 py-1 text-xl font-medium bg-blue-500 rounded-full self-stretch text-white h-10`}
-                            // onClick={handleUpdate}
+                            onClick={handleSignUp}
+                            disabled={loading}
                         >
-                            Sign up
+                            {loading ? "Loading..." : "Sign up"}
                         </Button>
                     </div>
                 </div>
             </div>
-            {/* <UpdateComponent /> */}
         </div>
     );
 };

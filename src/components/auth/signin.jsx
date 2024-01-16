@@ -72,15 +72,14 @@ export const SignIn = () => {
                         </label>
                         <Button
                             className={`px-3 py-1 bg-blue-500 rounded-full self-stretch text-white h-10`}
-                            type="submit"
                             onClick={handleSignIn}
+                            disabled={loading}
                         >
-                            Log In
+                            {loading ? "Loading..." : "Log In"}
                         </Button>
                         <div className="flex text-sm gap-1 justify-center">
                             <span>Don&apos;t have an account?</span>
                             <Button
-                                type="button"
                                 className="text-blue-500"
                                 onClick={() => push("/signup")}
                             >
