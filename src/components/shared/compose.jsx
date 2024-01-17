@@ -12,7 +12,7 @@ export const Compose = ({ openCompose }) => {
     const handlePost = async () => {
         try {
             setLoading(true);
-            const res = await fetch("/api/compose", {
+            const res = await fetch("/api/content/", {
                 method: "POST",
                 body: JSON.stringify({ content }),
             });

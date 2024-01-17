@@ -25,3 +25,30 @@ export async function POST(req) {
         return NextResponse.json(error, { status: 400 });
     }
 }
+
+export async function GET(req) {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    try {
+        if (id) {
+            const post = await prisma.post.findUnique({
+                where: {
+                    id,
+                },
+                include: {
+                    user: true,
+                },
+            });
+            return NextResponse.json(post, { status: 200 });
+        } else {
+            const post = await prisma.post.findMany({
+                include: {
+                    user: true,
+                },
+            });
+            return NextResponse.json(post, { status: 200 });
+        }
+    } catch (error) {
+        return NextResponse.json(error, { status: 400 });
+    }
+}
