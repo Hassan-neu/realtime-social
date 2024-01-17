@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { GoHome } from "react-icons/go";
 import { FiSearch } from "react-icons/fi";
 import { IoNotificationsOutline } from "react-icons/io5";
@@ -10,7 +10,8 @@ import { Button } from "../shared/btn";
 import { RiTwitterXFill } from "react-icons/ri";
 import { UtilityCard } from "../shared/utilityCard";
 import { Compose } from "../shared/compose";
-export function SideMenu() {
+export function SideMenu({ profile }) {
+    const { username, full_name } = profile;
     const [popup, setPopup] = useState(false);
     const [openCompose, setOpenCompose] = useState(false);
     return (
@@ -63,7 +64,7 @@ export function SideMenu() {
                         </li>
                         <li className="text-lg hover:bg-slate-200 pl-3 pr-6 py-3 rounded-full">
                             <Link
-                                href={"/profile"}
+                                href={`/profile/${username}`}
                                 className="flex gap-4 items-center"
                             >
                                 <HiOutlineUser size={30} />
@@ -112,9 +113,9 @@ export function SideMenu() {
                     onClick={() => setPopup(!popup)}
                 >
                     <div className="w-12 h-12 rounded-full border bg-blue-500"></div>
-                    <div className="flex flex-col">
-                        <span>full name</span>
-                        <span>username</span>
+                    <div className="flex flex-col items-start text-sm">
+                        <span>{full_name}</span>
+                        <span>{username}</span>
                     </div>
                 </Button>
             </div>

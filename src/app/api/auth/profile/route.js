@@ -1,36 +1,26 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prismaClient";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
 export async function GET(req) {
-    const cookieStore = cookies();
-    const supabase = createServerComponentClient({
-        cookies: () => cookieStore,
-    });
-
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
     try {
-        const {
-            data: { user },
-            error,
-        } = await supabase.auth.getUser();
-        if (user) {
-            const profile = await prisma.profile.findUnique({
-                where: {
-                    id: user.id,
-                },
-            });
-            return NextResponse.json(profile, { status: 200 });
-        }
+        const profile = await prisma.profile.findUnique({
+            where: {
+                id,
+            },
+        });
+        return NextResponse.json(profile, { status: 200 });
     } catch (error) {
-        console.log(error);
         return NextResponse.json(error, { status: 400 });
     }
 }
 
 export async function POST(req) {
     const cookieStore = cookies();
-    const supabase = createServerComponentClient({
+    const supabase = createRouteHandlerClient({
         cookies: () => cookieStore,
     });
     try {
