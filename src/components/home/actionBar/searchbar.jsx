@@ -1,11 +1,23 @@
 "use client";
 import React, { useState } from "react";
 import { FiSearch } from "react-icons/fi";
-export const Searchbar = () => {
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
+export const Searchbar = ({ sear }) => {
     const [focused, setFocused] = useState(false);
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const { replace } = useRouter();
+    const handleSearch = (e) => {
+        e.preventDefault();
+        const params = new URLSearchParams(searchParams);
+        params.set("query", e.target[0].value);
+        params.toString();
+        return replace(`${pathname}?${params}`);
+    };
     return (
         <div className="py-4 sticky top-0 bg-white w-full">
-            <div
+            <form
+                onSubmit={handleSearch}
                 className={`flex gap-3 items-center rounded-full bg-slate-100 border-2 ${
                     focused ? "border-blue-400" : "border-transparent"
                 }`}
@@ -21,7 +33,7 @@ export const Searchbar = () => {
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                 />
-            </div>
+            </form>
         </div>
     );
 };

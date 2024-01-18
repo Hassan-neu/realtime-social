@@ -1,9 +1,25 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "../shared/btn";
-
-export const ProfileHeader = ({ user }) => {
+import { BsCalendar3 } from "react-icons/bs";
+export const ProfileHeader = ({ profile }) => {
     const [active, setActive] = useState("post");
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
+    const date = new Date(profile?.created_at);
+    const createdAt = `${months[date.getMonth()]} ${date.getFullYear()}`;
     return (
         <div className="w-full">
             <div className="flex flex-col w-full border border-b-0">
@@ -19,21 +35,28 @@ export const ProfileHeader = ({ user }) => {
                                     "px-3 py-1 rounded-full border text-sm font-bold"
                                 }
                             >
-                                <p>Following</p>
+                                Following
                             </Button>
                         </div>
                     </div>
                     <div className="flex flex-col gap-2 mt-16">
-                        <div className="text-xl capitalize font-bold">
-                            {user}
+                        <div className="flex flex-col ">
+                            <p className="text-lg capitalize">
+                                {profile?.full_name}
+                            </p>
+                            <p className="text-sm">{profile?.username}</p>
                         </div>
-                        <div className="text-sm font-medium">
+
+                        <div className="text-sm">
                             Lorem ipsum dolor, sit amet consectetur adipisicing
                             elit. Suscipit porro possimus dolores facere
                             deleniti ipsum accusantium voluptate officia et
                             consequatur.
                         </div>
-                        <div className="text-sm">created on today</div>
+                        <div className="text-sm flex gap-1 items-center">
+                            <BsCalendar3 size={16} />
+                            <span>Joined {createdAt}</span>
+                        </div>
                         <div className="flex gap-2 text-sm">
                             <div className="flex gap-1">
                                 <span className="font-bold">0</span>
