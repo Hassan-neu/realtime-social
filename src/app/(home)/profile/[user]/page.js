@@ -9,7 +9,7 @@ import { TweetCard } from "@/components/shared/tweetCard";
 const Page = ({ params: { user } }) => {
     const { back } = useRouter();
     const [profile, setProfile] = useState({});
-    const [loading, setLoading] = useState();
+    const [loading, setLoading] = useState(false);
 
     const getProfile = useCallback(async () => {
         const res = await fetch(

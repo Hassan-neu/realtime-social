@@ -29,11 +29,24 @@ export async function POST(req) {
 export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
+    const query = searchParams.get("query");
     try {
         if (id) {
             const post = await prisma.post.findUnique({
                 where: {
                     id,
+                },
+                include: {
+                    user: true,
+                },
+            });
+            return NextResponse.json(post, { status: 200 });
+        } else if (query) {
+            const post = await prisma.post.findMany({
+                where: {
+                    content: {
+                        contains: query,
+                    },
                 },
                 include: {
                     user: true,

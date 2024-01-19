@@ -18,7 +18,7 @@ export const Searchbar = ({ sear }) => {
         <div className="py-4 sticky top-0 bg-white w-full">
             <form
                 onSubmit={handleSearch}
-                className={`flex gap-3 items-center rounded-full bg-slate-100 border-2 ${
+                className={`flex gap-3 items-center overflow-clip rounded-full bg-slate-100 border-2 ${
                     focused ? "border-blue-400" : "border-transparent"
                 }`}
             >
