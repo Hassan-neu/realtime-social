@@ -6,6 +6,9 @@ async function Page() {
     const fetchContents = async () => {
         const res = await fetch("http://localhost:3000/api/content", {
             method: "GET",
+            next: {
+                revalidate: 30,
+            },
         });
         const data = await res.json();
         return data;

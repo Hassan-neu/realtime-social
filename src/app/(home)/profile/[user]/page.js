@@ -13,7 +13,7 @@ const Page = ({ params: { user } }) => {
 
     const getProfile = useCallback(async () => {
         const res = await fetch(
-            `http://localhost:3000/api/auth/profile?username=${user.toLowerCase()}`,
+            `http://localhost:3000/api/auth/profile?username=${user}`,
             {
                 method: "GET",
             }

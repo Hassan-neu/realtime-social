@@ -18,7 +18,7 @@ export async function GET(req) {
         } else if (username) {
             const profile = await prisma.profile.findUnique({
                 where: {
-                    username,
+                    username: username.toLowerCase(),
                 },
                 include: {
                     posts: true,
@@ -54,9 +54,9 @@ export async function POST(req) {
                     id: user.id,
                 },
                 data: {
-                    email: user.email,
-                    username,
-                    full_name,
+                    email: user.email.toLowerCase(),
+                    username: username.toLowerCase(),
+                    full_name: full_name.toLowerCase(),
                     birth_date,
                 },
             });

@@ -1,9 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Button } from "../shared/btn";
-import { BsCalendar3 } from "react-icons/bs";
+import { BsBalloon, BsCalendar3 } from "react-icons/bs";
+import { HiOutlineDotsVertical } from "react-icons/hi";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 export const ProfileHeader = ({ profile }) => {
     const [active, setActive] = useState("post");
+    const [isActiveUser, setIsActiveUser] = useState(false);
+    const supabase = createClientComponentClient();
     const months = [
         "January",
         "February",
@@ -18,8 +22,25 @@ export const ProfileHeader = ({ profile }) => {
         "November",
         "December",
     ];
-    const date = new Date(profile?.created_at);
-    const createdAt = `${months[date.getMonth()]} ${date.getFullYear()}`;
+    const createDate = new Date(profile?.created_at);
+    const birthDate = new Date(profile?.birth_date);
+    const createdAt = `${
+        months[createDate.getMonth()]
+    } ${createDate.getFullYear()}`;
+    const birthString = `${
+        months[birthDate.getMonth()]
+    } ${birthDate.getDate()}, ${birthDate.getFullYear()}`;
+    const fetchCurrUser = useCallback(async () => {
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+        if (user.id === profile.id) {
+            setIsActiveUser(true);
+        }
+    }, [supabase, profile]);
+    useEffect(() => {
+        fetchCurrUser();
+    }, [fetchCurrUser]);
     return (
         <div className="w-full">
             <div className="flex flex-col w-full border border-b-0">
@@ -30,13 +51,23 @@ export const ProfileHeader = ({ profile }) => {
                             PF
                         </div>
                         <div className="ml-auto">
-                            <Button
-                                className={
-                                    "px-3 py-1 rounded-full border text-sm font-bold"
-                                }
-                            >
-                                Following
-                            </Button>
+                            {isActiveUser ? (
+                                <Button
+                                    className={
+                                        "px-3 flex items-center py-1 rounded-full border text-sm font-bold"
+                                    }
+                                >
+                                    Edit profile
+                                </Button>
+                            ) : (
+                                <Button
+                                    className={
+                                        "px-3 py-1 rounded-full border text-sm font-bold"
+                                    }
+                                >
+                                    Following
+                                </Button>
+                            )}
                         </div>
                     </div>
                     <div className="flex flex-col gap-2 mt-16">
@@ -53,9 +84,17 @@ export const ProfileHeader = ({ profile }) => {
                             deleniti ipsum accusantium voluptate officia et
                             consequatur.
                         </div>
-                        <div className="text-sm flex gap-1 items-center">
-                            <BsCalendar3 size={16} />
-                            <span>Joined {createdAt}</span>
+                        <div className="flex gap-4">
+                            {isActiveUser && (
+                                <div className="text-sm flex gap-1 items-center">
+                                    <BsBalloon size={16} />
+                                    <span>Born {birthString}</span>
+                                </div>
+                            )}
+                            <div className="text-sm flex gap-1 items-center">
+                                <BsCalendar3 size={16} />
+                                <span>Joined {createdAt}</span>
+                            </div>
                         </div>
                         <div className="flex gap-2 text-sm">
                             <div className="flex gap-1">

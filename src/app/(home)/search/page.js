@@ -14,7 +14,7 @@ const Page = async ({ searchParams: { query } }) => {
         return data;
     };
     const searchRes = await fetchQuery();
-
+    console.log(searchRes);
     return (
         <div>
             <Searchbar />

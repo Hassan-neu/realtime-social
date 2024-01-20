@@ -27,11 +27,14 @@ export const TweetCard = ({ post }) => {
                 </div>
                 <div className="flex flex-col gap-3 w-full">
                     <div className="flex flex-col gap-1">
-                        <div className="flex gap-1 items-center">
+                        <Link
+                            href={`/profile/${username}`}
+                            className="flex gap-1 items-center"
+                        >
                             <p>{full_name}</p>
                             <p className="text-sm">{username}</p>
                             <p className="text-sm">4h</p>
-                        </div>
+                        </Link>
                         <div className="text-sm text-pretty">{content}</div>
                     </div>
                 </div>
