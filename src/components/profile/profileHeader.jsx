@@ -4,6 +4,7 @@ import { Button } from "../shared/btn";
 import { BsBalloon, BsCalendar3 } from "react-icons/bs";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import Image from "next/image";
 export const ProfileHeader = ({ profile }) => {
     const [active, setActive] = useState("post");
     const [isActiveUser, setIsActiveUser] = useState(false);
@@ -48,7 +49,11 @@ export const ProfileHeader = ({ profile }) => {
                 <div className="flex flex-col gap-4 relative px-4 pt-3">
                     <div className="flex justify-between">
                         <div className="w-40 h-40 rounded-full border-4 border-white flex justify-center items-center bg-blue-300 absolute -translate-y-1/2">
-                            PF
+                            <Image
+                                src={`${profile.avatar_url}`}
+                                alt={`${profile.username} avatar`}
+                                fill
+                            />
                         </div>
                         <div className="ml-auto">
                             {isActiveUser ? (

@@ -32,6 +32,7 @@ const Page = ({ params: { user } }) => {
             setLoading(false);
         }
     }, [getProfile]);
+
     return (
         <div className="">
             <HomeBar>
