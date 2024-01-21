@@ -1,9 +1,9 @@
 import React from "react";
-import { UpdateProfile } from "@/components/auth/updateProfile";
+import { EditProfile } from "@/components/profile/updateProfile";
 const Page = () => {
     return (
         <>
-            <UpdateProfile />
+            <EditProfile />
         </>
     );
 };

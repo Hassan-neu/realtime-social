@@ -5,7 +5,7 @@ import { BsBalloon, BsCalendar3 } from "react-icons/bs";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
-export const ProfileHeader = ({ profile }) => {
+export const ProfileHeader = ({ profile, openEdit }) => {
     const [active, setActive] = useState("post");
     const [isActiveUser, setIsActiveUser] = useState(false);
     const supabase = createClientComponentClient();
@@ -50,7 +50,7 @@ export const ProfileHeader = ({ profile }) => {
                     <div className="flex justify-between">
                         <div className="w-40 h-40 rounded-full border-4 border-white flex justify-center items-center bg-blue-300 absolute -translate-y-1/2">
                             <Image
-                                src={`${profile.avatar_url}`}
+                                src={""}
                                 alt={`${profile.username} avatar`}
                                 fill
                             />
@@ -61,6 +61,7 @@ export const ProfileHeader = ({ profile }) => {
                                     className={
                                         "px-3 flex items-center py-1 rounded-full border text-sm font-bold"
                                     }
+                                    onClick={() => openEdit(true)}
                                 >
                                     Edit profile
                                 </Button>

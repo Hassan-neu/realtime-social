@@ -6,11 +6,12 @@ import { IoArrowBack } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import { ProfileHeader } from "@/components/profile/profileHeader";
 import { TweetCard } from "@/components/shared/tweetCard";
+import { EditProfile } from "@/components/profile/editProfile";
 const Page = ({ params: { user } }) => {
     const { back } = useRouter();
     const [profile, setProfile] = useState({});
     const [loading, setLoading] = useState(false);
-
+    const [openEdit, setOpenEdit] = useState(false);
     const getProfile = useCallback(async () => {
         const res = await fetch(
             `http://localhost:3000/api/auth/profile?username=${user}`,
@@ -44,7 +45,7 @@ const Page = ({ params: { user } }) => {
                 </Button>
                 {profile?.username}
             </HomeBar>
-            <ProfileHeader profile={profile} />
+            <ProfileHeader profile={profile} openEdit={setOpenEdit} />
             {loading ? (
                 <div>Loading...</div>
             ) : (
@@ -61,7 +62,7 @@ const Page = ({ params: { user } }) => {
                     />
                 ))
             )}
-            {}
+            {openEdit && <EditProfile openEdit={setOpenEdit} />}
         </div>
     );
 };

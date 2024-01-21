@@ -5,8 +5,8 @@ import React, { useState } from "react";
 
 export function Avatar({ url }) {
     const [uploading, setUploading] = useState(false);
+    const [avatarUrl, setAvatarUrl] = useState(url);
     const supabase = createClientComponentClient();
-
     const handleUpload = async (e) => {
         try {
             setUploading(true);
@@ -27,15 +27,13 @@ export function Avatar({ url }) {
         } finally {
             setUploading(false);
         }
-
-        const file = e.target.files[0];
     };
     return (
         <div>
-            {url ? (
+            {avatarUrl ? (
                 <div className="w-12 h-12 rounded-full border bg-blue-500">
                     <Image
-                        src={url}
+                        src={avatarUrl}
                         alt="profile-image"
                         width={150}
                         height={150}
