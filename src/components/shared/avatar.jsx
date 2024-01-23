@@ -1,57 +1,44 @@
 "use client";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export function Avatar({ url }) {
-    const [uploading, setUploading] = useState(false);
-    const [avatarUrl, setAvatarUrl] = useState(url);
+export function Avatar({ url, className }) {
+    const [avatarUrl, setAvatarUrl] = useState("");
     const supabase = createClientComponentClient();
-    const handleUpload = async (e) => {
-        try {
-            setUploading(true);
-            if (!e.target.files || e.target.files.length === 0) {
-                throw new Error("Select an image to upload");
+
+    useEffect(() => {
+        async function downloadAvatar(path) {
+            try {
+                const { data, error } = await supabase.storage
+                    .from("avatars")
+                    .download(path);
+                if (error) {
+                    throw error;
+                }
+                const src = URL.createObjectURL(data);
+                setAvatarUrl(src);
+            } catch (error) {
+                console.log(error);
             }
-            const file = e.target.files[0];
-            const fileExt = file.name.split(".").pop();
-            const filePath = `${uid}-${Math.random()}.${fileExt}`;
-            const { error: uploadError } = await supabase.storage
-                .from("avatars")
-                .upload(filePath, file);
-            if (uploadError) {
-                throw uploadError;
-            }
-        } catch (error) {
-            alert(error);
-        } finally {
-            setUploading(false);
         }
-    };
+        if (url) downloadAvatar(url);
+    }, [url, supabase]);
+
     return (
-        <div>
-            {avatarUrl ? (
-                <div className="w-12 h-12 rounded-full border bg-blue-500">
-                    <Image
-                        src={avatarUrl}
-                        alt="profile-image"
-                        width={150}
-                        height={150}
-                    />
-                </div>
-            ) : (
-                <div className="w-12 h-12 rounded-full border bg-blue-500"></div>
+        <div
+            className={`${
+                className || ""
+            } rounded-full bg-blue-300 overflow-clip`}
+        >
+            {avatarUrl && (
+                <Image
+                    src={avatarUrl}
+                    alt={"avatar"}
+                    fill
+                    className="object-cover object-top"
+                />
             )}
-            <label htmlFor="avatar">
-                {uploading ? "Uploading..." : "Upload"}
-            </label>
-            <input
-                type="file"
-                id="avatar"
-                accept="image/*"
-                disabled={uploading}
-                onChange={handleUpload}
-            />
         </div>
     );
 }

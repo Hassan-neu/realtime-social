@@ -15,7 +15,7 @@ export const EditProfile = ({ openEdit, profile }) => {
         website,
         birth_date: birth_date.split("T")[0],
     });
-    const [avatarSrc, setAvatarSrc] = useState(avatar_url);
+    const [avatarSrc, setAvatarSrc] = useState("");
     const [loading, setLoading] = useState(false);
     const [imageFile, setImageFile] = useState("");
     const [imageSrc, setImageSrc] = useState("");
@@ -98,12 +98,14 @@ export const EditProfile = ({ openEdit, profile }) => {
                     </div>
                     <div className="flex flex-col w-40 h-40 items-center self-start relative">
                         <div className="w-40 h-40 rounded-full bg-blue-300 relative overflow-clip">
-                            <Image
-                                src={avatarSrc || ""}
-                                alt={"avatar"}
-                                fill
-                                className="object-cover object-top"
-                            />
+                            {avatarSrc && (
+                                <Image
+                                    src={avatarSrc}
+                                    alt={"avatar"}
+                                    fill
+                                    className="object-cover object-top"
+                                />
+                            )}
                             {imageSrc && (
                                 <Image
                                     src={imageSrc}

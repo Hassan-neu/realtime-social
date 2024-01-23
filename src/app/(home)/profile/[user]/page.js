@@ -57,6 +57,7 @@ const Page = ({ params: { user } }) => {
                             user: {
                                 username: profile?.username,
                                 full_name: profile?.full_name,
+                                avatar_url: profile?.avatar_url,
                             },
                         }}
                     />

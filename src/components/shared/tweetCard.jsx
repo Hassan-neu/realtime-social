@@ -5,13 +5,14 @@ import { GoHeartFill, GoBookmarkFill } from "react-icons/go";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "./btn";
+import { Avatar } from "./avatar";
 export const TweetCard = ({ post }) => {
     const {
         id,
         content,
         likes,
         bookmarks,
-        user: { full_name, username },
+        user: { full_name, username, avatar_url },
     } = post;
     const [liked, setLiked] = useState(false);
     const [bookmarked, setBookmarked] = useState(false);
@@ -22,9 +23,10 @@ export const TweetCard = ({ post }) => {
                 href={`/status/${id}`}
                 className="flex gap-3 w-full"
             >
-                <div className="w-12 h-12 rounded-full border bg-blue-500">
-                    <Image src={""} alt="profile-image" />
-                </div>
+                <Avatar
+                    className={"relative w-12 h-12 border shrink-0"}
+                    url={avatar_url}
+                />
                 <div className="flex flex-col gap-3 w-full">
                     <div className="flex flex-col gap-1">
                         <Link
