@@ -62,7 +62,9 @@ const Page = ({ params: { user } }) => {
                     />
                 ))
             )}
-            {openEdit && <EditProfile openEdit={setOpenEdit} />}
+            {openEdit && (
+                <EditProfile openEdit={setOpenEdit} profile={profile} />
+            )}
         </div>
     );
 };

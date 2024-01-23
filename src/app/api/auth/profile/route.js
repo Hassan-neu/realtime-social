@@ -67,3 +67,36 @@ export async function POST(req) {
         return NextResponse.json(error, { status: 400 });
     }
 }
+
+export async function PUT(req) {
+    const cookieStore = cookies();
+    const supabse = createRouteHandlerClient({ cookies: () => cookieStore });
+
+    try {
+        const {
+            data: { user },
+            error,
+        } = await supabse.auth.getUser();
+        const body = await req.json();
+        const { username, avatar_url, website, birth_date } = body;
+        if (user) {
+            const profile = await prisma.profile.update({
+                where: {
+                    id: user.id,
+                },
+                data: {
+                    username,
+                    avatar_url,
+                    website,
+                    birth_date: new Date(birth_date).toISOString(),
+                },
+            });
+            return NextResponse.json(
+                { message: "Update successful" },
+                { status: 200 }
+            );
+        }
+    } catch (error) {
+        return NextResponse.json(error, { status: 400 });
+    }
+}
