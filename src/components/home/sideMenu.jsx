@@ -1,17 +1,20 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { GoHome } from "react-icons/go";
-import { FiSearch } from "react-icons/fi";
-import { IoNotificationsOutline } from "react-icons/io5";
-import { CiMail, CiBookmark } from "react-icons/ci";
-import { HiOutlineUser } from "react-icons/hi2";
+import { GoHomeFill, GoBookmarkFill } from "react-icons/go";
+import { BiSolidUser } from "react-icons/bi";
+import { MdOutlineSearch, MdNotifications } from "react-icons/md";
+import { BiSolidMessage } from "react-icons/bi";
 import Link from "next/link";
 import { Button } from "../shared/btn";
 import { RiTwitterXFill } from "react-icons/ri";
-import { UtilityCard } from "../shared/utilityCard";
 import { Compose } from "../shared/compose";
+import { Avatar } from "../shared/avatar";
+import { TbLogout } from "react-icons/tb";
+import { useSelectedLayoutSegment } from "next/navigation";
+import { IoMdMail } from "react-icons/io";
 export function SideMenu({ profile }) {
-    const { username, full_name } = profile;
+    const segment = useSelectedLayoutSegment();
+    const { username, full_name, avatar_url } = profile;
     const [popup, setPopup] = useState(false);
     const [openCompose, setOpenCompose] = useState(false);
     return (
@@ -25,101 +28,170 @@ export function SideMenu({ profile }) {
                     <RiTwitterXFill size={25} />
                 </Link>
                 <nav>
-                    <ul className="flex flex-col items-start">
-                        <li className="text-lg hover:bg-slate-200 pl-3 pr-6 py-3 rounded-full">
+                    <ul className="flex flex-col items-start gap-2">
+                        <li className="text-lg hover:bg-slate-200 rounded-full">
                             <Link
                                 href={"/"}
-                                className="flex  gap-4 items-center"
+                                className="flex h-full w-full gap-4 items-center pl-2 pr-6 py-2"
                             >
-                                <GoHome size={30} />
+                                <GoHomeFill
+                                    fill={`${
+                                        segment === "home"
+                                            ? "black"
+                                            : "transparent"
+                                    }`}
+                                    stroke={`${
+                                        segment === "home"
+                                            ? "black"
+                                            : "currentColor"
+                                    }`}
+                                    strokeWidth={1}
+                                    size={30}
+                                />
                                 <span>Home</span>
                             </Link>
                         </li>
-                        <li className="text-lg  hover:bg-slate-200 pl-3 pr-6 py-3 rounded-full">
+                        <li className="text-lg  hover:bg-slate-200  rounded-full">
                             <Link
                                 href={"/search"}
-                                className="flex gap-4 items-center"
+                                className="flex h-full w-full gap-4 items-center pl-2 pr-6 py-2"
                             >
-                                <FiSearch size={30} />
+                                <MdOutlineSearch size={30} />
                                 <span>Search</span>
                             </Link>
                         </li>
-                        <li className="text-lg hover:bg-slate-200 pl-3 pr-6 py-3 rounded-full">
+                        <li className="text-lg hover:bg-slate-200 rounded-full">
                             <Link
                                 href={"/notifications"}
-                                className="flex gap-4 items-center"
+                                className="flex w-full h-full gap-4 items-center pl-2 pr-6 py-2"
                             >
-                                <IoNotificationsOutline size={30} />
+                                <MdNotifications
+                                    size={30}
+                                    fill={`${
+                                        segment === "notifications"
+                                            ? "black"
+                                            : "transparent"
+                                    }`}
+                                    stroke={"black"}
+                                    strokeWidth={1}
+                                />
                                 <span>Notifications</span>
                             </Link>
                         </li>
-                        <li className="text-lg hover:bg-slate-200 pl-3 pr-6 py-3 rounded-full">
+                        <li className="text-lg hover:bg-slate-200 rounded-full">
                             <Link
                                 href={"/messages"}
-                                className="flex gap-4 items-center"
+                                className="flex w-full h-full gap-4 items-center pl-2 pr-6 py-2"
                             >
-                                <CiMail size={30} />
+                                <BiSolidMessage
+                                    size={30}
+                                    fill={`${
+                                        segment === "messages"
+                                            ? "black"
+                                            : "transparent"
+                                    }`}
+                                    stroke={`${
+                                        segment === "messages"
+                                            ? "black"
+                                            : "black"
+                                    }`}
+                                    strokeWidth={1}
+                                />
                                 <span>Messages</span>
                             </Link>
                         </li>
-                        <li className="text-lg hover:bg-slate-200 pl-3 pr-6 py-3 rounded-full">
+                        <li className="text-lg hover:bg-slate-200 rounded-full">
                             <Link
                                 href={`/profile/${username}`}
-                                className="flex gap-4 items-center"
+                                className="flex w-full h-full gap-4 items-center pl-2 pr-6 py-2"
                             >
-                                <HiOutlineUser size={30} />
+                                <BiSolidUser
+                                    size={30}
+                                    fill={`${
+                                        segment === "profile"
+                                            ? "black"
+                                            : "transparent"
+                                    }`}
+                                    stroke={`${
+                                        segment === "profile"
+                                            ? "black"
+                                            : "currentColor"
+                                    }`}
+                                    strokeWidth={1}
+                                />
                                 <span>Profile</span>
                             </Link>
                         </li>
-                        <li className="text-lg  hover:bg-slate-200 pl-3 pr-6 py-3 rounded-full">
+                        <li className="text-lg  hover:bg-slate-200 rounded-full">
                             <Link
                                 href={"/bookmark"}
-                                className="flex gap-4 items-center"
+                                className="flex w-full h-full gap-4 items-center pl-2 pr-6 py-2"
                             >
-                                <CiBookmark size={30} />
+                                <GoBookmarkFill
+                                    size={30}
+                                    fill={`${
+                                        segment === "bookmark"
+                                            ? "black"
+                                            : "transparent"
+                                    }`}
+                                    stroke={`${
+                                        segment === "bookmark"
+                                            ? "black"
+                                            : "currentColor"
+                                    }`}
+                                    strokeWidth={1}
+                                />
                                 <span>Bookmarks</span>
                             </Link>
                         </li>
                     </ul>
                 </nav>
                 <Button
-                    className="bg-blue-400 font-bold text-white px-3 py-3 rounded-full text-center uppercase"
+                    className="mt-2 bg-blue-400 font-bold text-white px-3 py-3 rounded-full text-center uppercase"
                     onClick={() => setOpenCompose(true)}
                 >
                     post
                 </Button>
-                <UtilityCard
-                    className={`relative min-w-full mt-auto h-20 border bg-white shadow rounded-lg transition ${
-                        popup ? "opacity-100" : "opacity-0"
+
+                <div
+                    className={`relative w-full mt-auto shadow rounded-lg bg-white flex flex-col overflow-clip ${
+                        popup ? "opacity-100 visible" : "opacity-0 invisible"
                     }`}
                 >
-                    <div className="w-full h-full rounded-md bg-white flex flex-col py-3">
-                        <form
-                            action="/api/auth/signout"
-                            method="post"
-                            className="w-full"
+                    <form
+                        action="/api/auth/signout"
+                        method="post"
+                        className="w-full"
+                    >
+                        <Button
+                            className={
+                                "w-full p-3 hover:bg-slate-200 flex gap-2 items-center"
+                            }
                         >
-                            <Button className={"w-full p-3 hover:bg-slate-200"}>
-                                Log out
-                            </Button>
-                        </form>
-                    </div>
-                    <span className="w-4 h-4 rotate-45 absolute top-full -translate-y-1/2 left-1/2 bg-white -translate-x-1/2 shadow -z-10"></span>
-                </UtilityCard>
+                            <TbLogout size={20} />
+                            Log out
+                        </Button>
+                    </form>
+                </div>
                 <Button
                     className={
-                        "flex gap-3 items-center hover:bg-slate-200 pl-3 pr-6 py-3 rounded-full relative"
+                        "flex gap-3 items-center hover:bg-slate-200 pl-1 py-1 rounded-full relative"
                     }
                     onClick={() => setPopup(!popup)}
                 >
-                    <div className="w-12 h-12 rounded-full border bg-blue-500"></div>
+                    <Avatar
+                        className={"relative w-12 h-12 border shrink-0"}
+                        url={avatar_url}
+                    />
                     <div className="flex flex-col items-start text-sm">
                         <span>{full_name}</span>
                         <span>{username}</span>
                     </div>
                 </Button>
             </div>
-            {openCompose && <Compose openCompose={setOpenCompose} />}
+            {openCompose && (
+                <Compose openCompose={setOpenCompose} avatar_url={avatar_url} />
+            )}
         </div>
     );
 }

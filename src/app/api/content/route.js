@@ -43,6 +43,9 @@ export async function GET(req) {
             return NextResponse.json(post, { status: 200 });
         } else if (query) {
             const post = await prisma.post.findMany({
+                orderBy: {
+                    created_at: "desc",
+                },
                 where: {
                     content: {
                         contains: query,
@@ -55,6 +58,9 @@ export async function GET(req) {
             return NextResponse.json(post, { status: 200 });
         } else {
             const post = await prisma.post.findMany({
+                orderBy: {
+                    created_at: "desc",
+                },
                 include: {
                     user: true,
                 },

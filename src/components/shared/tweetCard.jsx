@@ -12,10 +12,49 @@ export const TweetCard = ({ post }) => {
         content,
         likes,
         bookmarks,
+        created_at,
         user: { full_name, username, avatar_url },
     } = post;
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
     const [liked, setLiked] = useState(false);
     const [bookmarked, setBookmarked] = useState(false);
+    const [time, setTime] = useState("");
+    const getDate = () => {
+        let remSeconds;
+        const toSeconds = Math.round(
+            (Date.now() - new Date(created_at)) / 1000
+        );
+        const hours = Math.floor(toSeconds / 3600);
+        remSeconds = toSeconds % 3600;
+        const minutes = Math.floor(remSeconds / 60);
+        remSeconds = remSeconds % 60;
+
+        if (hours > 24) {
+            const createdDate = new Date(created_at);
+            const createdString = `${
+                months[createdDate.getMonth()]
+            } ${createdDate.getDate()}, ${createdDate.getFullYear()}`;
+            return createdString;
+        } else {
+            return `${
+                hours ? hours + "h" : minutes ? minutes + "m" : remSeconds + "s"
+            }`;
+        }
+    };
+
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer hover:bg-slate-100">
             <Link
@@ -35,7 +74,8 @@ export const TweetCard = ({ post }) => {
                         >
                             <p>{full_name}</p>
                             <p className="text-sm">{username}</p>
-                            <p className="text-sm">4h</p>
+                            <span className="w-1 h-1 inline-block mx-0.5 rounded-full bg-black"></span>
+                            <p className="text-sm">{getDate()}</p>
                         </Link>
                         <div className="text-sm text-pretty">{content}</div>
                     </div>

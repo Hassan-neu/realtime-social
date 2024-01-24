@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { Button } from "./btn";
 import Image from "next/image";
 import { RxCross2 } from "react-icons/rx";
-export const Compose = ({ openCompose }) => {
+import { Avatar } from "./avatar";
+export const Compose = ({ openCompose, avatar_url }) => {
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
     const handleChange = (e) => {
@@ -36,9 +37,10 @@ export const Compose = ({ openCompose }) => {
                         </Button>
                     </div>
                     <div className="flex gap-2 w-full h-full">
-                        <div className="w-14 h-14 rounded-full bg-blue-400">
-                            <Image src={""} alt="profile picture" />
-                        </div>
+                        <Avatar
+                            className={"relative w-14 h-14 border shrink-0"}
+                            url={avatar_url}
+                        />
                         <textarea
                             name=""
                             id=""
@@ -52,7 +54,7 @@ export const Compose = ({ openCompose }) => {
                     <div className="self-end">
                         <Button
                             className={
-                                "px-5 py-1 rounded-full bg-blue-400 uppercase text-white"
+                                "px-5 py-1 rounded-full font-semibold bg-blue-400 uppercase text-white"
                             }
                             onClick={handlePost}
                             disabled={loading}

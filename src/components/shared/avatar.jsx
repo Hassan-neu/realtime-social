@@ -2,6 +2,7 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { Spinner } from "./spinner";
 
 export function Avatar({ url, className }) {
     const [avatarUrl, setAvatarUrl] = useState("");
@@ -27,17 +28,19 @@ export function Avatar({ url, className }) {
 
     return (
         <div
-            className={`${
-                className || ""
-            } rounded-full bg-blue-300 overflow-clip`}
+            className={`${className || ""} rounded-full bg-white overflow-clip`}
         >
-            {avatarUrl && (
+            {avatarUrl ? (
                 <Image
                     src={avatarUrl}
                     alt={"avatar"}
                     fill
                     className="object-cover object-top"
                 />
+            ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                    <Spinner className={"w-8 h-8"} />
+                </div>
             )}
         </div>
     );
