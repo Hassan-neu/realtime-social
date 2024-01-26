@@ -8,18 +8,20 @@ import { Avatar } from "../shared/avatar";
 import { Spinner } from "../shared/spinner";
 import { months } from "@/utils/months";
 export const ProfileHeader = ({ profile, openEdit, loading }) => {
+    const { id, created_at, birth_date, avatar_url, full_name, username } =
+        profile;
     const [active, setActive] = useState("post");
     const [isActiveUser, setIsActiveUser] = useState(false);
     const supabase = createClientComponentClient();
     function birthDate() {
-        const date = new Date(profile?.birth_date);
+        const date = new Date(birth_date);
         const birthday = `${
             months[date.getMonth()]
         } ${date.getDate()}, ${date.getFullYear()}`;
         return birthday;
     }
     function dateCreated() {
-        const date = new Date(profile?.created_at);
+        const date = new Date(created_at);
         const dateString = `${months[date.getMonth()]} ${date.getFullYear()}`;
         return dateString;
     }
@@ -27,10 +29,10 @@ export const ProfileHeader = ({ profile, openEdit, loading }) => {
         const {
             data: { user },
         } = await supabase.auth.getUser();
-        if (user.id === profile.id) {
+        if (user.id === id) {
             setIsActiveUser(true);
         }
-    }, [supabase, profile]);
+    }, [supabase, id]);
     useEffect(() => {
         fetchCurrUser();
     }, [fetchCurrUser]);
@@ -41,7 +43,7 @@ export const ProfileHeader = ({ profile, openEdit, loading }) => {
                 <div className="flex flex-col gap-4 relative px-4 pt-3">
                     <div className="flex justify-between">
                         <Avatar
-                            url={profile?.avatar_url}
+                            url={avatar_url}
                             className={
                                 "w-40 h-40 border-4 border-white absolute -translate-y-1/2 flex justify-center items-center"
                             }
@@ -75,9 +77,9 @@ export const ProfileHeader = ({ profile, openEdit, loading }) => {
                         <div className="flex flex-col gap-2 mt-16">
                             <div className="flex flex-col ">
                                 <p className="text-lg capitalize">
-                                    {profile?.full_name}
+                                    {full_name}
                                 </p>
-                                <p className="text-sm">{profile?.username}</p>
+                                <p className="text-sm">{username}</p>
                             </div>
 
                             <div className="text-sm">

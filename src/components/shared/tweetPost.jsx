@@ -1,11 +1,12 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { GoBookmarkFill, GoHeartFill } from "react-icons/go";
 import { Button } from "./btn";
 import { HiChatBubbleLeft } from "react-icons/hi2";
 import Link from "next/link";
 import { Avatar } from "./avatar";
 import { months } from "@/utils/months";
+import { Reply } from "./reply";
 export function TweetPost({ post }) {
     const {
         id,
@@ -15,6 +16,8 @@ export function TweetPost({ post }) {
         created_at,
         user: { full_name, username, avatar_url },
     } = post;
+    const [liked, setLiked] = useState(false);
+    const [bookmarked, setBookmarked] = useState(false);
     function getTime() {
         const date = new Date(created_at);
         const hour = date.getHours();
@@ -64,57 +67,43 @@ export function TweetPost({ post }) {
                             />
                         </Button>
                         <Button
-                            onClick={() => alert("Liked Button")}
+                            onClick={() => setLiked(!liked)}
                             className={"flex items-center gap-1"}
                         >
                             <GoHeartFill
                                 size={18}
-                                //   fill={`${liked ? "red" : "transparent"}`}
-                                //   stroke={`${liked ? "red" : "currentColor"}`}
-                                //   strokeWidth={1}
+                                fill={`${liked ? "red" : "transparent"}`}
+                                stroke={`${liked ? "red" : "currentColor"}`}
+                                strokeWidth={1}
                                 className="transition duration-500"
                             />
                             <span className="text-xs">{likes}</span>
                         </Button>
                         <Button
-                            onClick={() => alert("Bookmarked Button")}
+                            onClick={() => setBookmarked(!bookmarked)}
                             className={"flex items-center gap-1"}
                         >
                             <GoBookmarkFill
                                 size={18}
-                                //   fill={`${bookmarked ? "rgb(59 130 246)" : "transparent"}`}
-                                //   stroke={`${
-                                //       bookmarked ? "rgb(59 130 246)" : "currentColor"
-                                //   }`}
-                                //   strokeWidth={1}
+                                fill={`${
+                                    bookmarked
+                                        ? "rgb(59 130 246)"
+                                        : "transparent"
+                                }`}
+                                stroke={`${
+                                    bookmarked
+                                        ? "rgb(59 130 246)"
+                                        : "currentColor"
+                                }`}
+                                strokeWidth={1}
                                 className="transition duration-500"
                             />
                             <span className="text-xs">{bookmarks}</span>
                         </Button>
                     </div>
                 </div>
-                <div className="flex gap-2 items-center">
-                    <Avatar
-                        className={
-                            "relative w-12 h-12 border shrink-0 self-start"
-                        }
-                        url={avatar_url}
-                    />
-                    <textarea
-                        name=""
-                        id=""
-                        className="grow h-12 focus-visible:h-24 transition-[height] resize-none text-lg p-2 focus-visible:outline-none hidescroll"
-                        placeholder="What's on your mind?!"
-                        maxLength={200}
-                    ></textarea>
-                    <Button
-                        className={
-                            "px-4 py-1 rounded-full font-semibold bg-blue-400 text-white self-end"
-                        }
-                    >
-                        Reply
-                    </Button>
-                </div>
+
+                <Reply avatar_url={avatar_url} />
             </div>
         </div>
     );
