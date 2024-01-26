@@ -36,7 +36,7 @@ export function TweetPost({ post }) {
         return dateString;
     }
     return (
-        <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer">
+        <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer border-b-0">
             <div className="flex flex-col gap-3 w-full">
                 <div className="flex gap-2">
                     <Avatar
@@ -103,7 +103,7 @@ export function TweetPost({ post }) {
                     </div>
                 </div>
 
-                <Reply avatar_url={avatar_url} />
+                <Reply avatar_url={avatar_url} id={id} />
             </div>
         </div>
     );

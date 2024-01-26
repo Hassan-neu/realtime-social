@@ -11,12 +11,13 @@ export async function POST(req) {
             data: { user },
             error,
         } = await supabase.auth.getUser();
-        const { content } = body;
+        const { content, reply_to } = body;
         if (user && content) {
             const post = await prisma.post.create({
                 data: {
                     content,
                     user_id: user.id,
+                    reply_to,
                 },
             });
             return NextResponse.json(post, { status: 201 });
@@ -30,6 +31,7 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
     const query = searchParams.get("query");
+    const reply_to = searchParams.get("reply_to");
     try {
         if (id) {
             const post = await prisma.post.findUnique({
@@ -56,8 +58,21 @@ export async function GET(req) {
                 },
             });
             return NextResponse.json(post, { status: 200 });
+        } else if (reply_to) {
+            const post = await prisma.post.findMany({
+                where: {
+                    reply_to,
+                },
+                include: {
+                    user: true,
+                },
+            });
+            return NextResponse.json(post, { status: 200 });
         } else {
             const post = await prisma.post.findMany({
+                where: {
+                    reply_to: null,
+                },
                 orderBy: {
                     created_at: "desc",
                 },
