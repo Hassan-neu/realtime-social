@@ -5,62 +5,55 @@ import { Button } from "./btn";
 import { HiChatBubbleLeft } from "react-icons/hi2";
 import Link from "next/link";
 import { Avatar } from "./avatar";
-
-export function TweetPost() {
-    const username = "hnxo";
+import { months } from "@/utils/months";
+export function TweetPost({ post }) {
+    const {
+        id,
+        content,
+        likes,
+        bookmarks,
+        created_at,
+        user: { full_name, username, avatar_url },
+    } = post;
+    function getTime() {
+        const date = new Date(created_at);
+        const hour = date.getHours();
+        const minutes = date.getMinutes();
+        const timeString = `${hour == 0 ? 12 : hour > 12 ? hour - 12 : hour}:${
+            minutes < 10 ? "0" + minutes : minutes
+        } ${hour > 11 ? "PM" : "AM"}`;
+        return timeString;
+    }
+    function getDate() {
+        const date = new Date(created_at);
+        const month = months[date.getMonth()].slice(0, 3);
+        const day = date.getDate();
+        const year = date.getFullYear();
+        const dateString = `${month} ${day}, ${year}`;
+        return dateString;
+    }
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer">
             <div className="flex flex-col gap-3 w-full">
-                {/* <Avatar
-                  className={"relative w-12 h-12 border shrink-0"}
-                  url={avatar_url}
-              /> */}
                 <div className="flex gap-2">
-                    <div className="relative w-12 h-12 border shrink-0 rounded-full bg-red-500"></div>
+                    <Avatar
+                        className={"relative w-12 h-12 border shrink-0"}
+                        url={avatar_url}
+                    />
                     <Link
                         href={`/profile/${username}`}
                         className="flex flex-col gap-0.5 leading-"
                     >
-                        <p className="text-xl font-bold">Hassan</p>
+                        <p className="text-xl font-bold">{full_name}</p>
                         <p className="text-sm">{username}</p>
                     </Link>
                 </div>
                 <div className="flex flex-col gap-3 w-full">
-                    <div className="text-pretty">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Nobis, voluptatum natus consequuntur dolor tenetur
-                        delectus accusamus est quidem dignissimos neque officiis
-                        rem? Alias atque esse aperiam aut quos. Aliquam,
-                        tempora. Nulla ipsam quasi, cupiditate iste aut ducimus
-                        dolores, impedit suscipit ad quos voluptatem ut.
-                        Praesentium quod aliquam error, laboriosam suscipit
-                        exercitationem expedita adipisci aspernatur facere velit
-                        eveniet nostrum saepe, necessitatibus ea distinctio
-                        rerum. Voluptates distinctio temporibus vitae, tempora
-                        id voluptatum reiciendis tempore dolorem, possimus
-                        cupiditate facere debitis culpa dolores error ratione
-                        iusto, quos iste? Magnam numquam placeat consequatur
-                        pariatur alias repellendus labore, similique suscipit.
-                        Doloribus consectetur ducimus alias sequi earum quas
-                        amet fugit unde, sed debitis asperiores ut iste
-                        distinctio beatae officiis non, fuga dicta aspernatur
-                        consequatur laboriosam? Hic, ullam voluptatum accusamus
-                        a voluptatem voluptate sed minus vitae veritatis,
-                        repellendus maiores iusto. At nihil iure accusamus vel
-                        aut aliquam velit, quas amet voluptate repudiandae
-                        doloremque natus quia deserunt? Possimus exercitationem
-                        commodi nobis totam, vitae enim fugiat ratione eveniet
-                        sapiente repudiandae aut illum eaque modi dignissimos
-                        repellat culpa! Deleniti praesentium labore nihil minima
-                        aspernatur, voluptatem sint natus incidunt quidem,
-                        architecto quia odit. Nam quisquam voluptates dolore sit
-                        nulla tempora, est provident harum voluptatem
-                        repellendus nemo neque beatae laudantium optio culpa at?
-                    </div>
+                    <div className="text-pretty">{content}</div>
                     <div className="flex gap-1 items-center text-sm">
-                        <span>Today</span>
+                        <span>{getTime()}</span>
                         <span className="w-1 h-1 inline-block mx-0.5 rounded-full bg-black"></span>
-                        <span>Date</span>
+                        <span>{getDate()}</span>
                     </div>
                     <div className="flex gap-3 justify-between border-y py-3">
                         <Button onClick={(e) => console.log(e.target)}>
@@ -81,7 +74,7 @@ export function TweetPost() {
                                 //   strokeWidth={1}
                                 className="transition duration-500"
                             />
-                            <span className="text-xs">{2}</span>
+                            <span className="text-xs">{likes}</span>
                         </Button>
                         <Button
                             onClick={() => alert("Bookmarked Button")}
@@ -96,22 +89,27 @@ export function TweetPost() {
                                 //   strokeWidth={1}
                                 className="transition duration-500"
                             />
-                            <span className="text-xs">{2}</span>
+                            <span className="text-xs">{bookmarks}</span>
                         </Button>
                     </div>
                 </div>
                 <div className="flex gap-2 items-center">
-                    <div className="relative w-12 h-12 border shrink-0 rounded-full bg-red-500"></div>
+                    <Avatar
+                        className={
+                            "relative w-12 h-12 border shrink-0 self-start"
+                        }
+                        url={avatar_url}
+                    />
                     <textarea
                         name=""
                         id=""
-                        className="grow h-12 resize-none text-lg p-2 focus-visible:outline-none hidescroll"
+                        className="grow h-12 focus-visible:h-24 transition-[height] resize-none text-lg p-2 focus-visible:outline-none hidescroll"
                         placeholder="What's on your mind?!"
                         maxLength={200}
                     ></textarea>
                     <Button
                         className={
-                            "px-4 py-1 rounded-full font-semibold bg-blue-400 text-white"
+                            "px-4 py-1 rounded-full font-semibold bg-blue-400 text-white self-end"
                         }
                     >
                         Reply

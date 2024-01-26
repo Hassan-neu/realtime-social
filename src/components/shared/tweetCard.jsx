@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "./btn";
 import { Avatar } from "./avatar";
+import { months } from "@/utils/months";
 export const TweetCard = ({ post }) => {
     const {
         id,
@@ -15,25 +16,11 @@ export const TweetCard = ({ post }) => {
         created_at,
         user: { full_name, username, avatar_url },
     } = post;
-    const months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-    ];
     const [liked, setLiked] = useState(false);
     const [bookmarked, setBookmarked] = useState(false);
-    const [time, setTime] = useState("");
     const getDate = () => {
         let remSeconds;
+        const currYear = new Date(Date.now()).getFullYear();
         const toSeconds = Math.round(
             (Date.now() - new Date(created_at)) / 1000
         );
@@ -43,10 +30,13 @@ export const TweetCard = ({ post }) => {
         remSeconds = remSeconds % 60;
 
         if (hours > 24) {
-            const createdDate = new Date(created_at);
-            const createdString = `${
-                months[createdDate.getMonth()]
-            } ${createdDate.getDate()}, ${createdDate.getFullYear()}`;
+            const date = new Date(created_at);
+            const month = months[date.getMonth()].slice(0, 3);
+            const day = date.getDate();
+            const year = date.getFullYear();
+            const createdString = `${month} ${day}${
+                year == currYear ? "" : ","
+            } ${year == currYear ? "" : year}`;
             return createdString;
         } else {
             return `${

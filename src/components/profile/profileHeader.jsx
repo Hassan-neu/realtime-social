@@ -6,32 +6,23 @@ import { IoCalendarOutline } from "react-icons/io5";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Avatar } from "../shared/avatar";
 import { Spinner } from "../shared/spinner";
+import { months } from "@/utils/months";
 export const ProfileHeader = ({ profile, openEdit, loading }) => {
     const [active, setActive] = useState("post");
     const [isActiveUser, setIsActiveUser] = useState(false);
     const supabase = createClientComponentClient();
-    const months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-    ];
-    const createDate = new Date(profile?.created_at);
-    const birthDate = new Date(profile?.birth_date);
-    const createdAt = `${
-        months[createDate.getMonth()]
-    } ${createDate.getFullYear()}`;
-    const birthString = `${
-        months[birthDate.getMonth()]
-    } ${birthDate.getDate()}, ${birthDate.getFullYear()}`;
+    function birthDate() {
+        const date = new Date(profile?.birth_date);
+        const birthday = `${
+            months[date.getMonth()]
+        } ${date.getDate()}, ${date.getFullYear()}`;
+        return birthday;
+    }
+    function dateCreated() {
+        const date = new Date(profile?.created_at);
+        const dateString = `${months[date.getMonth()]} ${date.getFullYear()}`;
+        return dateString;
+    }
     const fetchCurrUser = useCallback(async () => {
         const {
             data: { user },
@@ -99,12 +90,12 @@ export const ProfileHeader = ({ profile, openEdit, loading }) => {
                                 {isActiveUser && (
                                     <div className="text-sm flex gap-1 items-center">
                                         <BsBalloon size={16} />
-                                        <span>Born {birthString}</span>
+                                        <span>Born {birthDate()}</span>
                                     </div>
                                 )}
                                 <div className="text-sm flex gap-1 items-center">
                                     <IoCalendarOutline size={16} />
-                                    <span>Joined {createdAt}</span>
+                                    <span>Joined {dateCreated()}</span>
                                 </div>
                             </div>
                             <div className="flex gap-2 text-sm">

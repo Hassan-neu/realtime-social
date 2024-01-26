@@ -5,16 +5,12 @@ import React from "react";
 const Page = async ({ searchParams: { query } }) => {
     const fetchQuery = async () => {
         const res = await fetch(
-            `http://localhost:3000/api/content?query=${query}`,
-            {
-                method: "GET",
-            }
+            `http://localhost:3000/api/content?query=${query}`
         );
         const data = await res.json();
         return data;
     };
     const searchRes = await fetchQuery();
-    console.log(searchRes);
     return (
         <div>
             <Searchbar />
