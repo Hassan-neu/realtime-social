@@ -8,7 +8,7 @@ import { Avatar } from "../shared/avatar";
 import { Spinner } from "../shared/spinner";
 import { months } from "@/utils/months";
 export const ProfileHeader = ({ profile, openEdit, loading }) => {
-    const { id, created_at, birth_date, avatar_url, full_name, username } =
+    const { id, created_at, birth_date, avatar_url, bio, full_name, username } =
         profile;
     const [active, setActive] = useState("post");
     const [isActiveUser, setIsActiveUser] = useState(false);
@@ -82,12 +82,7 @@ export const ProfileHeader = ({ profile, openEdit, loading }) => {
                                 <p className="text-sm">{username}</p>
                             </div>
 
-                            <div className="text-sm">
-                                Lorem ipsum dolor, sit amet consectetur
-                                adipisicing elit. Suscipit porro possimus
-                                dolores facere deleniti ipsum accusantium
-                                voluptate officia et consequatur.
-                            </div>
+                            <div className="text-sm">{bio}</div>
                             <div className="flex gap-4">
                                 {isActiveUser && (
                                     <div className="text-sm flex gap-1 items-center">

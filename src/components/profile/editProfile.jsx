@@ -6,12 +6,12 @@ import Image from "next/image";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 export const EditProfile = ({ openEdit, profile }) => {
-    const { avatar_url, username, website, birth_date } = profile;
+    const { avatar_url, username, bio, website, birth_date } = profile;
     const supabase = createClientComponentClient();
     const [user, setUser] = useState({
         username,
         avatar_url,
-        // bio: "",
+        bio,
         website,
         birth_date: birth_date.split("T")[0],
     });
@@ -82,6 +82,7 @@ export const EditProfile = ({ openEdit, profile }) => {
             console.log(error);
         } finally {
             setLoading(false);
+            openEdit(false);
         }
     };
     return (
@@ -144,7 +145,7 @@ export const EditProfile = ({ openEdit, profile }) => {
                                 onChange={handleChange}
                             />
                         </label>
-                        {/* <label
+                        <label
                             htmlFor="bio"
                             className="border-slate-200 border-2 rounded flex flex-col"
                         >
@@ -158,7 +159,7 @@ export const EditProfile = ({ openEdit, profile }) => {
                                 value={user.bio}
                                 onChange={handleChange}
                             />
-                        </label> */}
+                        </label>
                         <label
                             htmlFor="website"
                             className="border-slate-200 border-2 rounded flex flex-col"

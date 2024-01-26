@@ -78,7 +78,7 @@ export async function PUT(req) {
             error,
         } = await supabse.auth.getUser();
         const body = await req.json();
-        const { username, avatar_url, website, birth_date } = body;
+        const { username, avatar_url, website, birth_date, bio } = body;
         if (user) {
             const profile = await prisma.profile.update({
                 where: {
@@ -88,6 +88,7 @@ export async function PUT(req) {
                     username,
                     avatar_url,
                     website,
+                    bio,
                     birth_date: new Date(birth_date).toISOString(),
                 },
             });

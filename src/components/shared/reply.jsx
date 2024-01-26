@@ -13,7 +13,7 @@ export function Reply({ avatar_url }) {
                 name=""
                 id=""
                 className="grow h-12 focus-visible:h-24 transition-[height] resize-none text-lg p-2 focus-visible:outline-none hidescroll"
-                placeholder="What's on your mind?!"
+                placeholder="Write a reply"
                 maxLength={200}
             ></textarea>
             <Button
