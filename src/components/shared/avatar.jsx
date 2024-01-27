@@ -35,11 +35,16 @@ export function Avatar({ url, className }) {
                     src={avatarUrl}
                     alt={"avatar"}
                     fill
-                    className="object-cover object-top"
+                    className="object-cover"
                 />
             ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                    <Spinner className={"w-8 h-8"} />
+                <div className="w-full h-full flex items-center justify-center relative">
+                    <Image
+                        src="/blankavatar.png"
+                        alt="no-avatar"
+                        fill
+                        className="object-cover"
+                    />
                 </div>
             )}
         </div>
