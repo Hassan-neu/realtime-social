@@ -6,6 +6,7 @@ import { FaRegImage } from "react-icons/fa6";
 import Image from "next/image";
 import { RxCross1 } from "react-icons/rx";
 export function Reply({ id }) {
+    const mediaInput = useRef();
     const supabase = createClientComponentClient();
     const [content, setContent] = useState("");
     const [avatar_url, setAvatarUrl] = useState("");
@@ -17,7 +18,6 @@ export function Reply({ id }) {
         width: 0,
         height: 0,
     });
-    const mediaInput = useRef();
     function handleChange(e) {
         setContent(e.target.value);
     }
@@ -116,7 +116,7 @@ export function Reply({ id }) {
                 )}
                 <div className="flex justify-between">
                     <div
-                        className={`relative flex justify-center items-center self-start hover:bg-opacity-50 p-2 rounded-full ${
+                        className={`relative justify-center items-center self-start hover:bg-opacity-50 p-2 rounded-full ${
                             focused ? "flex" : "hidden"
                         } hover:bg-blue-400 `}
                     >
