@@ -5,56 +5,21 @@ import Image from "next/image";
 import { RxCross1, RxCross2 } from "react-icons/rx";
 import { Avatar } from "./avatar";
 import { FaRegImage } from "react-icons/fa6";
+import { useCreateMedia } from "@/utils/mediaReplyHook";
 export const Compose = ({ openCompose, avatar_url }) => {
+    const {
+        mediaSrc,
+        size,
+        loading,
+        content,
+        importMedia,
+        setMediaFile,
+        setMediaSrc,
+        handleChange,
+        handlePost,
+    } = useCreateMedia();
     const mediaInput = useRef();
-    const [content, setContent] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [mediaFile, setMediaFile] = useState("");
-    const [mediaSrc, setMediaSrc] = useState("");
-    const [size, setSize] = useState({
-        width: 0,
-        height: 0,
-    });
-    const handleChange = (e) => {
-        setContent(e.target.value);
-    };
-    const handlePost = async () => {
-        try {
-            setLoading(true);
-            const res = await fetch("/api/content/", {
-                method: "POST",
-                body: JSON.stringify({ content }),
-            });
-            const post = await res.json();
-            console.log(post);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
-            setContent("");
-            openCompose(false);
-        }
-    };
-    const importMedia = (e) => {
-        e.preventDefault();
-        if (!e.target.files[0] || e.target.files.length === 0) {
-            return;
-        }
-        const file = e.target.files[0];
-        setMediaFile(file);
-        console.log(file.name);
-        setMediaSrc(URL.createObjectURL(file));
-    };
-    useEffect(() => {
-        const setImageSize = (imageUrl) => {
-            const img = new window.Image();
-            img.src = imageUrl;
-            img.onload = () => {
-                setSize({ height: img.height, width: img.width });
-            };
-        };
-        if (mediaSrc) setImageSize(mediaSrc);
-    }, [mediaSrc]);
+
     return (
         <div className="w-screen h-screen flex flex-col justify-center items-center bg-black  bg-opacity-50 fixed top-0 left-0 z-[60]">
             <div className="w-4/5 max-w-[600px] rounded-lg p-4 bg-white relative">
@@ -79,7 +44,7 @@ export const Compose = ({ openCompose, avatar_url }) => {
                                 value={content}
                                 onChange={handleChange}
                             ></textarea>
-                            <div className="w-full max-h-80 overflow-scroll">
+                            <div className="w-full max-h-96 overflow-y-scroll">
                                 {mediaSrc && (
                                     <div
                                         className={`relative rounded-xl overflow-clip w-full`}

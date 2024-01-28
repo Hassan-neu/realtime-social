@@ -2,51 +2,26 @@ import React, { useCallback, useEffect, useState, useRef } from "react";
 import { Button } from "./btn";
 import { Avatar } from "./avatar";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useCreateMedia } from "@/utils/mediaReplyHook";
 import { FaRegImage } from "react-icons/fa6";
 import Image from "next/image";
 import { RxCross1 } from "react-icons/rx";
 export function Reply({ id }) {
+    const {
+        mediaSrc,
+        size,
+        content,
+        loading,
+        importMedia,
+        setMediaFile,
+        setMediaSrc,
+        handleChange,
+        handlePost,
+    } = useCreateMedia();
     const mediaInput = useRef();
     const supabase = createClientComponentClient();
-    const [content, setContent] = useState("");
     const [avatar_url, setAvatarUrl] = useState("");
-    const [loading, setLoading] = useState(false);
     const [focused, setFocused] = useState(false);
-    const [mediaFile, setMediaFile] = useState("");
-    const [mediaSrc, setMediaSrc] = useState("");
-    const [size, setSize] = useState({
-        width: 0,
-        height: 0,
-    });
-    function handleChange(e) {
-        setContent(e.target.value);
-    }
-    const handlePost = async () => {
-        try {
-            setLoading(true);
-            const res = await fetch("/api/content/", {
-                method: "POST",
-                body: JSON.stringify({ content, reply_to: id }),
-            });
-            const post = await res.json();
-            console.log(post);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
-            setContent("");
-        }
-    };
-    const importMedia = (e) => {
-        e.preventDefault();
-        if (!e.target.files[0] || e.target.files.length === 0) {
-            return;
-        }
-        const file = e.target.files[0];
-        setMediaFile(file);
-        console.log(file.name);
-        setMediaSrc(URL.createObjectURL(file));
-    };
     const getAvatar = useCallback(async () => {
         const {
             data: { user },
@@ -64,16 +39,6 @@ export function Reply({ id }) {
     useEffect(() => {
         getAvatar();
     }, [getAvatar]);
-    useEffect(() => {
-        const setImageSize = (imageUrl) => {
-            const img = new window.Image();
-            img.src = imageUrl;
-            img.onload = () => {
-                setSize({ height: img.height, width: img.width });
-            };
-        };
-        if (mediaSrc) setImageSize(mediaSrc);
-    }, [mediaSrc]);
     return (
         <div className="flex gap-2 items-center">
             <Avatar
@@ -136,8 +101,8 @@ export function Reply({ id }) {
                         className={
                             "px-4 py-1 rounded-full font-semibold bg-blue-400 text-white ml-auto"
                         }
-                        onClick={handlePost}
-                        disabled={loading || content}
+                        onClick={() => handlePost({ reply_to: id })}
+                        disabled={loading}
                     >
                         {loading ? "Sending..." : "Reply"}
                     </Button>
