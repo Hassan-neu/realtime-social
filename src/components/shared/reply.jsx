@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { Button } from "./btn";
 import { Avatar } from "./avatar";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useCreateMedia } from "@/utils/mediaReplyHook";
 import { FaRegImage } from "react-icons/fa6";
 import Image from "next/image";
@@ -12,14 +11,13 @@ export function Reply({ id }) {
         size,
         content,
         loading,
+        supabase,
+        mediaInput,
         importMedia,
-        setMediaFile,
-        setMediaSrc,
+        onCancel,
         handleChange,
         handlePost,
     } = useCreateMedia();
-    const mediaInput = useRef();
-    const supabase = createClientComponentClient();
     const [avatar_url, setAvatarUrl] = useState("");
     const [focused, setFocused] = useState(false);
     const getAvatar = useCallback(async () => {
@@ -69,11 +67,7 @@ export function Reply({ id }) {
                             className={
                                 "bg-black hover:bg-opacity-70 p-1 rounded-full absolute top-0 right-0 text-white"
                             }
-                            onClick={() => {
-                                setMediaFile("");
-                                setMediaSrc("");
-                                mediaInput.current.value = "";
-                            }}
+                            onClick={onCancel}
                         >
                             <RxCross1 size={18} />
                         </Button>

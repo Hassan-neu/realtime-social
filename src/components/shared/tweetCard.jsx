@@ -7,10 +7,12 @@ import Image from "next/image";
 import { Button } from "./btn";
 import { Avatar } from "./avatar";
 import { months } from "@/utils/months";
+import { TweetMedia } from "./tweetMedia";
 export const TweetCard = ({ post }) => {
     const {
         id,
         content,
+        media_url,
         likes,
         bookmarks,
         created_at,
@@ -67,7 +69,10 @@ export const TweetCard = ({ post }) => {
                             <span className="w-1 h-1 inline-block mx-0.5 rounded-full bg-black"></span>
                             <p className="text-sm">{getDate()}</p>
                         </Link>
-                        <div className="text-sm text-pretty">{content}</div>
+                        <div className="flex flex-col gap-1">
+                            <div className="text-sm text-pretty">{content}</div>
+                            <TweetMedia url={media_url} />
+                        </div>
                     </div>
                 </div>
             </Link>

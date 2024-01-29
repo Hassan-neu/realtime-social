@@ -12,14 +12,12 @@ export const Compose = ({ openCompose, avatar_url }) => {
         size,
         loading,
         content,
+        mediaInput,
+        onCancel,
         importMedia,
-        setMediaFile,
-        setMediaSrc,
         handleChange,
         handlePost,
     } = useCreateMedia();
-    const mediaInput = useRef();
-
     return (
         <div className="w-screen h-screen flex flex-col justify-center items-center bg-black  bg-opacity-50 fixed top-0 left-0 z-[60]">
             <div className="w-4/5 max-w-[600px] rounded-lg p-4 bg-white relative">
@@ -60,11 +58,7 @@ export const Compose = ({ openCompose, avatar_url }) => {
                                             className={
                                                 "bg-black hover:bg-opacity-70 p-1 rounded-full absolute top-0 right-0 text-white"
                                             }
-                                            onClick={() => {
-                                                setMediaFile("");
-                                                setMediaSrc("");
-                                                mediaInput.current.value = "";
-                                            }}
+                                            onClick={onCancel}
                                         >
                                             <RxCross1 size={18} />
                                         </Button>

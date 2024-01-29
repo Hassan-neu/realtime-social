@@ -11,13 +11,14 @@ export async function POST(req) {
             data: { user },
             error,
         } = await supabase.auth.getUser();
-        const { content, reply_to } = body;
+        const { content, reply_to, media_url } = body;
         if (user && content) {
             const post = await prisma.post.create({
                 data: {
                     content,
                     user_id: user.id,
                     reply_to,
+                    media_url,
                 },
             });
             return NextResponse.json(post, { status: 201 });

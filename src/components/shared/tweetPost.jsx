@@ -7,10 +7,12 @@ import Link from "next/link";
 import { Avatar } from "./avatar";
 import { months } from "@/utils/months";
 import { Reply } from "./reply";
+import { TweetMedia } from "./tweetMedia";
 export function TweetPost({ post }) {
     const {
         id,
         content,
+        media_url,
         likes,
         bookmarks,
         created_at,
@@ -52,7 +54,10 @@ export function TweetPost({ post }) {
                     </Link>
                 </div>
                 <div className="flex flex-col gap-3 w-full">
-                    <div className="text-pretty">{content}</div>
+                    <div className="flex flex-col gap-2">
+                        <div className="text-pretty">{content}</div>
+                        <TweetMedia url={media_url} />
+                    </div>
                     <div className="flex gap-1 items-center text-sm">
                         <span>{getTime()}</span>
                         <span className="w-1 h-1 inline-block mx-0.5 rounded-full bg-black"></span>

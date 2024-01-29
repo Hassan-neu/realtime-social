@@ -1,10 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useEffect, useRef, useState } from "react";
 export const useCreateMedia = () => {
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
     const [mediaSrc, setMediaSrc] = useState("");
     const [mediaFile, setMediaFile] = useState("");
+    const supabase = createClientComponentClient();
+    const mediaInput = useRef();
     const [size, setSize] = useState({
         width: 0,
         height: 0,
@@ -12,20 +15,47 @@ export const useCreateMedia = () => {
     function handleChange(e) {
         setContent(e.target.value);
     }
+    const onCancel = () => {
+        setMediaFile("");
+        setMediaSrc("");
+        mediaInput.current.value = "";
+    };
     const handlePost = async ({ reply_to }) => {
         try {
             setLoading(true);
-            const res = await fetch("/api/content/", {
-                method: "POST",
-                body: JSON.stringify({ content, reply_to }),
-            });
-            const post = await res.json();
-            console.log(post);
+            if (mediaFile) {
+                const fileExt = mediaFile.name.split(".").pop();
+                const filePath = `${mediaFile.name}-${Date.now()}.${fileExt}`;
+                const { error } = await supabase.storage
+                    .from("media")
+                    .upload(filePath, mediaFile);
+                if (error) {
+                    throw error;
+                }
+                const res = await fetch("/api/content/", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        content,
+                        reply_to,
+                        media_url: filePath,
+                    }),
+                });
+                const post = await res.json();
+                console.log(post);
+            } else {
+                const res = await fetch("/api/content/", {
+                    method: "POST",
+                    body: JSON.stringify({ content, reply_to }),
+                });
+                const post = await res.json();
+                console.log(post);
+            }
         } catch (error) {
             console.log(error);
         } finally {
             setLoading(false);
             setContent("");
+            onCancel();
         }
     };
     const importMedia = (e) => {
@@ -54,10 +84,14 @@ export const useCreateMedia = () => {
         size,
         content,
         loading,
+        mediaFile,
+        supabase,
+        mediaInput,
         importMedia,
         setMediaFile,
         setMediaSrc,
         handleChange,
         handlePost,
+        onCancel,
     };
 };
