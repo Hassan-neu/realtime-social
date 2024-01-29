@@ -1,7 +1,10 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useCreateMedia } from "@/utils/mediaReplyHook";
+import { Button } from "./btn";
+import { RxCross1 } from "react-icons/rx";
 export function TweetMedia({ url }) {
+    const [view, setView] = useState(false);
     const { supabase } = useCreateMedia();
     const [mediaSrc, setMediaSrc] = useState("");
     const [size, setSize] = useState({
@@ -40,6 +43,7 @@ export function TweetMedia({ url }) {
             {mediaSrc && (
                 <div
                     className={`relative rounded-xl overflow-clip w-full h-96`}
+                    onClick={() => setView(true)}
                 >
                     <Image
                         src={mediaSrc}
@@ -49,7 +53,33 @@ export function TweetMedia({ url }) {
                     />
                 </div>
             )}
-            <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-75 z-50"></div>
+            {view && (
+                <MediaView setView={setView} mediaSrc={mediaSrc} size={size} />
+            )}
+        </div>
+    );
+}
+
+function MediaView({ setView, mediaSrc, size }) {
+    return (
+        <div className="fixed top-0 left-0 w-screen h-screen bg-black  z-50 flex justify-center items-center">
+            <div className={`relative`}>
+                <Image
+                    src={mediaSrc}
+                    alt="blank-png"
+                    width={size?.width}
+                    height={size?.height / 2}
+                    className="object-cover"
+                />
+            </div>
+            <Button
+                className={
+                    "bg-black hover:bg-opacity-70 p-1 rounded-full absolute top-5 left-5 text-white z-10"
+                }
+                onClick={() => setView(false)}
+            >
+                <RxCross1 size={18} />
+            </Button>
         </div>
     );
 }

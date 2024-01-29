@@ -25,7 +25,9 @@ export const useCreateMedia = () => {
             setLoading(true);
             if (mediaFile) {
                 const fileExt = mediaFile.name.split(".").pop();
-                const filePath = `${mediaFile.name}-${Date.now()}.${fileExt}`;
+                const filePath = `${Math.ceil(
+                    Math.random() * 100
+                )}-${Date.now()}.${fileExt}`;
                 const { error } = await supabase.storage
                     .from("media")
                     .upload(filePath, mediaFile);

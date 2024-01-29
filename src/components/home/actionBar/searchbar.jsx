@@ -15,7 +15,7 @@ export const Searchbar = ({ sear }) => {
         return replace(`${pathname}?${params}`);
     };
     return (
-        <div className="py-4 sticky top-0 bg-white w-full">
+        <div className="py-4 sticky top-0 bg-white w-full z-50">
             <form
                 onSubmit={handleSearch}
                 className={`flex gap-3 items-center overflow-clip rounded-full bg-slate-100 border-2 ${

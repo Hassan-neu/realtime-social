@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { Button } from "./btn";
 import Image from "next/image";
 import { RxCross1, RxCross2 } from "react-icons/rx";
