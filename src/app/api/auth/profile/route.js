@@ -21,7 +21,11 @@ export async function GET(req) {
                     username: username.toLowerCase(),
                 },
                 include: {
-                    posts: true,
+                    posts: {
+                        orderBy: {
+                            created_at: "desc",
+                        },
+                    },
                 },
             });
             return NextResponse.json(profile, { status: 200 });

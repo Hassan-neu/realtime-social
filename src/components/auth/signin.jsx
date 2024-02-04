@@ -3,20 +3,25 @@ import React, { useState } from "react";
 import { Button } from "../shared/btn";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { validation } from "@/libs/signinValidation";
+import { useFormik } from "formik";
+import { PiEyeClosedLight } from "react-icons/pi";
+import { RxEyeOpen } from "react-icons/rx";
 export const SignIn = () => {
-    const [user, setUser] = useState({
-        email: "",
-        password: "",
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+            password: "",
+        },
+        validate: validation,
+        onSubmit,
     });
+    const [showPassword, setShowPassword] = useState(false);
+    function onSubmit(values) {
+        console.log(values);
+    }
     const [loading, setLoading] = useState(false);
     const { push } = useRouter();
-
-    const handleChange = (e) => {
-        setUser((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
-    };
 
     const handleSignIn = async () => {
         try {
@@ -48,31 +53,64 @@ export const SignIn = () => {
                     </div>
                     <div className="flex flex-col gap-4 w-full">
                         <label htmlFor="email">
+                            {formik.errors.email && formik.touched.email && (
+                                <span className="text-red-400 text-xs block mb-1">
+                                    {formik.errors.email}
+                                </span>
+                            )}
                             <input
                                 type="email"
                                 name="email"
                                 id="email"
-                                className="border-2 h-12 bg-transparent text-sm border-slate-200 rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none"
+                                className={`border-2 h-12 bg-transparent text-sm rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none  ${
+                                    formik.errors.email && formik.touched.email
+                                        ? "border-red-400"
+                                        : "border-slate-200"
+                                }`}
                                 placeholder="Email"
-                                value={user.email}
-                                onChange={handleChange}
+                                {...formik.getFieldProps("email")}
                             />
                         </label>
                         <label htmlFor="password">
-                            {/* <span className="block font-medium">Password</span> */}
-                            <input
-                                type="password"
-                                name="password"
-                                id="password"
-                                className="border-2 h-12 border-slate-200 bg-transparent text-sm rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none"
-                                placeholder="Password"
-                                value={user.password}
-                                onChange={handleChange}
-                            />
+                            {formik.errors.password &&
+                                formik.touched.password && (
+                                    <span className="text-red-400 text-xs block mb-1">
+                                        {formik.errors.password}
+                                    </span>
+                                )}
+                            <div className="relative">
+                                <input
+                                    type={`${
+                                        showPassword ? "text" : "password"
+                                    }`}
+                                    name="password"
+                                    id="password"
+                                    className={`border-2 h-12 bg-transparent text-sm rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none  ${
+                                        formik.errors.password &&
+                                        formik.touched.password
+                                            ? "border-red-400"
+                                            : "border-slate-200"
+                                    }`}
+                                    placeholder="Password"
+                                    {...formik.getFieldProps("password")}
+                                />
+                                <span
+                                    className="absolute top-1/2 -translate-y-1/2 right-4 text-slate-400"
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
+                                >
+                                    {showPassword ? (
+                                        <PiEyeClosedLight size={16} />
+                                    ) : (
+                                        <RxEyeOpen size={16} />
+                                    )}
+                                </span>
+                            </div>
                         </label>
                         <Button
                             className={`px-3 py-1 bg-blue-500 rounded-full self-stretch text-white h-10`}
-                            onClick={handleSignIn}
+                            onClick={formik.handleSubmit}
                             disabled={loading}
                         >
                             {loading ? "Loading..." : "Log In"}

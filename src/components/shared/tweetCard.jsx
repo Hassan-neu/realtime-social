@@ -46,7 +46,12 @@ export const TweetCard = ({ post }) => {
             }`;
         }
     };
-
+    const updatePost = async () => {
+        const res = await fetch("/api/content", {
+            method: "PUT",
+            body: JSON.stringify({ bookmarked, liked, id }),
+        });
+    };
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer hover:bg-slate-100">
             <Link
@@ -81,7 +86,13 @@ export const TweetCard = ({ post }) => {
                     <HiChatBubbleLeft size={18} fill="none" strokeWidth={1} />
                 </Button>
                 <Button
-                    onClick={() => setLiked(!liked)}
+                    onClick={() => {
+                        setLiked(!liked);
+                        setTimeout(
+                            () => alert(JSON.stringify({ liked, bookmarked })),
+                            1000
+                        );
+                    }}
                     className={"flex items-center gap-1"}
                 >
                     <GoHeartFill

@@ -87,3 +87,63 @@ export async function GET(req) {
         return NextResponse.json(error, { status: 400 });
     }
 }
+
+export async function PUT(req) {
+    try {
+        const body = await req.json();
+        const { liked, bookmarked, id } = body;
+        console.log(liked, bookmarked, id);
+        // if (like && bookmark) {
+        //     const updatePost = await prisma.post.update({
+        //         where: {
+        //             id,
+        //         },
+        //         data: {
+        //             likes: {
+        //                 increment: 1,
+        //             },
+        //             bookmarks: {
+        //                 increment: 1,
+        //             },
+        //         },
+        //     });
+        //     return NextResponse.json(
+        //         { message: "update successful" },
+        //         { status: 200 }
+        //     );
+        // } else if (like) {
+        //     const updatePost = await prisma.post.update({
+        //         where: {
+        //             id,
+        //         },
+        //         data: {
+        //             likes: {
+        //                 increment: 1,
+        //             },
+        //         },
+        //     });
+        //     return NextResponse.json(
+        //         { message: "update successful" },
+        //         { status: 200 }
+        //     );
+        // } else if (bookmark) {
+        //     const updatePost = await prisma.post.update({
+        //         where: {
+        //             id,
+        //         },
+        //         data: {
+        //             bookmarks: {
+        //                 increment: 1,
+        //             },
+        //         },
+        //     });
+        //     return NextResponse.json(
+        //         { message: "update successful" },
+        //         { status: 200 }
+        //     );
+        // }
+        return NextResponse.json({ liked, bookmarked, id }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ error: "Unknown Error" }, { status: 400 });
+    }
+}
