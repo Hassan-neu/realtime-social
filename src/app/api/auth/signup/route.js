@@ -10,26 +10,27 @@ export async function POST(req) {
     try {
         const body = await req.json();
         const { email, password, full_name, username, birth_date } = body;
-        if (email && password && full_name && username && birth_date) {
-            const {
-                data: { user },
-                error,
-            } = await supabase.auth.signUp({
-                email,
-                password,
+        const {
+            data: { user },
+            error,
+        } = await supabase.auth.signUp({
+            email,
+            password,
+        });
+        if (user) {
+            const profile = await prisma.profile.create({
+                data: {
+                    id: user.id,
+                    email,
+                    username,
+                    full_name,
+                    birth_date: new Date(birth_date).toISOString(),
+                },
             });
-            if (user) {
-                const profile = await prisma.profile.create({
-                    data: {
-                        id: user.id,
-                        email,
-                        username,
-                        full_name,
-                        birth_date: new Date(birth_date).toISOString(),
-                    },
-                });
-                return NextResponse.json(profile, { status: 201 });
-            }
+            return NextResponse.json(
+                { message: "Sign up successful" },
+                { status: 201 }
+            );
         }
     } catch (error) {
         return NextResponse.json(error, { status: 400 });

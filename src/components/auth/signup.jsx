@@ -14,9 +14,6 @@ export const Signup = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [showPassword, setShowPassword] = useState(false);
     const [showCPassword, setShowCPassword] = useState(false);
-    const [imageSrc, setImageSrc] = useState("");
-    const [imageFile, setImageFile] = useState("");
-    const [user, setUser] = useState({});
     const formik = useFormik({
         initialValues: {
             email: "",
@@ -27,33 +24,15 @@ export const Signup = () => {
             birth_date: "",
         },
         validate: validation,
-        onSubmit,
+        onSubmit: handleSignUp,
     });
-    function onSubmit(values) {
-        console.log(values);
-    }
     const [loading, setLoading] = useState(false);
-    const handleChange = (e) => {
-        setUser((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
-    };
-    const handleSetAvatar = (e) => {
-        e.preventDefault();
-        if (!e.target.files || e.target.files.length === 0) {
-            throw new Error("Select image to upload");
-        }
-        const file = e.target.files[0];
-        setImageFile(file);
-        setImageSrc(URL.createObjectURL(file));
-    };
-    const handleSignUp = async () => {
+    async function handleSignUp(values) {
         try {
             setLoading(true);
             const res = await fetch("/api/auth/signup", {
                 method: "POST",
-                body: JSON.stringify(user),
+                body: JSON.stringify(values),
             });
             const data = res.json();
             if (data) {
@@ -63,21 +42,17 @@ export const Signup = () => {
             console.log(error);
         } finally {
             setLoading(false);
-            setUser({
-                email: "",
-                password: "",
-                full_name: "",
-                username: "",
-                birth_date: "",
-            });
         }
-    };
+    }
     useEffect(() => {
-        if (formik.values.full_name && !formik.errors.full_name) {
-            setDisableButton(false);
-        } else if (formik.values.email && !formik.errors.email) {
-            setDisableButton(false);
-        } else if (formik.values.birth_date && !formik.errors.birth_date) {
+        if (
+            formik.values.full_name &&
+            !formik.errors.full_name &&
+            formik.values.email &&
+            !formik.errors.email &&
+            formik.values.birth_date &&
+            !formik.errors.birth_date
+        ) {
             setDisableButton(false);
         } else setDisableButton(true);
     }, [formik]);
