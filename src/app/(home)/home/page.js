@@ -1,14 +1,12 @@
+import Tweets from "@/components/home/tweets";
 import { HomeBar } from "@/components/shared/homeBar";
 import { TweetCard } from "@/components/shared/tweetCard";
 import React from "react";
-
+export const revalidate = 0;
 async function Page() {
     const fetchContents = async () => {
         const res = await fetch("http://localhost:3000/api/content", {
             method: "GET",
-            next: {
-                revalidate: 30,
-            },
         });
         const data = await res.json();
         return data;
@@ -19,16 +17,7 @@ async function Page() {
             <HomeBar>
                 <div className="text-2xl font-semibold">HOME</div>
             </HomeBar>
-            <div>
-                {contents?.map((content) => (
-                    <TweetCard key={content.id} post={content} />
-                ))}
-                {/* <TweetCard />
-                <TweetCard />
-                <TweetCard />
-                <TweetCard />
-                <TweetCard /> */}
-            </div>
+            <Tweets contents={contents} />
         </main>
     );
 }

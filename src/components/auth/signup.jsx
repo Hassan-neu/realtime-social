@@ -34,8 +34,8 @@ export const Signup = () => {
                 method: "POST",
                 body: JSON.stringify(values),
             });
-            const data = res.json();
-            if (data) {
+            if (res.ok) {
+                const data = res.json();
                 console.log(data);
             }
         } catch (error) {

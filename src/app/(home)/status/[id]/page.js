@@ -2,7 +2,7 @@ import { HomeBar } from "@/components/shared/homeBar";
 import { TweetCard } from "@/components/shared/tweetCard";
 import { TweetPost } from "@/components/shared/tweetPost";
 import React from "react";
-
+export const revalidate = 0;
 const Page = async ({ params: { id } }) => {
     const getPost = async () => {
         const res = await fetch(`http://localhost:3000/api/content?id=${id}`);
@@ -22,7 +22,7 @@ const Page = async ({ params: { id } }) => {
     return (
         <div>
             <HomeBar>POST</HomeBar>
-            <TweetPost post={post} />
+            <TweetPost serverPost={post} />
             {replies.map((post) => (
                 <TweetCard key={post.id} post={post} />
             ))}

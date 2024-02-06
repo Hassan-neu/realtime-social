@@ -7,9 +7,20 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Avatar } from "../shared/avatar";
 import { Spinner } from "../shared/spinner";
 import { months } from "@/utils/months";
-export const ProfileHeader = ({ profile, openEdit, loading }) => {
-    const { id, created_at, birth_date, avatar_url, bio, full_name, username } =
-        profile;
+import { IoIosLink } from "react-icons/io";
+import Link from "next/link";
+import { RiLinkM } from "react-icons/ri";
+export const ProfileHeader = ({ profile, openEdit }) => {
+    const {
+        id,
+        created_at,
+        birth_date,
+        avatar_url,
+        bio,
+        full_name,
+        username,
+        website,
+    } = profile;
     const [active, setActive] = useState("post");
     const [isActiveUser, setIsActiveUser] = useState(false);
     const supabase = createClientComponentClient();
@@ -69,11 +80,7 @@ export const ProfileHeader = ({ profile, openEdit, loading }) => {
                             )}
                         </div>
                     </div>
-                    {loading ? (
-                        <div className="mt-16 flex justify-center">
-                            <Spinner className={"w-8 h-8 self-center"} />
-                        </div>
-                    ) : (
+                    {
                         <div className="flex flex-col gap-2 mt-16">
                             <div className="flex flex-col ">
                                 <p className="text-lg capitalize">
@@ -94,6 +101,16 @@ export const ProfileHeader = ({ profile, openEdit, loading }) => {
                                     <IoCalendarOutline size={16} />
                                     <span>Joined {dateCreated()}</span>
                                 </div>
+                                <div className="text-sm flex gap-1 items-center">
+                                    <RiLinkM size={16} />
+                                    <Link
+                                        href={`https://${website}`}
+                                        target="_blank"
+                                        className="text-blue-600"
+                                    >
+                                        {website}
+                                    </Link>
+                                </div>
                             </div>
                             <div className="flex gap-2 text-sm">
                                 <div className="flex gap-1">
@@ -106,8 +123,7 @@ export const ProfileHeader = ({ profile, openEdit, loading }) => {
                                 </div>
                             </div>
                         </div>
-                    )}
-
+                    }
                     <div className="flex gap-3 justify-between">
                         <Button
                             onClick={() => setActive("post")}

@@ -7,15 +7,19 @@ export default async function HomeLayout({ children }) {
     const supabase = createServerComponentClient({
         cookies: () => cookieStore,
     });
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
     const getUser = async () => {
-        const res = await fetch(
-            `http://localhost:3000/api/auth/profile?id=${user.id}`
-        );
-        const data = await res.json();
-        return data;
+        try {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+            const res = await fetch(
+                `http://localhost:3000/api/auth/profile?id=${user.id}`
+            );
+            const data = await res.json();
+            return data;
+        } catch (error) {
+            throw error;
+        }
     };
     const profile = await getUser();
     return (

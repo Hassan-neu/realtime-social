@@ -14,36 +14,31 @@ export const SignIn = () => {
             password: "",
         },
         validate: validation,
-        onSubmit,
+        onSubmit: handleSignIn,
     });
     const [showPassword, setShowPassword] = useState(false);
-    function onSubmit(values) {
-        console.log(values);
-    }
+
     const [loading, setLoading] = useState(false);
     const { push } = useRouter();
 
-    const handleSignIn = async () => {
+    async function handleSignIn(values) {
         try {
             setLoading(true);
             const res = await fetch("/api/auth/signin", {
                 method: "POST",
-                body: JSON.stringify(user),
+                body: JSON.stringify(values),
             });
-            const data = await res.json();
-            if (data) {
+            if (res.ok) {
+                const data = await res.json();
+                console.log(data);
                 push("/home");
             }
         } catch (error) {
             console.log(error);
         } finally {
-            setUser({
-                email: "",
-                password: "",
-            });
             setLoading(false);
         }
-    };
+    }
     return (
         <div className="w-screen h-screen flex flex-col justify-center items-center bg-slate-200">
             <div className="flex justify-center items-center w-[600px] h-[650px] px-4 py-2 bg-white rounded-2xl">

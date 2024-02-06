@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GoBookmarkFill, GoHeartFill } from "react-icons/go";
 import { Button } from "./btn";
 import { HiChatBubbleLeft } from "react-icons/hi2";
@@ -8,7 +8,10 @@ import { Avatar } from "./avatar";
 import { months } from "@/utils/months";
 import { Reply } from "./reply";
 import { TweetMedia } from "./tweetMedia";
-export function TweetPost({ post }) {
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+export function TweetPost({ serverPost }) {
+    const supabase = createClientComponentClient();
+    const [post, setPost] = useState(serverPost);
     const {
         id,
         content,
@@ -37,6 +40,21 @@ export function TweetPost({ post }) {
         const dateString = `${month} ${day}, ${year}`;
         return dateString;
     }
+    useEffect(() => {
+        const channel = supabase
+            .channel("custom-all-channel")
+            .on(
+                "postgres_changes",
+                { event: "*", schema: "public", table: "posts" },
+                (payload) => {
+                    const { new: newPost } = payload;
+                    setPost((prev) => ({ ...prev, ...newPost }));
+                }
+            )
+            .subscribe();
+
+        return () => supabase.removeChannel(channel);
+    }, [supabase]);
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer border-b-0">
             <div className="flex flex-col gap-3 w-full">
