@@ -50,7 +50,6 @@ export const useCreateMedia = () => {
                     body: JSON.stringify({ content, reply_to }),
                 });
                 const post = await res.json();
-                console.log(post);
             }
         } catch (error) {
             console.log(error);

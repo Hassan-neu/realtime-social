@@ -11,24 +11,34 @@ const Tweets = ({ contents }) => {
             .on(
                 "postgres_changes",
                 { event: "*", schema: "public", table: "posts" },
-                (payload) => {
+                async (payload) => {
                     const { new: newPost } = payload;
-                    setNewPosts((prev) =>
-                        prev.map((post) => {
-                            if (post.id === newPost.id) {
-                                return {
-                                    ...post,
-                                    ...newPost,
-                                };
-                            }
-                            return post;
-                        })
+                    const oldPost = newPosts.find(
+                        (post) => post.id === newPost.id
                     );
+                    if (oldPost) {
+                        setNewPosts((prev) =>
+                            prev.map((post) =>
+                                post.id === newPost.id
+                                    ? {
+                                          ...post,
+                                          ...newPost,
+                                      }
+                                    : post
+                            )
+                        );
+                    } else {
+                        const res = await fetch(
+                            `/api/auth/profile?id=${newPost.user_id}`
+                        );
+                        const user = await res.json();
+                        setNewPosts([{ ...newPost, user }, ...newPosts]);
+                    }
                 }
             )
             .subscribe();
         return () => supabase.removeChannel(channel);
-    }, [supabase]);
+    }, [supabase, newPosts]);
 
     return (
         <div>

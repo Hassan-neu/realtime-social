@@ -1,15 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { TweetCard } from "../shared/tweetCard";
 import { EditProfile } from "./editProfile";
 import { ProfileHeader } from "./profileHeader";
 import { IoArrowBack } from "react-icons/io5";
 import { Button } from "../shared/btn";
 import { HomeBar } from "../shared/homeBar";
 import { useRouter } from "next/navigation";
+import UserPosts from "./userPosts";
 
 export default function User({ profile }) {
-    const { username, posts, full_name, avatar_url } = profile;
+    const { username, posts: serverPosts, full_name, avatar_url } = profile;
     const { back } = useRouter();
     const [openEdit, setOpenEdit] = useState(false);
     return (
@@ -23,23 +23,15 @@ export default function User({ profile }) {
                 </Button>
                 {username}
             </HomeBar>
-            <ProfileHeader profile={profile} openEdit={setOpenEdit} />
-            <div className="flex flex-col">
-                {posts?.map((post) => (
-                    <TweetCard
-                        key={post.id}
-                        post={{
-                            ...post,
-                            user: {
-                                username,
-                                full_name,
-                                avatar_url,
-                            },
-                        }}
-                    />
-                ))}
-            </div>
-
+            <ProfileHeader serverProfile={profile} openEdit={setOpenEdit} />
+            <UserPosts
+                serverPosts={serverPosts}
+                user={{
+                    username,
+                    full_name,
+                    avatar_url,
+                }}
+            />
             {openEdit && (
                 <EditProfile openEdit={setOpenEdit} profile={profile} />
             )}

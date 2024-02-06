@@ -24,7 +24,7 @@ export const TweetCard = ({ post }) => {
         let remSeconds;
         const currYear = new Date(Date.now()).getFullYear();
         const toSeconds = Math.round(
-            (Date.now() - new Date(created_at)) / 1000
+            (Date.now() - new Date(created_at).getTime()) / 1000
         );
         const hours = Math.floor(toSeconds / 3600);
         remSeconds = toSeconds % 3600;

@@ -1,16 +1,15 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { Button } from "../shared/btn";
-import { BsBalloon, BsCalendar3 } from "react-icons/bs";
+import { BsBalloon } from "react-icons/bs";
 import { IoCalendarOutline } from "react-icons/io5";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Avatar } from "../shared/avatar";
-import { Spinner } from "../shared/spinner";
 import { months } from "@/utils/months";
-import { IoIosLink } from "react-icons/io";
 import Link from "next/link";
 import { RiLinkM } from "react-icons/ri";
-export const ProfileHeader = ({ profile, openEdit }) => {
+export const ProfileHeader = ({ serverProfile, openEdit }) => {
+    const [profile, setProfile] = useState(serverProfile);
     const {
         id,
         created_at,
@@ -47,6 +46,21 @@ export const ProfileHeader = ({ profile, openEdit }) => {
     useEffect(() => {
         fetchCurrUser();
     }, [fetchCurrUser]);
+    useEffect(() => {
+        const profileChannel = supabase
+            .channel("custom-all-channel")
+            .on(
+                "postgres_changes",
+                { event: "*", schema: "public", table: "profiles" },
+                (payload) => {
+                    const { new: newProfile } = payload;
+                    setProfile((prev) => ({ ...prev, ...newProfile }));
+                    console.log("Change received!", payload);
+                }
+            )
+            .subscribe();
+        return () => supabase.removeChannel(profileChannel);
+    }, [supabase, profile]);
     return (
         <div className="w-full">
             <div className="flex flex-col w-full border border-b-0">
@@ -80,50 +94,48 @@ export const ProfileHeader = ({ profile, openEdit }) => {
                             )}
                         </div>
                     </div>
-                    {
-                        <div className="flex flex-col gap-2 mt-16">
-                            <div className="flex flex-col ">
-                                <p className="text-lg capitalize">
-                                    {full_name}
-                                </p>
-                                <p className="text-sm">{username}</p>
-                            </div>
 
-                            <div className="text-sm">{bio}</div>
-                            <div className="flex gap-4">
-                                {isActiveUser && (
-                                    <div className="text-sm flex gap-1 items-center">
-                                        <BsBalloon size={16} />
-                                        <span>Born {birthDate()}</span>
-                                    </div>
-                                )}
+                    <div className="flex flex-col gap-2 mt-16">
+                        <div className="flex flex-col ">
+                            <p className="text-lg capitalize">{full_name}</p>
+                            <p className="text-sm">{username}</p>
+                        </div>
+
+                        <div className="text-sm">{bio}</div>
+                        <div className="flex gap-4">
+                            {isActiveUser && (
                                 <div className="text-sm flex gap-1 items-center">
-                                    <IoCalendarOutline size={16} />
-                                    <span>Joined {dateCreated()}</span>
+                                    <BsBalloon size={16} />
+                                    <span>Born {birthDate()}</span>
                                 </div>
-                                <div className="text-sm flex gap-1 items-center">
-                                    <RiLinkM size={16} />
-                                    <Link
-                                        href={`https://${website}`}
-                                        target="_blank"
-                                        className="text-blue-600"
-                                    >
-                                        {website}
-                                    </Link>
-                                </div>
+                            )}
+                            <div className="text-sm flex gap-1 items-center">
+                                <IoCalendarOutline size={16} />
+                                <span>Joined {dateCreated()}</span>
                             </div>
-                            <div className="flex gap-2 text-sm">
-                                <div className="flex gap-1">
-                                    <span className="font-bold">0</span>
-                                    following
-                                </div>
-                                <div className="flex gap-1">
-                                    <span className="font-bold">0</span>
-                                    followers
-                                </div>
+                            <div className="text-sm flex gap-1 items-center">
+                                <RiLinkM size={16} />
+                                <Link
+                                    href={`https://${website}`}
+                                    target="_blank"
+                                    className="text-blue-500"
+                                >
+                                    {website}
+                                </Link>
                             </div>
                         </div>
-                    }
+                        <div className="flex gap-2 text-sm">
+                            <div className="flex gap-1">
+                                <span className="font-bold">0</span>
+                                following
+                            </div>
+                            <div className="flex gap-1">
+                                <span className="font-bold">0</span>
+                                followers
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="flex gap-3 justify-between">
                         <Button
                             onClick={() => setActive("post")}
