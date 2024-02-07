@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { Button } from "./btn";
-import { Avatar } from "./avatar";
+import { Button } from "../shared/btn";
+import { Avatar } from "../shared/avatar";
 import { useCreateMedia } from "@/utils/mediaReplyHook";
 import { FaRegImage } from "react-icons/fa6";
 import Image from "next/image";

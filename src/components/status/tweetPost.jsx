@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { GoBookmarkFill, GoHeartFill } from "react-icons/go";
-import { Button } from "./btn";
+import { Button } from "../shared/btn";
 import { HiChatBubbleLeft } from "react-icons/hi2";
 import Link from "next/link";
-import { Avatar } from "./avatar";
+import { Avatar } from "../shared/avatar";
 import { months } from "@/utils/months";
 import { Reply } from "./reply";
-import { TweetMedia } from "./tweetMedia";
+import { TweetMedia } from "../shared/tweetMedia";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 export function TweetPost({ serverPost }) {
     const supabase = createClientComponentClient();
@@ -42,10 +42,15 @@ export function TweetPost({ serverPost }) {
     }
     useEffect(() => {
         const channel = supabase
-            .channel("custom-all-channel")
+            .channel("realtime-single-post")
             .on(
                 "postgres_changes",
-                { event: "*", schema: "public", table: "posts" },
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "posts",
+                    filter: `id=eq.${id}`,
+                },
                 (payload) => {
                     const { new: newPost } = payload;
                     setPost((prev) => ({ ...prev, ...newPost }));
@@ -54,7 +59,7 @@ export function TweetPost({ serverPost }) {
             .subscribe();
 
         return () => supabase.removeChannel(channel);
-    }, [supabase]);
+    }, [supabase, id]);
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer border-b-0">
             <div className="flex flex-col gap-3 w-full">

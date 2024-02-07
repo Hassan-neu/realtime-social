@@ -22,6 +22,7 @@ export async function GET(req) {
                 },
                 include: {
                     posts: {
+                        where: { reply_to: null },
                         orderBy: {
                             created_at: "desc",
                         },

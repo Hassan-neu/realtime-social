@@ -61,6 +61,9 @@ export async function GET(req) {
             return NextResponse.json(post, { status: 200 });
         } else if (reply_to) {
             const post = await prisma.post.findMany({
+                orderBy: {
+                    created_at: "desc",
+                },
                 where: {
                     reply_to,
                 },

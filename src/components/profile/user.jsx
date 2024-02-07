@@ -11,7 +11,6 @@ import UserPosts from "./userPosts";
 export default function User({ profile }) {
     const { username, posts: serverPosts, full_name, avatar_url } = profile;
     const { back } = useRouter();
-    const [openEdit, setOpenEdit] = useState(false);
     return (
         <div className="">
             <HomeBar>
@@ -23,7 +22,7 @@ export default function User({ profile }) {
                 </Button>
                 {username}
             </HomeBar>
-            <ProfileHeader serverProfile={profile} openEdit={setOpenEdit} />
+            <ProfileHeader serverProfile={profile} />
             <UserPosts
                 serverPosts={serverPosts}
                 user={{
@@ -32,9 +31,9 @@ export default function User({ profile }) {
                     avatar_url,
                 }}
             />
-            {openEdit && (
+            {/* {openEdit && (
                 <EditProfile openEdit={setOpenEdit} profile={profile} />
-            )}
+            )} */}
         </div>
     );
 }

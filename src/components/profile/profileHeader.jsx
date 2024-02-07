@@ -8,8 +8,10 @@ import { Avatar } from "../shared/avatar";
 import { months } from "@/utils/months";
 import Link from "next/link";
 import { RiLinkM } from "react-icons/ri";
-export const ProfileHeader = ({ serverProfile, openEdit }) => {
+import { EditProfile } from "./editProfile";
+export const ProfileHeader = ({ serverProfile }) => {
     const [profile, setProfile] = useState(serverProfile);
+    const [openEdit, setOpenEdit] = useState(false);
     const {
         id,
         created_at,
@@ -48,7 +50,7 @@ export const ProfileHeader = ({ serverProfile, openEdit }) => {
     }, [fetchCurrUser]);
     useEffect(() => {
         const profileChannel = supabase
-            .channel("custom-all-channel")
+            .channel("realtime-profile-details")
             .on(
                 "postgres_changes",
                 { event: "*", schema: "public", table: "profiles" },
@@ -62,124 +64,131 @@ export const ProfileHeader = ({ serverProfile, openEdit }) => {
         return () => supabase.removeChannel(profileChannel);
     }, [supabase, profile]);
     return (
-        <div className="w-full">
-            <div className="flex flex-col w-full border border-b-0">
-                <div className="bg-blue-400 min-h-52 text-4xl"></div>
-                <div className="flex flex-col gap-4 relative px-4 pt-3">
-                    <div className="flex justify-between">
-                        <Avatar
-                            url={avatar_url}
-                            className={
-                                "w-40 h-40 border-4 border-white absolute -translate-y-1/2 flex justify-center items-center"
-                            }
-                        />
-                        <div className="ml-auto">
-                            {isActiveUser ? (
-                                <Button
-                                    className={
-                                        "px-3 flex items-center py-1 rounded-full border text-sm font-bold"
-                                    }
-                                    onClick={() => openEdit(true)}
-                                >
-                                    Edit profile
-                                </Button>
-                            ) : (
-                                <Button
-                                    className={
-                                        "px-3 py-1 rounded-full border text-sm font-bold"
-                                    }
-                                >
-                                    Following
-                                </Button>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-2 mt-16">
-                        <div className="flex flex-col ">
-                            <p className="text-lg capitalize">{full_name}</p>
-                            <p className="text-sm">{username}</p>
+        <>
+            <div className="w-full">
+                <div className="flex flex-col w-full border border-b-0">
+                    <div className="bg-blue-400 min-h-52 text-4xl"></div>
+                    <div className="flex flex-col gap-4 relative px-4 pt-3">
+                        <div className="flex justify-between">
+                            <Avatar
+                                url={avatar_url}
+                                className={
+                                    "w-40 h-40 border-4 border-white absolute -translate-y-1/2 flex justify-center items-center"
+                                }
+                            />
+                            <div className="ml-auto">
+                                {isActiveUser ? (
+                                    <Button
+                                        className={
+                                            "px-3 flex items-center py-1 rounded-full border text-sm font-bold"
+                                        }
+                                        onClick={() => setOpenEdit(true)}
+                                    >
+                                        Edit profile
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        className={
+                                            "px-3 py-1 rounded-full border text-sm font-bold"
+                                        }
+                                    >
+                                        Following
+                                    </Button>
+                                )}
+                            </div>
                         </div>
 
-                        <div className="text-sm">{bio}</div>
-                        <div className="flex gap-4">
-                            {isActiveUser && (
+                        <div className="flex flex-col gap-2 mt-16">
+                            <div className="flex flex-col ">
+                                <p className="text-lg capitalize">
+                                    {full_name}
+                                </p>
+                                <p className="text-sm">{username}</p>
+                            </div>
+
+                            <div className="text-sm">{bio}</div>
+                            <div className="flex gap-4">
+                                {isActiveUser && (
+                                    <div className="text-sm flex gap-1 items-center">
+                                        <BsBalloon size={16} />
+                                        <span>Born {birthDate()}</span>
+                                    </div>
+                                )}
                                 <div className="text-sm flex gap-1 items-center">
-                                    <BsBalloon size={16} />
-                                    <span>Born {birthDate()}</span>
+                                    <IoCalendarOutline size={16} />
+                                    <span>Joined {dateCreated()}</span>
                                 </div>
-                            )}
-                            <div className="text-sm flex gap-1 items-center">
-                                <IoCalendarOutline size={16} />
-                                <span>Joined {dateCreated()}</span>
+                                <div className="text-sm flex gap-1 items-center">
+                                    <RiLinkM size={16} />
+                                    <Link
+                                        href={`https://${website}`}
+                                        target="_blank"
+                                        className="text-blue-500"
+                                    >
+                                        {website}
+                                    </Link>
+                                </div>
                             </div>
-                            <div className="text-sm flex gap-1 items-center">
-                                <RiLinkM size={16} />
-                                <Link
-                                    href={`https://${website}`}
-                                    target="_blank"
-                                    className="text-blue-500"
-                                >
-                                    {website}
-                                </Link>
-                            </div>
-                        </div>
-                        <div className="flex gap-2 text-sm">
-                            <div className="flex gap-1">
-                                <span className="font-bold">0</span>
-                                following
-                            </div>
-                            <div className="flex gap-1">
-                                <span className="font-bold">0</span>
-                                followers
+                            <div className="flex gap-2 text-sm">
+                                <div className="flex gap-1">
+                                    <span className="font-bold">0</span>
+                                    following
+                                </div>
+                                <div className="flex gap-1">
+                                    <span className="font-bold">0</span>
+                                    followers
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="flex gap-3 justify-between">
-                        <Button
-                            onClick={() => setActive("post")}
-                            className={`border-b-4 ${
-                                active == "post"
-                                    ? "border-blue-400"
-                                    : "border-transparent"
-                            }`}
-                        >
-                            Post
-                        </Button>
-                        <Button
-                            onClick={() => setActive("media")}
-                            className={`border-b-4 ${
-                                active == "media"
-                                    ? "border-blue-400"
-                                    : "border-transparent"
-                            }`}
-                        >
-                            Media
-                        </Button>
-                        <Button
-                            onClick={() => setActive("bookmarks")}
-                            className={`border-b-4 ${
-                                active == "bookmarks"
-                                    ? "border-blue-400"
-                                    : "border-transparent"
-                            }`}
-                        >
-                            Boomarks
-                        </Button>
-                        <Button
-                            onClick={() => setActive("likes")}
-                            className={`border-b-4 ${
-                                active == "likes"
-                                    ? "border-blue-400"
-                                    : "border-transparent"
-                            }`}
-                        >
-                            Likes
-                        </Button>
+                        <div className="flex gap-3 justify-between">
+                            <Button
+                                onClick={() => setActive("post")}
+                                className={`border-b-4 ${
+                                    active == "post"
+                                        ? "border-blue-400"
+                                        : "border-transparent"
+                                }`}
+                            >
+                                Post
+                            </Button>
+                            <Button
+                                onClick={() => setActive("media")}
+                                className={`border-b-4 ${
+                                    active == "media"
+                                        ? "border-blue-400"
+                                        : "border-transparent"
+                                }`}
+                            >
+                                Media
+                            </Button>
+                            <Button
+                                onClick={() => setActive("bookmarks")}
+                                className={`border-b-4 ${
+                                    active == "bookmarks"
+                                        ? "border-blue-400"
+                                        : "border-transparent"
+                                }`}
+                            >
+                                Boomarks
+                            </Button>
+                            <Button
+                                onClick={() => setActive("likes")}
+                                className={`border-b-4 ${
+                                    active == "likes"
+                                        ? "border-blue-400"
+                                        : "border-transparent"
+                                }`}
+                            >
+                                Likes
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            {openEdit && (
+                <EditProfile openEdit={setOpenEdit} profile={profile} />
+            )}
+        </>
     );
 };

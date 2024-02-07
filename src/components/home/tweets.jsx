@@ -7,7 +7,7 @@ const Tweets = ({ contents }) => {
     const [newPosts, setNewPosts] = useState(contents);
     useEffect(() => {
         const channel = supabase
-            .channel("custom-all-channel")
+            .channel("realtime-posts")
             .on(
                 "postgres_changes",
                 { event: "*", schema: "public", table: "posts" },

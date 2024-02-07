@@ -1,6 +1,7 @@
 import { HomeBar } from "@/components/shared/homeBar";
 import { TweetCard } from "@/components/shared/tweetCard";
-import { TweetPost } from "@/components/shared/tweetPost";
+import Replies from "@/components/status/replies";
+import { TweetPost } from "@/components/status/tweetPost";
 import React from "react";
 export const revalidate = 0;
 const Page = async ({ params: { id } }) => {
@@ -23,9 +24,7 @@ const Page = async ({ params: { id } }) => {
         <div>
             <HomeBar>POST</HomeBar>
             <TweetPost serverPost={post} />
-            {replies.map((post) => (
-                <TweetCard key={post.id} post={post} />
-            ))}
+            <Replies serverReplies={replies} reply_id={id} />
         </div>
     );
 };

@@ -3,14 +3,18 @@ import React from "react";
 export const revalidate = 0;
 const Page = async ({ params: { user } }) => {
     const getProfile = async () => {
-        const res = await fetch(
-            `http://localhost:3000/api/auth/profile?username=${user}`
-        );
-        if (res.ok) {
-            const data = await res.json();
-            return data;
+        try {
+            const res = await fetch(
+                `http://localhost:3000/api/auth/profile?username=${user}`
+            );
+            if (res.ok) {
+                const data = await res.json();
+                return data;
+            }
+        } catch (error) {
+            console.log(error);
+            throw new Error("Unable to fetch user profile");
         }
-        throw new Error("Unable to fetch user profile");
     };
 
     const userProfile = await getProfile();

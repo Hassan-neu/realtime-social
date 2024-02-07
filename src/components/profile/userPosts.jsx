@@ -6,7 +6,7 @@ export default function UserPosts({ serverPosts, user }) {
     const [posts, setPosts] = useState(serverPosts);
     useEffect(() => {
         const channel = supabase
-            .channel("custom-all-channel")
+            .channel("realtime-user-posts")
             .on(
                 "postgres_changes",
                 { event: "*", schema: "public", table: "posts" },
