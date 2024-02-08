@@ -32,6 +32,9 @@ async function Page() {
     const newContents = contents.map((content) => ({
         ...content,
         user_liked: content.likes.find((like) => like.user_id === userId),
+        user_bookmarked: content.bookmarks.find(
+            (bookmark) => bookmark.user_id === userId
+        ),
     }));
     return (
         <main className="">

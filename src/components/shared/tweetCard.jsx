@@ -20,6 +20,7 @@ export const TweetCard = ({ post }) => {
         likes,
         bookmarks,
         user_liked,
+        user_bookmarked,
         created_at,
         user: { full_name, username, avatar_url },
     } = post;
@@ -146,13 +147,13 @@ export const TweetCard = ({ post }) => {
                 >
                     <GoBookmarkFill
                         size={18}
-                        // fill={`${
-                        //     bookmarked ? "rgb(59 130 246)" : "transparent"
-                        // }`}
-                        // stroke={`${
-                        //     bookmarked ? "rgb(59 130 246)" : "currentColor"
-                        // }`}
-                        // strokeWidth={1}
+                        fill={`${
+                            user_bookmarked ? "rgb(59 130 246)" : "transparent"
+                        }`}
+                        stroke={`${
+                            user_bookmarked ? "rgb(59 130 246)" : "currentColor"
+                        }`}
+                        strokeWidth={1}
                         className="transition duration-500"
                     />
                     <span className="text-xs">{bookmarks.length}</span>

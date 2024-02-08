@@ -18,11 +18,11 @@ export function TweetPost({ serverPost }) {
         media_url,
         likes,
         bookmarks,
+        user_liked,
+        user_bookmarked,
         created_at,
         user: { full_name, username, avatar_url },
     } = post;
-    const [liked, setLiked] = useState(false);
-    const [bookmarked, setBookmarked] = useState(false);
     function getTime() {
         const date = new Date(created_at);
         const hour = date.getHours();
@@ -60,6 +60,45 @@ export function TweetPost({ serverPost }) {
 
         return () => supabase.removeChannel(channel);
     }, [supabase, id]);
+    const handleLike = async () => {
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+        if (user_liked) {
+            const res = await fetch(
+                `/api/like?post_id=${id}&user_id=${user.id}`,
+                {
+                    method: "DELETE",
+                }
+            );
+        } else {
+            const res = await fetch("/api/like", {
+                method: "POST",
+                body: JSON.stringify({ post_id: id, user_id: user.id }),
+            });
+        }
+    };
+    const handleBookmark = async () => {
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+        const bookmarkExists = bookmarks.find(
+            (bookmark) => bookmark.user_id === user.id
+        );
+        if (bookmarkExists) {
+            const res = await fetch(
+                `/api/bookmark?post_id=${id}&user_id=${user.id}`,
+                {
+                    method: "DELETE",
+                }
+            );
+        } else {
+            const res = await fetch("/api/bookmark", {
+                method: "POST",
+                body: JSON.stringify({ post_id: id, user_id: user.id }),
+            });
+        }
+    };
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer border-b-0">
             <div className="flex flex-col gap-3 w-full">
@@ -87,7 +126,7 @@ export function TweetPost({ serverPost }) {
                         <span>{getDate()}</span>
                     </div>
                     <div className="flex gap-3 justify-between border-y py-3">
-                        <Button onClick={(e) => console.log(e.target)}>
+                        <Button>
                             <HiChatBubbleLeft
                                 size={18}
                                 fill="none"
@@ -95,38 +134,54 @@ export function TweetPost({ serverPost }) {
                             />
                         </Button>
                         <Button
-                            onClick={() => setLiked(!liked)}
+                            onClick={handleLike}
                             className={"flex items-center gap-1"}
                         >
                             <GoHeartFill
                                 size={18}
-                                fill={`${liked ? "red" : "transparent"}`}
-                                stroke={`${liked ? "red" : "currentColor"}`}
+                                fill={`${user_liked ? "red" : "transparent"}`}
+                                stroke={`${
+                                    user_liked ? "red" : "currentColor"
+                                }`}
                                 strokeWidth={1}
                                 className="transition duration-500"
                             />
-                            <span className="text-xs">{likes}</span>
+                            <span
+                                className={`text-xs ${
+                                    user_liked ? "text-red-500" : "text-black"
+                                }`}
+                            >
+                                {likes.length}
+                            </span>
                         </Button>
                         <Button
-                            onClick={() => setBookmarked(!bookmarked)}
+                            onClick={handleBookmark}
                             className={"flex items-center gap-1"}
                         >
                             <GoBookmarkFill
                                 size={18}
                                 fill={`${
-                                    bookmarked
+                                    user_liked
                                         ? "rgb(59 130 246)"
                                         : "transparent"
                                 }`}
                                 stroke={`${
-                                    bookmarked
+                                    user_bookmarked
                                         ? "rgb(59 130 246)"
                                         : "currentColor"
                                 }`}
                                 strokeWidth={1}
                                 className="transition duration-500"
                             />
-                            <span className="text-xs">{bookmarks}</span>
+                            <span
+                                className={`text-xs ${
+                                    user_bookmarked
+                                        ? "text-blue-500"
+                                        : "text-black"
+                                }`}
+                            >
+                                {bookmarks.length}
+                            </span>
                         </Button>
                     </div>
                 </div>

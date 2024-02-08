@@ -40,6 +40,9 @@ const Page = async ({ params: { user } }) => {
         posts: userProfile.posts.map((post) => ({
             ...post,
             user_liked: post.likes.find((post) => post.user_id === userId),
+            user_bookmarked: post.bookmarks.find(
+                (bookmark) => bookmark.user_id === userId
+            ),
         })),
     };
 
