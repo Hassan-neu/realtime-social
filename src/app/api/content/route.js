@@ -51,7 +51,8 @@ export async function GET(req) {
                 },
                 where: {
                     content: {
-                        contains: query,
+                        search: query.split(" ").join(" & "),
+                        mode: "insensitive",
                     },
                 },
                 include: {

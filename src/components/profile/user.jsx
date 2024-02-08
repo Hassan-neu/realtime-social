@@ -1,27 +1,13 @@
-"use client";
-import React, { useState } from "react";
-import { EditProfile } from "./editProfile";
+import React from "react";
 import { ProfileHeader } from "./profileHeader";
-import { IoArrowBack } from "react-icons/io5";
-import { Button } from "../shared/btn";
 import { HomeBar } from "../shared/homeBar";
-import { useRouter } from "next/navigation";
 import UserPosts from "./userPosts";
 
 export default function User({ profile }) {
     const { username, posts: serverPosts, full_name, avatar_url } = profile;
-    const { back } = useRouter();
     return (
-        <div className="">
-            <HomeBar>
-                <Button
-                    className="w-9 h-9 rounded-full flex justify-center items-center hover:bg-slate-200"
-                    onClick={() => back()}
-                >
-                    <IoArrowBack size={18} />
-                </Button>
-                {username}
-            </HomeBar>
+        <div>
+            <HomeBar showButton>{username}</HomeBar>
             <ProfileHeader serverProfile={profile} />
             <UserPosts
                 serverPosts={serverPosts}
@@ -31,9 +17,6 @@ export default function User({ profile }) {
                     avatar_url,
                 }}
             />
-            {/* {openEdit && (
-                <EditProfile openEdit={setOpenEdit} profile={profile} />
-            )} */}
         </div>
     );
 }

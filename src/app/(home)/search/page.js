@@ -1,7 +1,7 @@
 import { Searchbar } from "@/components/home/actionBar/searchbar";
 import { TweetCard } from "@/components/shared/tweetCard";
 import React from "react";
-
+export const revalidate = 0;
 const Page = async ({ searchParams: { query } }) => {
     const fetchQuery = async () => {
         const res = await fetch(

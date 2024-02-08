@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { TweetCard } from "../shared/tweetCard";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
