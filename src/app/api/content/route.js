@@ -42,6 +42,7 @@ export async function GET(req) {
                 include: {
                     user: true,
                     likes: true,
+                    bookmarks: true,
                 },
             });
             return NextResponse.json(post, { status: 200 });
@@ -59,6 +60,7 @@ export async function GET(req) {
                 include: {
                     user: true,
                     likes: true,
+                    bookmarks: true,
                 },
             });
             return NextResponse.json(post, { status: 200 });
@@ -73,6 +75,7 @@ export async function GET(req) {
                 include: {
                     user: true,
                     likes: true,
+                    bookmarks: true,
                 },
             });
             return NextResponse.json(post, { status: 200 });
@@ -87,6 +90,7 @@ export async function GET(req) {
                 include: {
                     user: true,
                     likes: true,
+                    bookmarks: true,
                 },
             });
             return NextResponse.json(post, { status: 200 });

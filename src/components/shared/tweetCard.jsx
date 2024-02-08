@@ -19,10 +19,10 @@ export const TweetCard = ({ post }) => {
         media_url,
         likes,
         bookmarks,
+        user_liked,
         created_at,
         user: { full_name, username, avatar_url },
     } = post;
-    const [bookmarked, setBookmarked] = useState(false);
     const getDate = () => {
         let remSeconds;
         const currYear = new Date(Date.now()).getFullYear();
@@ -53,8 +53,7 @@ export const TweetCard = ({ post }) => {
         const {
             data: { user },
         } = await supabase.auth.getUser();
-        const likeExists = likes.find((like) => like.user_id === user.id);
-        if (likeExists) {
+        if (user_liked) {
             const res = await fetch(
                 `/api/like?post_id=${id}&user_id=${user.id}`,
                 {
@@ -63,6 +62,27 @@ export const TweetCard = ({ post }) => {
             );
         } else {
             const res = await fetch("/api/like", {
+                method: "POST",
+                body: JSON.stringify({ post_id: id, user_id: user.id }),
+            });
+        }
+    };
+    const handleBookmark = async () => {
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+        const bookmarkExists = bookmarks.find(
+            (bookmark) => bookmark.user_id === user.id
+        );
+        if (bookmarkExists) {
+            const res = await fetch(
+                `/api/bookmark?post_id=${id}&user_id=${user.id}`,
+                {
+                    method: "DELETE",
+                }
+            );
+        } else {
+            const res = await fetch("/api/bookmark", {
                 method: "POST",
                 body: JSON.stringify({ post_id: id, user_id: user.id }),
             });
@@ -107,29 +127,35 @@ export const TweetCard = ({ post }) => {
                 >
                     <GoHeartFill
                         size={18}
-                        // fill={`${liked ? "red" : "transparent"}`}
-                        // stroke={`${liked ? "red" : "currentColor"}`}
+                        fill={`${user_liked ? "red" : "transparent"}`}
+                        stroke={`${user_liked ? "red" : "currentColor"}`}
                         strokeWidth={1}
                         className="transition duration-500"
                     />
-                    <span className="text-xs">{likes.length}</span>
+                    <span
+                        className={`text-xs ${
+                            user_liked ? "text-red-500" : "text-black"
+                        }`}
+                    >
+                        {likes.length}
+                    </span>
                 </Button>
                 <Button
-                    onClick={() => setBookmarked(!bookmarked)}
+                    onClick={handleBookmark}
                     className={"flex items-center gap-1"}
                 >
                     <GoBookmarkFill
                         size={18}
-                        fill={`${
-                            bookmarked ? "rgb(59 130 246)" : "transparent"
-                        }`}
-                        stroke={`${
-                            bookmarked ? "rgb(59 130 246)" : "currentColor"
-                        }`}
-                        strokeWidth={1}
+                        // fill={`${
+                        //     bookmarked ? "rgb(59 130 246)" : "transparent"
+                        // }`}
+                        // stroke={`${
+                        //     bookmarked ? "rgb(59 130 246)" : "currentColor"
+                        // }`}
+                        // strokeWidth={1}
                         className="transition duration-500"
                     />
-                    <span className="text-xs">{bookmarks}</span>
+                    <span className="text-xs">{bookmarks.length}</span>
                 </Button>
             </div>
         </div>

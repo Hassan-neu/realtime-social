@@ -28,6 +28,7 @@ export async function GET(req) {
                         },
                         include: {
                             likes: true,
+                            bookmarks: true,
                         },
                     },
                 },

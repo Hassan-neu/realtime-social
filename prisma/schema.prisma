@@ -13,33 +13,34 @@ datasource db {
 }
 
 model Profile {
-  id         String   @id @default(uuid()) @db.Uuid
-  email      String   @unique
-  username   String   @unique
+  id         String     @id @default(uuid()) @db.Uuid
+  email      String     @unique
+  username   String     @unique
   full_name  String
   bio        String?
   avatar_url String?
   website    String?
   birth_date DateTime
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt @db.Timestamptz()
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt @db.Timestamptz()
   posts      Post[]
   likes      Like[]
+  bookmarks  Bookmark[]
 
   @@map("profiles")
 }
 
 model Post {
-  id         String   @id @default(uuid()) @db.Uuid()
+  id         String     @id @default(uuid()) @db.Uuid()
   content    String
   media_url  String?
-  bookmarks  Int      @default(0)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt @db.Timestamptz()
-  user       Profile  @relation(fields: [user_id], references: [id])
-  user_id    String   @db.Uuid()
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt @db.Timestamptz()
+  user       Profile    @relation(fields: [user_id], references: [id])
+  user_id    String     @db.Uuid()
   reply_to   String?
   likes      Like[]
+  bookmarks  Bookmark[]
 
   @@map("posts")
 }
@@ -53,4 +54,15 @@ model Like {
   created_at DateTime @default(now())
 
   @@map("likes")
+}
+
+model Bookmark {
+  id         String   @id @default(uuid()) @db.Uuid()
+  user_id    String   @db.Uuid()
+  user       Profile  @relation(fields: [user_id], references: [id])
+  post_id    String   @db.Uuid()
+  post       Post     @relation(fields: [post_id], references: [id])
+  created_at DateTime @default(now())
+
+  @@map("bookmarks")
 }
