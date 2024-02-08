@@ -26,6 +26,9 @@ export async function GET(req) {
                         orderBy: {
                             created_at: "desc",
                         },
+                        include: {
+                            likes: true,
+                        },
                     },
                 },
             });

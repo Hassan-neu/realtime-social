@@ -8,7 +8,11 @@ import { Button } from "./btn";
 import { Avatar } from "./avatar";
 import { months } from "@/utils/months";
 import { TweetMedia } from "./tweetMedia";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 export const TweetCard = ({ post }) => {
+    const { refresh } = useRouter();
+    const supabase = createClientComponentClient();
     const {
         id,
         content,
@@ -18,7 +22,6 @@ export const TweetCard = ({ post }) => {
         created_at,
         user: { full_name, username, avatar_url },
     } = post;
-    const [liked, setLiked] = useState(false);
     const [bookmarked, setBookmarked] = useState(false);
     const getDate = () => {
         let remSeconds;
@@ -46,11 +49,24 @@ export const TweetCard = ({ post }) => {
             }`;
         }
     };
-    const updatePost = async () => {
-        const res = await fetch("/api/content", {
-            method: "PUT",
-            body: JSON.stringify({ bookmarked, liked, id }),
-        });
+    const handleLike = async () => {
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+        const likeExists = likes.find((like) => like.user_id === user.id);
+        if (likeExists) {
+            const res = await fetch(
+                `/api/like?post_id=${id}&user_id=${user.id}`,
+                {
+                    method: "DELETE",
+                }
+            );
+        } else {
+            const res = await fetch("/api/like", {
+                method: "POST",
+                body: JSON.stringify({ post_id: id, user_id: user.id }),
+            });
+        }
     };
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer hover:bg-slate-100">
@@ -86,23 +102,17 @@ export const TweetCard = ({ post }) => {
                     <HiChatBubbleLeft size={18} fill="none" strokeWidth={1} />
                 </Button>
                 <Button
-                    onClick={() => {
-                        setLiked(!liked);
-                        setTimeout(
-                            () => alert(JSON.stringify({ liked, bookmarked })),
-                            1000
-                        );
-                    }}
+                    onClick={handleLike}
                     className={"flex items-center gap-1"}
                 >
                     <GoHeartFill
                         size={18}
-                        fill={`${liked ? "red" : "transparent"}`}
-                        stroke={`${liked ? "red" : "currentColor"}`}
+                        // fill={`${liked ? "red" : "transparent"}`}
+                        // stroke={`${liked ? "red" : "currentColor"}`}
                         strokeWidth={1}
                         className="transition duration-500"
                     />
-                    <span className="text-xs">{likes}</span>
+                    <span className="text-xs">{likes.length}</span>
                 </Button>
                 <Button
                     onClick={() => setBookmarked(!bookmarked)}
