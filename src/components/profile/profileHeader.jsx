@@ -21,6 +21,9 @@ export const ProfileHeader = ({ serverProfile }) => {
         full_name,
         username,
         website,
+        followers,
+        following,
+        user_followed,
     } = profile;
     const [active, setActive] = useState("post");
     const [isActiveUser, setIsActiveUser] = useState(false);
@@ -48,12 +51,47 @@ export const ProfileHeader = ({ serverProfile }) => {
     useEffect(() => {
         fetchCurrUser();
     }, [fetchCurrUser]);
+
+    async function handleFollow() {
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+        if (user_followed) {
+            const res = await fetch(
+                `/api/follow?following_id=${id}&follower_id=${user.id}`,
+                {
+                    method: "DELETE",
+                }
+            );
+            if (res.ok) {
+                const data = await res.json();
+                console.log(data);
+            }
+        } else {
+            const res = await fetch("/api/follow", {
+                method: "POST",
+                body: JSON.stringify({
+                    following_id: id,
+                    follower_id: user.id,
+                }),
+            });
+            if (res.ok) {
+                const data = await res.json();
+                console.log(data);
+            }
+        }
+    }
     useEffect(() => {
         const profileChannel = supabase
             .channel("realtime-profile-details")
             .on(
                 "postgres_changes",
-                { event: "*", schema: "public", table: "profiles" },
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "profiles",
+                    filter: `id=eq.${id}`,
+                },
                 (payload) => {
                     const { new: newProfile } = payload;
                     setProfile((prev) => ({ ...prev, ...newProfile }));
@@ -62,7 +100,7 @@ export const ProfileHeader = ({ serverProfile }) => {
             )
             .subscribe();
         return () => supabase.removeChannel(profileChannel);
-    }, [supabase, profile]);
+    }, [supabase, profile, id]);
     return (
         <>
             <div className="w-full">
@@ -86,13 +124,23 @@ export const ProfileHeader = ({ serverProfile }) => {
                                     >
                                         Edit profile
                                     </Button>
+                                ) : user_followed ? (
+                                    <Button
+                                        className={
+                                            "px-3 py-1 rounded-full border text-sm font-bold"
+                                        }
+                                        onClick={handleFollow}
+                                    >
+                                        Following
+                                    </Button>
                                 ) : (
                                     <Button
                                         className={
                                             "px-3 py-1 rounded-full border text-sm font-bold"
                                         }
+                                        onClick={handleFollow}
                                     >
-                                        Following
+                                        Follow
                                     </Button>
                                 )}
                             </div>
@@ -118,24 +166,30 @@ export const ProfileHeader = ({ serverProfile }) => {
                                     <IoCalendarOutline size={16} />
                                     <span>Joined {dateCreated()}</span>
                                 </div>
-                                <div className="text-sm flex gap-1 items-center">
-                                    <RiLinkM size={16} />
-                                    <Link
-                                        href={`https://${website}`}
-                                        target="_blank"
-                                        className="text-blue-500"
-                                    >
-                                        {website}
-                                    </Link>
-                                </div>
+                                {website && (
+                                    <div className="text-sm flex gap-1 items-center">
+                                        <RiLinkM size={16} />
+                                        <Link
+                                            href={`https://${website}`}
+                                            target="_blank"
+                                            className="text-blue-500"
+                                        >
+                                            {website}
+                                        </Link>
+                                    </div>
+                                )}
                             </div>
                             <div className="flex gap-2 text-sm">
                                 <div className="flex gap-1">
-                                    <span className="font-bold">0</span>
+                                    <span className="font-bold">
+                                        {following.length}
+                                    </span>
                                     following
                                 </div>
                                 <div className="flex gap-1">
-                                    <span className="font-bold">0</span>
+                                    <span className="font-bold">
+                                        {followers.length}
+                                    </span>
                                     followers
                                 </div>
                             </div>

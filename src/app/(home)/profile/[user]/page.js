@@ -37,6 +37,9 @@ const Page = async ({ params: { user } }) => {
     const userProfile = await getProfile();
     const newUserProfile = {
         ...userProfile,
+        user_followed: userProfile.followers.find(
+            (follow) => follow.follower_id === userId
+        ),
         posts: userProfile.posts.map((post) => ({
             ...post,
             user_liked: post.likes.find((post) => post.user_id === userId),

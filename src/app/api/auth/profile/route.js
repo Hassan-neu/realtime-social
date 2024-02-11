@@ -31,6 +31,8 @@ export async function GET(req) {
                             bookmarks: true,
                         },
                     },
+                    following: true,
+                    followers: true,
                 },
             });
             return NextResponse.json(profile, { status: 200 });

@@ -4,7 +4,7 @@ import { HomeBar } from "../shared/homeBar";
 import UserPosts from "./userPosts";
 
 export default function User({ profile }) {
-    const { username, posts: serverPosts, full_name, avatar_url } = profile;
+    const { id, username, posts: serverPosts, full_name, avatar_url } = profile;
     return (
         <div>
             <HomeBar showButton>{username}</HomeBar>
@@ -15,6 +15,7 @@ export default function User({ profile }) {
                     username,
                     full_name,
                     avatar_url,
+                    id,
                 }}
             />
         </div>

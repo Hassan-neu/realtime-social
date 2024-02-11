@@ -1,19 +1,10 @@
 import { NextResponse } from "next/server";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
 import prisma from "@/utils/prismaClient";
 
 export async function POST(req) {
-    const cookieStore = cookies();
-    // const supabase = createServerComponentClient({
-    //     cookies: () => cookieStore,
-    // });
     try {
         const body = await req.json();
         const { post_id, user_id } = body;
-        // const {
-        //     data: { user },
-        // } = await supabase.auth.getUser();
         await prisma.like.create({
             data: {
                 post_id,
@@ -27,17 +18,10 @@ export async function POST(req) {
 }
 
 export async function DELETE(req) {
-    const cookieStore = cookies();
-    // const supabase = createServerComponentClient({
-    //     cookies: () => cookieStore,
-    // });
     const { searchParams } = new URL(req.url);
     const post_id = searchParams.get("post_id");
     const user_id = searchParams.get("user_id");
     try {
-        // const {
-        //     data: { user },
-        // } = await supabase.auth.getUser();
         const post = await prisma.like.deleteMany({
             where: {
                 post_id,

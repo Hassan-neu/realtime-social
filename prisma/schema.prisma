@@ -26,6 +26,8 @@ model Profile {
   posts      Post[]
   likes      Like[]
   bookmarks  Bookmark[]
+  following  Follow[]   @relation("Follower")
+  followers  Follow[]   @relation("Following")
 
   @@map("profiles")
 }
@@ -43,6 +45,17 @@ model Post {
   bookmarks  Bookmark[]
 
   @@map("posts")
+}
+
+model Follow {
+  id           String   @id @default(uuid()) @db.Uuid()
+  follower_id  String   @db.Uuid()
+  follower     Profile  @relation("Follower", fields: [follower_id], references: [id], onDelete: Cascade)
+  following_id String   @db.Uuid()
+  following    Profile  @relation("Following", fields: [following_id], references: [id], onDelete: Cascade)
+  created_at   DateTime @default(now())
+
+  @@map("follows")
 }
 
 model Like {

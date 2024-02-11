@@ -10,7 +10,12 @@ export default function UserPosts({ serverPosts, user }) {
             .channel("realtime-user-posts")
             .on(
                 "postgres_changes",
-                { event: "*", schema: "public", table: "posts" },
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "posts",
+                    filter: `user_id=eq.${user.id}`,
+                },
                 (payload) => {
                     const { new: newPost } = payload;
                     console.log(payload);
@@ -40,7 +45,7 @@ export default function UserPosts({ serverPosts, user }) {
             )
             .subscribe();
         return () => supabase.removeChannel(channel);
-    }, [supabase, userPosts]);
+    }, [supabase, userPosts, user]);
     return (
         <div className="flex flex-col">
             {userPosts?.map((post) => (
