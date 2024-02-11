@@ -13,9 +13,15 @@ const Tweets = ({ contents }) => {
                 { event: "*", schema: "public", table: "posts" },
                 async (payload) => {
                     const { new: newPost } = payload;
+                    console.log(payload);
                     const oldPost = newPosts.find(
                         (post) => post.id === newPost.id
                     );
+                    if (payload.eventType === "DELETE") {
+                        return setNewPosts((prev) =>
+                            prev.filter((post) => post.id !== payload.old.id)
+                        );
+                    }
                     if (oldPost) {
                         setNewPosts((prev) =>
                             prev.map((post) =>
@@ -32,7 +38,10 @@ const Tweets = ({ contents }) => {
                             `/api/auth/profile?id=${newPost.user_id}`
                         );
                         const user = await res.json();
-                        setNewPosts([{ ...newPost, user }, ...newPosts]);
+                        setNewPosts([
+                            { ...newPost, likes: [], bookmarks: [], user },
+                            ...newPosts,
+                        ]);
                     }
                 }
             )

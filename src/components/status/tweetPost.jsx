@@ -161,7 +161,7 @@ export function TweetPost({ serverPost }) {
                             <GoBookmarkFill
                                 size={18}
                                 fill={`${
-                                    user_liked
+                                    user_bookmarked
                                         ? "rgb(59 130 246)"
                                         : "transparent"
                                 }`}

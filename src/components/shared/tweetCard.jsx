@@ -11,7 +11,7 @@ import { TweetMedia } from "./tweetMedia";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 export const TweetCard = ({ post }) => {
-    const { refresh } = useRouter();
+    const { refresh, push } = useRouter();
     const supabase = createClientComponentClient();
     const {
         id,
@@ -91,9 +91,8 @@ export const TweetCard = ({ post }) => {
     };
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer hover:bg-slate-100">
-            <Link
-                scroll={false}
-                href={`/status/${id}`}
+            <div
+                onClick={() => push(`/status/${id}`, { scroll: false })}
                 className="flex gap-3 w-full"
             >
                 <Avatar
@@ -117,7 +116,7 @@ export const TweetCard = ({ post }) => {
                         </div>
                     </div>
                 </div>
-            </Link>
+            </div>
             <div className="flex gap-3 justify-between w-[calc(100%_-_3.75rem)] self-end">
                 <Button onClick={(e) => console.log(e.target)}>
                     <HiChatBubbleLeft size={18} fill="none" strokeWidth={1} />

@@ -4,7 +4,7 @@ import { TweetCard } from "../shared/tweetCard";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 export default function UserPosts({ serverPosts, user }) {
     const supabase = createClientComponentClient();
-    const [posts, setPosts] = useState(serverPosts);
+    const [userPosts, setUserPosts] = useState(serverPosts);
     useEffect(() => {
         const channel = supabase
             .channel("realtime-user-posts")
@@ -12,22 +12,38 @@ export default function UserPosts({ serverPosts, user }) {
                 "postgres_changes",
                 { event: "*", schema: "public", table: "posts" },
                 (payload) => {
-                    const { new: newPosts } = payload;
-                    setPosts((prev) =>
-                        prev.map((post) =>
-                            post.id === newPosts.id
-                                ? { ...post, ...newPosts }
-                                : post
-                        )
+                    const { new: newPost } = payload;
+                    console.log(payload);
+                    const oldPost = userPosts.find(
+                        (post) => post.id === newPost.id
                     );
+                    if (payload.eventType === "DELETE") {
+                        return setUserPosts((prev) =>
+                            prev.filter((post) => post.id !== payload.old.id)
+                        );
+                    }
+                    if (oldPost) {
+                        setUserPosts((prev) =>
+                            prev.map((post) =>
+                                post.id === newPost.id
+                                    ? { ...post, ...newPost }
+                                    : post
+                            )
+                        );
+                    } else {
+                        setUserPosts([
+                            { ...newPost, likes: [], bookmarks: [] },
+                            ...userPosts,
+                        ]);
+                    }
                 }
             )
             .subscribe();
         return () => supabase.removeChannel(channel);
-    }, [supabase, posts]);
+    }, [supabase, userPosts]);
     return (
         <div className="flex flex-col">
-            {posts?.map((post) => (
+            {userPosts?.map((post) => (
                 <TweetCard
                     key={post.id}
                     post={{
