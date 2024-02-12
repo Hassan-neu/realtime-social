@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { TweetCard } from "../shared/tweetCard";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-export default function UserPosts({ serverPosts, user }) {
+export default function UserPosts({ serverPosts }) {
     const supabase = createClientComponentClient();
     const [userPosts, setUserPosts] = useState(serverPosts);
     useEffect(() => {
@@ -14,7 +14,7 @@ export default function UserPosts({ serverPosts, user }) {
                     event: "*",
                     schema: "public",
                     table: "posts",
-                    filter: `user_id=eq.${user.id}`,
+                    filter: `user_id=eq.${userPosts.user_id}`,
                 },
                 (payload) => {
                     const { new: newPost } = payload;
@@ -45,17 +45,11 @@ export default function UserPosts({ serverPosts, user }) {
             )
             .subscribe();
         return () => supabase.removeChannel(channel);
-    }, [supabase, userPosts, user]);
+    }, [supabase, userPosts]);
     return (
         <div className="flex flex-col">
             {userPosts?.map((post) => (
-                <TweetCard
-                    key={post.id}
-                    post={{
-                        ...post,
-                        user,
-                    }}
-                />
+                <TweetCard key={post.id} post={post} />
             ))}
         </div>
     );

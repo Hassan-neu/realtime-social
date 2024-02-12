@@ -30,14 +30,31 @@ export async function POST(req) {
 
 export async function GET(req) {
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
+    const post_id = searchParams.get("id");
     const query = searchParams.get("query");
     const reply_to = searchParams.get("reply_to");
+    const user_id = searchParams.get("user_id");
     try {
-        if (id) {
+        if (user_id) {
+            const post = await prisma.post.findMany({
+                orderBy: {
+                    created_at: "desc",
+                },
+                where: {
+                    user_id,
+                    reply_to: null,
+                },
+                include: {
+                    user: true,
+                    likes: true,
+                    bookmarks: true,
+                },
+            });
+            return NextResponse.json(post, { status: 200 });
+        } else if (id) {
             const post = await prisma.post.findUnique({
                 where: {
-                    id,
+                    id: post_id,
                 },
                 include: {
                     user: true,
