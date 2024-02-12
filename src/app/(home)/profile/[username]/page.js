@@ -5,19 +5,13 @@ import React from "react";
 import { ProfileHeader } from "@/components/profile/profileHeader";
 import { HomeBar } from "@/components/shared/homeBar";
 import ProfilePosts from "@/components/profile/profilePosts";
-import NotFound from "@/app/not-found";
+import Followers from "@/components/profile/follower";
 const Page = async ({ params: { username }, searchParams }) => {
-    const matcher = ["followers", "following"];
-    const checkMatch = matcher.some((match) => username[1] === match);
-    if (!checkMatch) {
-        return <NotFound />;
-    }
-
     return (
         <div>
-            <HomeBar showButton>{username[0]}</HomeBar>
-            <ProfileHeader username={username[0]} />
-            <ProfilePosts username={username[0]} searchParams={searchParams} />
+            <HomeBar showButton>{username}</HomeBar>
+            <ProfileHeader username={username} />
+            <ProfilePosts username={username} searchParams={searchParams} />
         </div>
     );
 };

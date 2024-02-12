@@ -22,6 +22,23 @@ export const ProfileHeader = async ({ username }) => {
             throw new Error("Unable to fetch user profile");
         }
     }
-    const serverProfile = await getProfile();
+    const getUserId = async () => {
+        try {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+            return user.id;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const userId = await getUserId();
+    const profile = await getProfile();
+    const serverProfile = {
+        ...profile,
+        user_followed: profile.followers.find(
+            (follower) => follower.follower_id === userId
+        ),
+    };
     return <UserHeader serverProfile={serverProfile} />;
 };

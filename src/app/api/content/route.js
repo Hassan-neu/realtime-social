@@ -51,7 +51,7 @@ export async function GET(req) {
                 },
             });
             return NextResponse.json(post, { status: 200 });
-        } else if (id) {
+        } else if (post_id) {
             const post = await prisma.post.findUnique({
                 where: {
                     id: post_id,
