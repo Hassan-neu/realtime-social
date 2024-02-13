@@ -52,3 +52,28 @@ export async function DELETE(req) {
         return NextResponse.json(error, { status: 400 });
     }
 }
+
+export async function GET(req) {
+    const { searchParams } = new URL(req.url);
+    const user_id = searchParams.get("user_id");
+
+    try {
+        const bookmarks = await prisma.bookmark.findMany({
+            where: {
+                user_id,
+            },
+            include: {
+                post: {
+                    include: {
+                        likes: true,
+                        bookmarks: true,
+                        user: true,
+                    },
+                },
+            },
+        });
+        return NextResponse.json(bookmarks, { status: 200 });
+    } catch (error) {
+        return NextResponse.json(error, { status: 404 });
+    }
+}

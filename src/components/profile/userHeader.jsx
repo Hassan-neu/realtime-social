@@ -192,18 +192,24 @@ export const UserHeader = ({ serverProfile }) => {
                                 )}
                             </div>
                             <div className="flex gap-2 text-sm">
-                                <div className="flex gap-1">
+                                <Link
+                                    href={`${username}/following`}
+                                    className="flex gap-1"
+                                >
                                     <span className="font-bold">
                                         {following.length}
                                     </span>
                                     following
-                                </div>
-                                <div className="flex gap-1">
+                                </Link>
+                                <Link
+                                    href={`${username}/followers`}
+                                    className="flex gap-1"
+                                >
                                     <span className="font-bold">
                                         {followers.length}
                                     </span>
                                     followers
-                                </div>
+                                </Link>
                             </div>
                         </div>
 

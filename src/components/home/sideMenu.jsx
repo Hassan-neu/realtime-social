@@ -124,7 +124,7 @@ export function SideMenu({ profile }) {
                         </li>
                         <li className="text-lg  hover:bg-slate-200 rounded-full">
                             <Link
-                                href={"/bookmark"}
+                                href={"/bookmarks"}
                                 className="flex w-full h-full gap-4 items-center pl-2 pr-6 py-2"
                             >
                                 <GoBookmarkFill
