@@ -1,8 +1,8 @@
 import Link from "next/link";
 import React from "react";
 import { Avatar } from "../shared/avatar";
-export default function Follower({ follower }) {
-    const { username, avatar_url, full_name, bio } = follower;
+export function Follows({ follows }) {
+    const { username, avatar_url, full_name, bio } = follows;
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer hover:bg-slate-100">
             <Link href={`/profile/${username}`} className="flex gap-3 w-full">

@@ -5,7 +5,6 @@ import React from "react";
 import { ProfileHeader } from "@/components/profile/profileHeader";
 import { HomeBar } from "@/components/shared/homeBar";
 import ProfilePosts from "@/components/profile/profilePosts";
-import Followers from "@/components/profile/follower";
 const Page = async ({ params: { username }, searchParams }) => {
     return (
         <div>
