@@ -1,8 +1,23 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { TweetCard } from "../shared/tweetCard";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-export async function Bookmarks({ serverBookmarks }) {
+export function Bookmarks({ serverBookmarks }) {
+    const [newBookmarks, setNewBookmarks] = useState(serverBookmarks);
+    const supabase = createClientComponentClient();
+
+    useEffect(() => {
+        const channel = supabase
+            .channel("realtime-bookmarks")
+            .on(
+                "postgres_changes",
+                { event: "*", schema: "public", table: "bookmarks" },
+                (payload) => console.log(payload)
+            )
+            .subscribe();
+        return () => supabase.removeChannel(channel);
+    });
     return (
         <div>
             {serverBookmarks.map((bookmark) => {

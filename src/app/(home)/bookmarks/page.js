@@ -3,7 +3,7 @@ import { HomeBar } from "@/components/shared/homeBar";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import React from "react";
-
+export const revalidate = 0;
 export default async function page() {
     const cookieStore = cookies();
     const supabase = createServerComponentClient({
@@ -48,7 +48,6 @@ export default async function page() {
             ),
         },
     }));
-    console.log(serverBookmarks);
     return (
         <div>
             <HomeBar showButton>Bookmarks</HomeBar>

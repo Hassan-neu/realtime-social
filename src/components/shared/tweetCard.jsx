@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { HiChatBubbleLeft } from "react-icons/hi2";
 import { GoHeartFill, GoBookmarkFill } from "react-icons/go";
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "./btn";
 import { Avatar } from "./avatar";
 import { months } from "@/utils/months";
@@ -112,7 +111,7 @@ export const TweetCard = ({ post }) => {
                         </Link>
                         <div className="flex flex-col gap-1">
                             <div className="text-sm text-pretty">{content}</div>
-                            <TweetMedia url={media_url} />
+                            {media_url && <TweetMedia url={media_url} />}
                         </div>
                     </div>
                 </div>

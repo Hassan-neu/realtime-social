@@ -46,7 +46,9 @@ const Page = async ({ params: { id } }) => {
 
     return (
         <div>
-            <HomeBar showButton>POST</HomeBar>
+            <HomeBar showButton>
+                <div>POST</div>
+            </HomeBar>
             <TweetPost serverPost={newPosts} />
             <Replies serverReplies={replies} reply_id={id} />
         </div>

@@ -38,7 +38,7 @@ export function Reply({ id }) {
         getAvatar();
     }, [getAvatar]);
     return (
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center ">
             <Avatar
                 className={"relative w-12 h-12 border shrink-0 self-start"}
                 url={avatar_url}

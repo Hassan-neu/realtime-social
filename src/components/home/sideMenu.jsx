@@ -18,7 +18,7 @@ export function SideMenu({ profile }) {
     const [popup, setPopup] = useState(false);
     const [openCompose, setOpenCompose] = useState(false);
     return (
-        <div className="min-h-screen px-4">
+        <div className="min-h-screen px-4 hidden lg:block">
             <div className="py-4 ml-auto flex flex-col gap-3 w-3/4 h-screen sticky top-0">
                 <Link
                     href={"/"}

@@ -117,13 +117,17 @@ export const UserHeader = ({ serverProfile }) => {
         <>
             <div className="w-full">
                 <div className="flex flex-col w-full border border-b-0">
-                    <div className="bg-blue-400 min-h-52 text-4xl"></div>
+                    <div className=" h-36 lg:min-h-52 text-2xl font-bold flex items-center">
+                        <div className="text-center">
+                            THIS ISN&apos;T X FORGET A COVER PHOTO
+                        </div>
+                    </div>
                     <div className="flex flex-col gap-4 relative px-4 pt-3">
                         <div className="flex justify-between">
                             <Avatar
                                 url={avatar_url}
                                 className={
-                                    "w-40 h-40 border-4 border-white absolute -translate-y-1/2 flex justify-center items-center"
+                                    "w-28 h-28 lg:w-40 lg:h-40 border-4 border-white absolute -translate-y-1/2 flex justify-center items-center"
                                 }
                             />
                             <div className="ml-auto">
@@ -158,7 +162,7 @@ export const UserHeader = ({ serverProfile }) => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col gap-2 mt-16">
+                        <div className="flex flex-col gap-2 mt-8 lg:mt-16">
                             <div className="flex flex-col ">
                                 <p className="text-lg capitalize">
                                     {full_name}
@@ -167,7 +171,7 @@ export const UserHeader = ({ serverProfile }) => {
                             </div>
 
                             <div className="text-sm">{bio}</div>
-                            <div className="flex gap-4">
+                            <div className="flex gap-2 lg:gap-4 flex-wrap">
                                 {isActiveUser && (
                                     <div className="text-sm flex gap-1 items-center">
                                         <BsBalloon size={16} />
@@ -236,19 +240,6 @@ export const UserHeader = ({ serverProfile }) => {
                                 }`}
                             >
                                 Media
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    setActive("bookmarks");
-                                    profileTab("bookmarks");
-                                }}
-                                className={`border-b-4 ${
-                                    active == "bookmarks"
-                                        ? "border-blue-400"
-                                        : "border-transparent"
-                                }`}
-                            >
-                                Bookmarks
                             </Button>
                             <Button
                                 onClick={() => {

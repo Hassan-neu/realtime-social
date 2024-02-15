@@ -4,6 +4,7 @@ import { TweetCard } from "@/components/shared/tweetCard";
 import React from "react";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import { RiTwitterXFill } from "react-icons/ri";
 export const revalidate = 0;
 async function Page() {
     const cookieStore = cookies();
@@ -39,7 +40,13 @@ async function Page() {
     return (
         <main className="">
             <HomeBar>
-                <div className="text-2xl font-semibold">HOME</div>
+                <div className="text-2xl font-semibold hidden lg:block">
+                    HOME
+                </div>
+                <div className="px-3 text-xl font-bold flex items-center mx-auto lg:hidden">
+                    NOT &nbsp;
+                    <RiTwitterXFill size={20} />
+                </div>
             </HomeBar>
             <Tweets contents={newContents} />
         </main>

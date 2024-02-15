@@ -23,7 +23,7 @@ export default async function HomeLayout({ children }) {
     };
     const profile = await getUser();
     return (
-        <main className="grid grid-cols-[1fr_1.5fr_1fr] min-h-screen relative">
+        <main className="grid lg:grid-cols-[1fr_1.5fr_1fr] min-h-dvh relative">
             <SideMenu profile={profile} />
             {children}
             {/* <ActionBar /> */}
