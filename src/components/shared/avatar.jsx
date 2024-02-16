@@ -3,11 +3,12 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { Spinner } from "./spinner";
+import { MediaView } from "./tweetMedia";
 
-export function Avatar({ url, className }) {
+export function Avatar({ url, className, ...props }) {
     const [avatarUrl, setAvatarUrl] = useState("");
     const supabase = createClientComponentClient();
-
+    const [viewAvatar, setviewAvatar] = useState(false);
     useEffect(() => {
         async function downloadAvatar(path) {
             try {
@@ -25,28 +26,39 @@ export function Avatar({ url, className }) {
         }
         if (url) downloadAvatar(url);
     }, [url, supabase]);
-
     return (
-        <div
-            className={`${className || ""} rounded-full bg-white overflow-clip`}
-        >
-            {avatarUrl ? (
-                <Image
-                    src={avatarUrl}
-                    alt={"avatar"}
-                    fill
-                    className="object-cover"
-                />
-            ) : (
-                <div className="w-full h-full flex items-center justify-center relative">
+        <>
+            <div
+                className={`${
+                    className || ""
+                } rounded-full bg-white overflow-clip`}
+                onClick={() => setviewAvatar(true)}
+            >
+                {avatarUrl ? (
                     <Image
-                        src="/blankavatar.png"
-                        alt="no-avatar"
+                        src={avatarUrl}
+                        alt={"avatar"}
                         fill
                         className="object-cover"
                     />
-                </div>
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center relative">
+                        <Image
+                            src="/blankavatar.png"
+                            alt="no-avatar"
+                            fill
+                            className="object-cover"
+                        />
+                    </div>
+                )}
+            </div>
+            {viewAvatar && (
+                <MediaView
+                    setView={setviewAvatar}
+                    mediaSrc={avatarUrl}
+                    size={{ width: 200, height: 400 }}
+                />
             )}
-        </div>
+        </>
     );
 }

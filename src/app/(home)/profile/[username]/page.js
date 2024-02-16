@@ -5,12 +5,17 @@ import React from "react";
 import { ProfileHeader } from "@/components/profile/profileHeader";
 import { HomeBar } from "@/components/shared/homeBar";
 import ProfilePosts from "@/components/profile/profilePosts";
-const Page = async ({ params: { username }, searchParams }) => {
+import ProfileLikes from "@/components/profile/profileLikes";
+const Page = async ({ params: { username }, searchParams: { view } }) => {
     return (
         <div>
             <HomeBar showButton>{username}</HomeBar>
             <ProfileHeader username={username} />
-            <ProfilePosts username={username} searchParams={searchParams} />
+            {view === "likes" ? (
+                <ProfileLikes username={username} />
+            ) : (
+                <ProfilePosts username={username} />
+            )}
         </div>
     );
 };

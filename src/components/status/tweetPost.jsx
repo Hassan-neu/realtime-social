@@ -112,7 +112,7 @@ export function TweetPost({ serverPost }) {
                         className="flex flex-col gap-0.5 leading-"
                     >
                         <p className="text-xl font-bold">{full_name}</p>
-                        <p className="text-sm">{username}</p>
+                        <p className="text-sm">&#64;{username}</p>
                     </Link>
                 </div>
                 <div className="flex flex-col gap-3 w-full">

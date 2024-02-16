@@ -60,46 +60,7 @@ export function SideMenu({ profile }) {
                                 <span>Search</span>
                             </Link>
                         </li>
-                        <li className="text-lg hover:bg-slate-200 rounded-full">
-                            <Link
-                                href={"/notifications"}
-                                className="flex w-full h-full gap-4 items-center pl-2 pr-6 py-2"
-                            >
-                                <MdNotifications
-                                    size={30}
-                                    fill={`${
-                                        segment === "notifications"
-                                            ? "black"
-                                            : "transparent"
-                                    }`}
-                                    stroke={"black"}
-                                    strokeWidth={1}
-                                />
-                                <span>Notifications</span>
-                            </Link>
-                        </li>
-                        <li className="text-lg hover:bg-slate-200 rounded-full">
-                            <Link
-                                href={"/messages"}
-                                className="flex w-full h-full gap-4 items-center pl-2 pr-6 py-2"
-                            >
-                                <BiSolidMessage
-                                    size={30}
-                                    fill={`${
-                                        segment === "messages"
-                                            ? "black"
-                                            : "transparent"
-                                    }`}
-                                    stroke={`${
-                                        segment === "messages"
-                                            ? "black"
-                                            : "black"
-                                    }`}
-                                    strokeWidth={1}
-                                />
-                                <span>Messages</span>
-                            </Link>
-                        </li>
+
                         <li className="text-lg hover:bg-slate-200 rounded-full">
                             <Link
                                 href={`/profile/${username}`}

@@ -38,7 +38,7 @@ export function Reply({ id }) {
         getAvatar();
     }, [getAvatar]);
     return (
-        <div className="flex gap-2 items-center ">
+        <div className="flex gap-2 items-center">
             <Avatar
                 className={"relative w-12 h-12 border shrink-0 self-start"}
                 url={avatar_url}
@@ -49,7 +49,6 @@ export function Reply({ id }) {
                     id=""
                     className="peer h-12 resize-none text-lg p-2 focus-visible:outline-none hidescroll"
                     placeholder="Write a reply"
-                    maxLength={200}
                     value={content}
                     onFocus={() => setFocused(true)}
                     onChange={handleChange}

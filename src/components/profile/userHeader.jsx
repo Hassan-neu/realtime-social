@@ -14,6 +14,7 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 export const UserHeader = ({ serverProfile }) => {
     const searchParams = useSearchParams();
+    const view = searchParams.get("view");
     const path = usePathname();
     const { replace } = useRouter();
     const [profile, setProfile] = useState(serverProfile);
@@ -31,7 +32,6 @@ export const UserHeader = ({ serverProfile }) => {
         following,
         user_followed,
     } = profile;
-    const [active, setActive] = useState("post");
     const [isActiveUser, setIsActiveUser] = useState(false);
     const supabase = createClientComponentClient();
     function birthDate() {
@@ -219,9 +219,9 @@ export const UserHeader = ({ serverProfile }) => {
 
                         <div className="flex gap-3 justify-between">
                             <Button
-                                onClick={() => setActive("post")}
+                                onClick={() => replace(`${username}`)}
                                 className={`border-b-4 ${
-                                    active == "post"
+                                    view === null
                                         ? "border-blue-400"
                                         : "border-transparent"
                                 }`}
@@ -230,11 +230,10 @@ export const UserHeader = ({ serverProfile }) => {
                             </Button>
                             <Button
                                 onClick={() => {
-                                    setActive("media");
                                     profileTab("media");
                                 }}
                                 className={`border-b-4 ${
-                                    active == "media"
+                                    view === "media"
                                         ? "border-blue-400"
                                         : "border-transparent"
                                 }`}
@@ -243,11 +242,10 @@ export const UserHeader = ({ serverProfile }) => {
                             </Button>
                             <Button
                                 onClick={() => {
-                                    setActive("likes");
                                     profileTab("likes");
                                 }}
                                 className={`border-b-4 ${
-                                    active == "likes"
+                                    view === "likes"
                                         ? "border-blue-400"
                                         : "border-transparent"
                                 }`}

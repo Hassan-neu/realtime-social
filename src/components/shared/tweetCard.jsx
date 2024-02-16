@@ -105,7 +105,7 @@ export const TweetCard = ({ post }) => {
                             className="flex gap-1 items-center"
                         >
                             <p>{full_name}</p>
-                            <p className="text-sm">{username}</p>
+                            <p className="text-sm">&#64;{username}</p>
                             <span className="w-1 h-1 inline-block mx-0.5 rounded-full bg-black"></span>
                             <p className="text-sm">{getDate()}</p>
                         </Link>
