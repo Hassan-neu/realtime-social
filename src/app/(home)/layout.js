@@ -1,5 +1,7 @@
 import { ActionBar } from "@/components/home/actionBar";
 import { SideMenu } from "@/components/home/sideMenu";
+import ProfileLoading from "@/components/shared/profileLoading";
+import TweetLoading from "@/components/shared/tweetLoading";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 export default async function HomeLayout({ children }) {
@@ -26,7 +28,7 @@ export default async function HomeLayout({ children }) {
         <main className="grid lg:grid-cols-[1fr_1.5fr_1fr] min-h-dvh relative">
             <SideMenu profile={profile} />
             {children}
-            {/* <ActionBar /> */}
+            <TweetLoading />
         </main>
     );
 }

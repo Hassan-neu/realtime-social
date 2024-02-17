@@ -111,7 +111,6 @@ export const UserHeader = ({ serverProfile }) => {
                 (payload) => {
                     const { new: newProfile } = payload;
                     setProfile((prev) => ({ ...prev, ...newProfile }));
-                    console.log("Change received!", payload);
                 }
             )
             .subscribe();

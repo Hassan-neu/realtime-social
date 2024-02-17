@@ -34,6 +34,7 @@ export const ProfileHeader = async ({ username }) => {
     };
     const userId = await getUserId();
     const profile = await getProfile();
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const serverProfile = {
         ...profile,
         user_followed: profile.followers.find(

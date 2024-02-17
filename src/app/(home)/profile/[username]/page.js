@@ -8,11 +8,14 @@ import ProfilePosts from "@/components/profile/profilePosts";
 import ProfileLikes from "@/components/profile/profileLikes";
 import { Suspense } from "react";
 import Loading from "@/components/shared/loading";
+import ProfileLoading from "@/components/shared/profileLoading";
 const Page = async ({ params: { username }, searchParams: { view } }) => {
     return (
         <div>
             <HomeBar showButton>{username}</HomeBar>
-            <ProfileHeader username={username} />
+            <Suspense fallback={<ProfileLoading />}>
+                <ProfileHeader username={username} />
+            </Suspense>
             {view === "likes" ? (
                 <Suspense fallback={<Loading />}>
                     <ProfileLikes username={username} />
