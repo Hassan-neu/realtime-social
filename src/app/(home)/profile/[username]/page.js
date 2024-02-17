@@ -6,15 +6,21 @@ import { ProfileHeader } from "@/components/profile/profileHeader";
 import { HomeBar } from "@/components/shared/homeBar";
 import ProfilePosts from "@/components/profile/profilePosts";
 import ProfileLikes from "@/components/profile/profileLikes";
+import { Suspense } from "react";
+import Loading from "@/components/shared/loading";
 const Page = async ({ params: { username }, searchParams: { view } }) => {
     return (
         <div>
             <HomeBar showButton>{username}</HomeBar>
             <ProfileHeader username={username} />
             {view === "likes" ? (
-                <ProfileLikes username={username} />
+                <Suspense fallback={<Loading />}>
+                    <ProfileLikes username={username} />
+                </Suspense>
             ) : (
-                <ProfilePosts username={username} />
+                <Suspense fallback={<Loading />}>
+                    <ProfilePosts username={username} />
+                </Suspense>
             )}
         </div>
     );

@@ -90,8 +90,9 @@ export const TweetCard = ({ post }) => {
     };
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer hover:bg-slate-100">
-            <div
-                onClick={() => push(`/status/${id}`, { scroll: false })}
+            <Link
+                href={`/status/${id}`}
+                scroll={false}
                 className="flex gap-3 w-full"
             >
                 <Avatar
@@ -100,22 +101,19 @@ export const TweetCard = ({ post }) => {
                 />
                 <div className="flex flex-col gap-3 w-full">
                     <div className="flex flex-col gap-1">
-                        <Link
-                            href={`/profile/${username}`}
-                            className="flex gap-1 items-center"
-                        >
+                        <div className="flex gap-1 items-center">
                             <p>{full_name}</p>
                             <p className="text-sm">&#64;{username}</p>
                             <span className="w-1 h-1 inline-block mx-0.5 rounded-full bg-black"></span>
                             <p className="text-sm">{getDate()}</p>
-                        </Link>
+                        </div>
                         <div className="flex flex-col gap-1">
                             <div className="text-sm text-pretty">{content}</div>
                             {media_url && <TweetMedia url={media_url} />}
                         </div>
                     </div>
                 </div>
-            </div>
+            </Link>
             <div className="flex gap-3 justify-between w-[calc(100%_-_3.75rem)] self-end">
                 <Button onClick={(e) => console.log(e.target)}>
                     <HiChatBubbleLeft size={18} fill="none" strokeWidth={1} />

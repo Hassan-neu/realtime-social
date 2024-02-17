@@ -89,7 +89,11 @@ export const UserHeader = ({ serverProfile }) => {
     }
     function profileTab(value) {
         const params = new URLSearchParams(searchParams);
-        params.set("view", value);
+        if (value) {
+            params.set("view", value);
+        } else {
+            params.delete("view");
+        }
         params.toString();
         return replace(`${path}?${params}`);
     }
@@ -117,7 +121,7 @@ export const UserHeader = ({ serverProfile }) => {
         <>
             <div className="w-full">
                 <div className="flex flex-col w-full border border-b-0">
-                    <div className=" h-36 lg:min-h-52 text-2xl font-bold flex items-center">
+                    <div className=" h-36 lg:min-h-52 text-2xl font-bold flex items-center justify-center">
                         <div className="text-center">
                             THIS ISN&apos;T X FORGET A COVER PHOTO
                         </div>
@@ -219,7 +223,7 @@ export const UserHeader = ({ serverProfile }) => {
 
                         <div className="flex gap-3 justify-between">
                             <Button
-                                onClick={() => replace(`${username}`)}
+                                onClick={() => profileTab("")}
                                 className={`border-b-4 ${
                                     view === null
                                         ? "border-blue-400"

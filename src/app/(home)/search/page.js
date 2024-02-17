@@ -15,9 +15,17 @@ const Page = async ({ searchParams: { query } }) => {
         <div>
             <Searchbar />
             <div className="text-pretty">
-                {searchRes.map((res) => (
-                    <TweetCard key={res.id} post={res} />
-                ))}
+                {searchRes.length > 0 ? (
+                    searchRes.map((res) => (
+                        <TweetCard key={res.id} post={res} />
+                    ))
+                ) : (
+                    <div className="flex flex-col items-center h-full mt-10">
+                        <div className="text-lg text-slate-400">
+                            Results not found
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

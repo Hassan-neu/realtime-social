@@ -49,6 +49,7 @@ export default async function ProfileLikes({ username }) {
     };
     const userId = await getUserId();
     const userLikes = await getUserLikes();
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const serverLikes = userLikes.map((like) => ({
         ...like,
         post: {

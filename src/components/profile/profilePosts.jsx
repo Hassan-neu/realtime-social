@@ -51,6 +51,7 @@ export default async function ProfilePosts({ username }) {
     };
     const userId = await getUserId();
     const userPosts = await getUserPosts();
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const serverPosts = userPosts.map((post) => ({
         ...post,
         user_liked: post.likes.find((like) => like.user_id == userId),
