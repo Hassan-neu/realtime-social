@@ -4,7 +4,7 @@ import React, { Suspense } from "react";
 import { RiTwitterXFill } from "react-icons/ri";
 import HomeTweets from "@/components/home/homeTweets";
 import Loading from "@/components/shared/loading";
-import TweetsLoading from "@/components/home/tweetsLoading";
+import TweetsLoading from "@/components/shared/tweetsLoading";
 async function Page() {
     return (
         <main className="">

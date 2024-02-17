@@ -7,8 +7,8 @@ import { HomeBar } from "@/components/shared/homeBar";
 import ProfilePosts from "@/components/profile/profilePosts";
 import ProfileLikes from "@/components/profile/profileLikes";
 import { Suspense } from "react";
-import Loading from "@/components/shared/loading";
 import ProfileLoading from "@/components/shared/profileLoading";
+import TweetsLoading from "@/components/shared/tweetsLoading";
 const Page = async ({ params: { username }, searchParams: { view } }) => {
     return (
         <div>
@@ -17,11 +17,11 @@ const Page = async ({ params: { username }, searchParams: { view } }) => {
                 <ProfileHeader username={username} />
             </Suspense>
             {view === "likes" ? (
-                <Suspense fallback={<Loading />}>
+                <Suspense fallback={<TweetsLoading />}>
                     <ProfileLikes username={username} />
                 </Suspense>
             ) : (
-                <Suspense fallback={<Loading />}>
+                <Suspense fallback={<TweetsLoading />}>
                     <ProfilePosts username={username} />
                 </Suspense>
             )}

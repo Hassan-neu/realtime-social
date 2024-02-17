@@ -1,5 +1,5 @@
 import React from "react";
-import TweetLoading from "../shared/tweetLoading";
+import TweetLoading from "./tweetLoading";
 
 export default function TweetsLoading() {
     return (
