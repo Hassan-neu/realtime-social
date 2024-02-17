@@ -12,7 +12,7 @@ export default function StatusLoading() {
                         }
                     />
                     <div className="flex flex-col gap-0.5">
-                        <Skeleton className={"w-20 h-3 rounded"} />
+                        <Skeleton className={"w-24 h-4 rounded"} />
                         <Skeleton className="w-20 h-3 rounded" />
                     </div>
                 </div>

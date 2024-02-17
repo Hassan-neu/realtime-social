@@ -40,6 +40,7 @@ export const ProfileHeader = async ({ username }) => {
         user_followed: profile.followers.find(
             (follower) => follower.follower_id === userId
         ),
+        is_current_user: profile.id === userId,
     };
     return <UserHeader serverProfile={serverProfile} />;
 };

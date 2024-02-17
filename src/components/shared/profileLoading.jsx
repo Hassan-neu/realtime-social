@@ -3,7 +3,7 @@ import { Skeleton } from "../ui/skeleton";
 
 export default function ProfileLoading() {
     return (
-        <div className="flex flex-col w-full border border-b-0">
+        <div className="flex flex-col w-full border border-b-0 pb-2">
             <div className=" h-36 lg:min-h-52 text-2xl font-bold flex items-center justify-center">
                 <div className="text-center">
                     THIS ISN&apos;T X FORGET A COVER PHOTO

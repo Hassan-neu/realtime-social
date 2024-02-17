@@ -31,8 +31,8 @@ export const UserHeader = ({ serverProfile }) => {
         followers,
         following,
         user_followed,
+        is_current_user,
     } = profile;
-    const [isActiveUser, setIsActiveUser] = useState(false);
     const supabase = createClientComponentClient();
     function birthDate() {
         const date = new Date(birth_date);
@@ -46,17 +46,6 @@ export const UserHeader = ({ serverProfile }) => {
         const dateString = `${months[date.getMonth()]} ${date.getFullYear()}`;
         return dateString;
     }
-    const fetchCurrUser = useCallback(async () => {
-        const {
-            data: { user },
-        } = await supabase.auth.getUser();
-        if (user.id === id) {
-            setIsActiveUser(true);
-        }
-    }, [supabase, id]);
-    useEffect(() => {
-        fetchCurrUser();
-    }, [fetchCurrUser]);
 
     async function handleFollow() {
         const {
@@ -134,7 +123,7 @@ export const UserHeader = ({ serverProfile }) => {
                                 }
                             />
                             <div className="ml-auto">
-                                {isActiveUser ? (
+                                {is_current_user ? (
                                     <Button
                                         className={
                                             "px-3 flex items-center py-1 rounded-full border text-sm font-bold"
@@ -175,7 +164,7 @@ export const UserHeader = ({ serverProfile }) => {
 
                             <div className="text-sm">{bio}</div>
                             <div className="flex gap-2 lg:gap-4 flex-wrap">
-                                {isActiveUser && (
+                                {is_current_user && (
                                     <div className="text-sm flex gap-1 items-center">
                                         <BsBalloon size={16} />
                                         <span>Born {birthDate()}</span>
