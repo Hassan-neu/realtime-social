@@ -6,6 +6,9 @@ export default function UserPosts({ serverPosts }) {
     const supabase = createClientComponentClient();
     const [userPosts, setUserPosts] = useState(serverPosts);
     useEffect(() => {
+        setUserPosts(serverPosts);
+    }, [serverPosts]);
+    useEffect(() => {
         const channel = supabase
             .channel("realtime-user-posts")
             .on(

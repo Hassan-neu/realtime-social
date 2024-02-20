@@ -23,6 +23,11 @@ export default function Replies({ serverReplies, reply_id }) {
                     const oldReply = newReplies.find(
                         (post) => post.id === newReply.id
                     );
+                    if (payload.eventType === "DELETE") {
+                        return setNewReplies((prev) =>
+                            prev.filter((post) => post.id !== payload.old.id)
+                        );
+                    }
                     if (oldReply) {
                         setNewReplies((prev) =>
                             prev.map((reply) =>
@@ -39,7 +44,10 @@ export default function Replies({ serverReplies, reply_id }) {
                             `/api/auth/profile?id=${newReply.user_id}`
                         );
                         const user = await res.json();
-                        setNewReplies([{ ...newReply, user }, ...newReplies]);
+                        setNewReplies([
+                            { ...newReply, likes: [], bookmarks: [], user },
+                            ...newReplies,
+                        ]);
                     }
                 }
             )

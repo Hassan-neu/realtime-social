@@ -1,11 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button } from "../shared/btn";
 import { RxCross2 } from "react-icons/rx";
 import Image from "next/image";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-export const EditProfile = ({ openEdit, profile }) => {
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import { Button } from "../ui/button";
+export const EditProfile = ({ profile }) => {
     const { avatar_url, username, bio, website, birth_date } = profile;
     const supabase = createClientComponentClient();
     const [user, setUser] = useState({
@@ -82,20 +83,19 @@ export const EditProfile = ({ openEdit, profile }) => {
             console.log(error);
         } finally {
             setLoading(false);
-            openEdit(false);
         }
     };
     return (
-        <div className="w-screen h-screen flex flex-col justify-center items-center bg-slate-200 bg-opacity-50 fixed top-0 left-0 z-[60]">
-            <div className="flex justify-center items-center w-[600px] h-[650px] px-4 py-2 bg-white rounded-2xl">
+        <Dialog>
+            <DialogTrigger asChild className="rounded-full">
+                <Button> Edit Profile</Button>
+            </DialogTrigger>
+            <DialogContent className="flex justify-center items-center w-[600px] h-[650px]">
                 <div className="flex flex-col items-center justify-center gap-3 w-3/4">
                     <div className="flex justify-between w-full">
                         <div className="text-lg font-semibold">
                             <h2>Edit Profile</h2>
                         </div>
-                        <Button onClick={() => openEdit(false)}>
-                            <RxCross2 size={25} />
-                        </Button>
                     </div>
                     <div className="flex flex-col w-40 h-40 items-center self-start relative">
                         <div className="w-40 h-40 rounded-full bg-blue-300 relative overflow-clip">
@@ -134,7 +134,9 @@ export const EditProfile = ({ openEdit, profile }) => {
                             htmlFor="username"
                             className="border-slate-200 border-2 rounded flex flex-col"
                         >
-                            <span className="text-xs px-2 pt-1">Username</span>
+                            <span className="text-xs font-semibold px-2 pt-1">
+                                Username
+                            </span>
                             <input
                                 type="text"
                                 name="username"
@@ -149,7 +151,9 @@ export const EditProfile = ({ openEdit, profile }) => {
                             htmlFor="bio"
                             className="border-slate-200 border-2 rounded flex flex-col"
                         >
-                            <span className="text-xs px-2 pt-1">Bio</span>
+                            <span className="text-xs font-semibold px-2 pt-1">
+                                Bio
+                            </span>
                             <textarea
                                 type="text"
                                 name="bio"
@@ -164,7 +168,9 @@ export const EditProfile = ({ openEdit, profile }) => {
                             htmlFor="website"
                             className="border-slate-200 border-2 rounded flex flex-col"
                         >
-                            <span className="text-xs px-2 pt-1">Website</span>
+                            <span className="text-xs font-semibold px-2 pt-1">
+                                Website
+                            </span>
                             <input
                                 type="url"
                                 name="website"
@@ -179,7 +185,7 @@ export const EditProfile = ({ openEdit, profile }) => {
                             htmlFor="birth_date"
                             className="border-slate-200 border-2 rounded flex flex-col"
                         >
-                            <span className="text-xs px-2 pt-1">
+                            <span className="text-xs font-semibold px-2 pt-1">
                                 Date of Birth
                             </span>
                             <input
@@ -192,14 +198,14 @@ export const EditProfile = ({ openEdit, profile }) => {
                             />
                         </label>
                         <Button
-                            className={`px-3 py-1 bg-blue-500 rounded-full self-stretch text-white h-9`}
+                            className={`px-3 py-1 rounded-full self-stretch h-9`}
                             onClick={handleUpdate}
                         >
                             {loading ? "Saving..." : "Save"}
                         </Button>
                     </div>
                 </div>
-            </div>
-        </div>
+            </DialogContent>
+        </Dialog>
     );
 };

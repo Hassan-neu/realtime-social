@@ -22,6 +22,11 @@ export async function POST(req) {
                 },
             });
             return NextResponse.json(post, { status: 201 });
+        } else {
+            return NextResponse.json(
+                { message: "Unable to send" },
+                { status: 403 }
+            );
         }
     } catch (error) {
         return NextResponse.json(error, { status: 400 });
@@ -34,8 +39,9 @@ export async function GET(req) {
     const query = searchParams.get("query");
     const reply_to = searchParams.get("reply_to");
     const user_id = searchParams.get("user_id");
+    const media = searchParams.get("media_url");
     try {
-        if (user_id) {
+        if (user_id && !media) {
             const post = await prisma.post.findMany({
                 orderBy: {
                     created_at: "desc",
@@ -88,6 +94,22 @@ export async function GET(req) {
                 },
                 where: {
                     reply_to,
+                },
+                include: {
+                    user: true,
+                    likes: true,
+                    bookmarks: true,
+                },
+            });
+            return NextResponse.json(post, { status: 200 });
+        } else if (media) {
+            const post = await prisma.post.findMany({
+                where: {
+                    user_id,
+                    media_url: { not: null },
+                },
+                orderBy: {
+                    created_at: "desc",
                 },
                 include: {
                     user: true,

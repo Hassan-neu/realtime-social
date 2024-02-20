@@ -1,6 +1,6 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
-import { Button } from "../shared/btn";
+import React, { useEffect, useState } from "react";
+import { Button } from "../ui/button";
 import { BsBalloon } from "react-icons/bs";
 import { IoCalendarOutline } from "react-icons/io5";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -46,7 +46,16 @@ export const UserHeader = ({ serverProfile }) => {
         const dateString = `${months[date.getMonth()]} ${date.getFullYear()}`;
         return dateString;
     }
-
+    function profileTab(value) {
+        const params = new URLSearchParams(searchParams);
+        if (value) {
+            params.set("view", value);
+        } else {
+            params.delete("view");
+        }
+        params.toString();
+        return replace(`${path}?${params}`);
+    }
     async function handleFollow() {
         const {
             data: { user },
@@ -75,16 +84,6 @@ export const UserHeader = ({ serverProfile }) => {
                 console.log(data);
             }
         }
-    }
-    function profileTab(value) {
-        const params = new URLSearchParams(searchParams);
-        if (value) {
-            params.set("view", value);
-        } else {
-            params.delete("view");
-        }
-        params.toString();
-        return replace(`${path}?${params}`);
     }
     useEffect(() => {
         const profileChannel = supabase
@@ -124,18 +123,11 @@ export const UserHeader = ({ serverProfile }) => {
                             />
                             <div className="ml-auto">
                                 {is_current_user ? (
-                                    <Button
-                                        className={
-                                            "px-3 flex items-center py-1 rounded-full border text-sm font-bold"
-                                        }
-                                        onClick={() => setOpenEdit(true)}
-                                    >
-                                        Edit profile
-                                    </Button>
+                                    <EditProfile profile={profile} />
                                 ) : user_followed ? (
                                     <Button
                                         className={
-                                            "px-3 py-1 rounded-full border text-sm font-bold"
+                                            "rounded-full text-sm font-medium text-white"
                                         }
                                         onClick={handleFollow}
                                     >
@@ -144,7 +136,7 @@ export const UserHeader = ({ serverProfile }) => {
                                 ) : (
                                     <Button
                                         className={
-                                            "px-3 py-1 rounded-full border text-sm font-bold"
+                                            "rounded-full text-sm font-medium"
                                         }
                                         onClick={handleFollow}
                                     >
@@ -208,37 +200,39 @@ export const UserHeader = ({ serverProfile }) => {
                                 </Link>
                             </div>
                         </div>
-
                         <div className="flex gap-3 justify-between">
                             <Button
+                                variant="ghost"
                                 onClick={() => profileTab("")}
-                                className={`border-b-4 ${
+                                className={`border-b-4 rounded-none ${
                                     view === null
-                                        ? "border-blue-400"
+                                        ? "border-slate-900"
                                         : "border-transparent"
                                 }`}
                             >
                                 Post
                             </Button>
                             <Button
+                                variant="ghost"
                                 onClick={() => {
                                     profileTab("media");
                                 }}
-                                className={`border-b-4 ${
+                                className={`border-b-4 rounded-none ${
                                     view === "media"
-                                        ? "border-blue-400"
+                                        ? "border-slate-900"
                                         : "border-transparent"
                                 }`}
                             >
                                 Media
                             </Button>
                             <Button
+                                variant="ghost"
                                 onClick={() => {
                                     profileTab("likes");
                                 }}
-                                className={`border-b-4 ${
+                                className={`border-b-4 rounded-none ${
                                     view === "likes"
-                                        ? "border-blue-400"
+                                        ? "border-slate-900"
                                         : "border-transparent"
                                 }`}
                             >
@@ -248,9 +242,9 @@ export const UserHeader = ({ serverProfile }) => {
                     </div>
                 </div>
             </div>
-            {openEdit && (
+            {/* {openEdit && (
                 <EditProfile openEdit={setOpenEdit} profile={profile} />
-            )}
+            )} */}
         </>
     );
 };

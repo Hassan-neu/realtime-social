@@ -21,7 +21,10 @@ export const Compose = ({ avatar_url }) => {
     } = useCreateMedia();
     return (
         <Dialog onOpenChange={(state) => !state && onCancel()}>
-            <DialogTrigger asChild className="py-5 rounded-full mt-2">
+            <DialogTrigger
+                asChild
+                className="text-white py-5 rounded-full mt-2"
+            >
                 <Button>POST</Button>
             </DialogTrigger>
             <DialogContent className="min-w-[600px]">
