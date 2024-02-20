@@ -144,10 +144,10 @@ export const TweetCard = ({ post }) => {
                     <GoBookmarkFill
                         size={18}
                         fill={`${
-                            user_bookmarked ? "rgb(59 130 246)" : "transparent"
+                            user_bookmarked ? "rgb(15 23 42)" : "transparent"
                         }`}
                         stroke={`${
-                            user_bookmarked ? "rgb(59 130 246)" : "currentColor"
+                            user_bookmarked ? "rgb(15 23 42)" : "currentColor"
                         }`}
                         strokeWidth={1}
                         className="transition duration-500"

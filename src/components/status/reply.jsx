@@ -87,12 +87,12 @@ export function Reply({ id }) {
                             onChange={importMedia}
                         />
                         <span>
-                            <FaRegImage size={18} className="text-blue-400" />
+                            <FaRegImage size={18} className="text-slate-900" />
                         </span>
                     </div>
                     <Button
                         className={
-                            "px-4 py-1 rounded-full font-semibold bg-blue-400 text-white ml-auto"
+                            "px-4 py-1 rounded-full font-medium bg-slate-900 text-white ml-auto"
                         }
                         onClick={() => handlePost({ reply_to: id })}
                         disabled={loading}

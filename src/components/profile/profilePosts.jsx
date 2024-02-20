@@ -1,10 +1,8 @@
 import React from "react";
-import { ProfileHeader } from "./profileHeader";
-import { HomeBar } from "../shared/homeBar";
 import UserPosts from "./userPosts";
 import { cookies } from "next/headers";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-
+export const revalidate = 0;
 export default async function ProfilePosts({ username }) {
     const cookieStore = cookies();
     const supabase = createServerComponentClient({

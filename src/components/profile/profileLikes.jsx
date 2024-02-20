@@ -2,7 +2,7 @@ import React from "react";
 import UserLikes from "./userLikes";
 import { cookies } from "next/headers";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-
+export const revalidate = 0;
 export default async function ProfileLikes({ username }) {
     const cookieStore = cookies();
     const supabase = createServerComponentClient({

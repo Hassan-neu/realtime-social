@@ -2,7 +2,7 @@ import React from "react";
 import { TweetPost } from "./tweetPost";
 import { cookies } from "next/headers";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-
+export const revalidate = 0;
 export default async function StatusTweet({ post_id: id }) {
     const cookieStore = cookies();
     const supabase = createServerComponentClient({

@@ -18,6 +18,7 @@ export const useCreateMedia = () => {
     const onCancel = () => {
         setMediaFile("");
         setMediaSrc("");
+        setContent("");
         mediaInput.current.value = "";
     };
     const handlePost = async ({ reply_to }) => {

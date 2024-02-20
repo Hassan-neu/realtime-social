@@ -1,17 +1,18 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { GoHomeFill, GoBookmarkFill } from "react-icons/go";
 import { BiSolidUser } from "react-icons/bi";
 import { MdOutlineSearch, MdNotifications } from "react-icons/md";
-import { BiSolidMessage } from "react-icons/bi";
 import Link from "next/link";
-import { Button } from "../shared/btn";
 import { RiTwitterXFill } from "react-icons/ri";
 import { Compose } from "../shared/compose";
 import { Avatar } from "../shared/avatar";
 import { TbLogout } from "react-icons/tb";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { IoMdMail } from "react-icons/io";
+import { Popover, PopoverTrigger } from "../ui/popover";
+import { PopoverContent } from "@radix-ui/react-popover";
+import { Dialog, DialogTrigger } from "../ui/dialog";
+import { Button } from "../ui/button";
 export function SideMenu({ profile }) {
     const segment = useSelectedLayoutSegment();
     const { username, full_name, avatar_url } = profile;
@@ -107,52 +108,47 @@ export function SideMenu({ profile }) {
                         </li>
                     </ul>
                 </nav>
-                <Button
+                <Compose avatar_url={avatar_url} />
+                {/* <Button
                     className="mt-2 bg-blue-400 font-bold text-white px-3 py-3 rounded-full text-center uppercase"
                     onClick={() => setOpenCompose(true)}
                 >
                     post
-                </Button>
-
-                <div
-                    className={`relative w-full mt-auto shadow rounded-lg bg-white flex flex-col overflow-clip ${
-                        popup ? "opacity-100 visible" : "opacity-0 invisible"
-                    }`}
-                >
-                    <form
-                        action="/api/auth/signout"
-                        method="post"
-                        className="w-full"
+                </Button> */}
+                <Popover>
+                    <PopoverTrigger
+                        asChild
+                        className="mt-auto border rounded-full pl-1 py-1 hover:cursor-pointer bg-slate-900 text-slate-50"
                     >
-                        <Button
-                            className={
-                                "w-full p-3 hover:bg-slate-200 flex gap-2 items-center"
-                            }
-                        >
-                            <TbLogout size={20} />
-                            Log out
+                        <Button className="flex h-auto gap-3 items-center justify-start">
+                            <Avatar
+                                className={"relative w-12 h-12 border shrink-0"}
+                                url={avatar_url}
+                            />
+                            <div className="flex flex-col items-start text-sm">
+                                <span>{full_name}</span>
+                                <span>{username}</span>
+                            </div>
                         </Button>
-                    </form>
-                </div>
-                <Button
-                    className={
-                        "flex gap-3 items-center hover:bg-slate-200 pl-1 py-1 rounded-full relative"
-                    }
-                    onClick={() => setPopup(!popup)}
-                >
-                    <Avatar
-                        className={"relative w-12 h-12 border shrink-0"}
-                        url={avatar_url}
-                    />
-                    <div className="flex flex-col items-start text-sm">
-                        <span>{full_name}</span>
-                        <span>{username}</span>
-                    </div>
-                </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                        className="w-40 border overflow-clip rounded-full"
+                        align="end"
+                        sideOffset={5}
+                    >
+                        <form
+                            action="/api/auth/signout"
+                            method="post"
+                            className="w-full"
+                        >
+                            <Button className="w-full justify-start gap-2">
+                                <TbLogout size={20} />
+                                Log out
+                            </Button>
+                        </form>
+                    </PopoverContent>
+                </Popover>
             </div>
-            {openCompose && (
-                <Compose openCompose={setOpenCompose} avatar_url={avatar_url} />
-            )}
         </div>
     );
 }

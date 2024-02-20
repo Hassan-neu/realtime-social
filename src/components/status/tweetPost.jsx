@@ -162,7 +162,7 @@ export function TweetPost({ serverPost }) {
                                 size={18}
                                 fill={`${
                                     user_bookmarked
-                                        ? "rgb(59 130 246)"
+                                        ? "rgb(15 23 42)"
                                         : "transparent"
                                 }`}
                                 stroke={`${
