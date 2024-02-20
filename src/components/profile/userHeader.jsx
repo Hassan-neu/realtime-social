@@ -54,7 +54,7 @@ export const UserHeader = ({ serverProfile }) => {
             params.delete("view");
         }
         params.toString();
-        return replace(`${path}?${params}`);
+        return replace(`${path}?${params}`, { scroll: false });
     }
     async function handleFollow() {
         const {

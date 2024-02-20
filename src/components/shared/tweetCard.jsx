@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { HiChatBubbleLeft } from "react-icons/hi2";
 import { GoHeartFill, GoBookmarkFill } from "react-icons/go";
 import Link from "next/link";
@@ -66,6 +66,7 @@ export const TweetCard = ({ post }) => {
                 body: JSON.stringify({ post_id: id, user_id: user.id }),
             });
         }
+        refresh();
     };
     const handleBookmark = async () => {
         const {
@@ -87,6 +88,7 @@ export const TweetCard = ({ post }) => {
                 body: JSON.stringify({ post_id: id, user_id: user.id }),
             });
         }
+        refresh();
     };
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer hover:bg-slate-100">
