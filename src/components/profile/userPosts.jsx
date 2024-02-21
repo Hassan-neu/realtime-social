@@ -2,12 +2,21 @@
 import React, { useEffect, useState } from "react";
 import { TweetCard } from "../shared/tweetCard";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useOptimistic } from "react";
 export default function UserPosts({ serverPosts }) {
     const supabase = createClientComponentClient();
     const [userPosts, setUserPosts] = useState(serverPosts);
-    useEffect(() => {
-        setUserPosts(serverPosts);
-    }, [serverPosts]);
+    const [optimisticPosts, addOptimisticPost] = useOptimistic(
+        userPosts,
+        (currentPosts, newPost) => {
+            const newOptimisticPosts = [...currentPosts];
+            const indx = newOptimisticPosts.findIndex(
+                (post) => post.id === newPost.id
+            );
+            newOptimisticPosts[indx] = newPost;
+            return newOptimisticPosts;
+        }
+    );
     useEffect(() => {
         const channel = supabase
             .channel("realtime-user-posts")
@@ -40,7 +49,11 @@ export default function UserPosts({ serverPosts }) {
                         );
                     } else {
                         setUserPosts([
-                            { ...newPost, likes: [], bookmarks: [] },
+                            {
+                                ...newPost,
+                                likes_length: 0,
+                                bookmarks_length: 0,
+                            },
                             ...userPosts,
                         ]);
                     }
@@ -51,8 +64,13 @@ export default function UserPosts({ serverPosts }) {
     }, [supabase, userPosts]);
     return (
         <div className="flex flex-col">
-            {userPosts?.map((post) => (
-                <TweetCard key={post.id} post={post} />
+            {optimisticPosts?.map((post) => (
+                <TweetCard
+                    key={post.id}
+                    post={post}
+                    addOptimisticPost={addOptimisticPost}
+                    setNewPosts={setUserPosts}
+                />
             ))}
         </div>
     );

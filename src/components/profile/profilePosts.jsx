@@ -27,16 +27,20 @@ export default async function ProfilePosts({ username, searchParams }) {
     if (view !== "likes") {
         serverPosts = userPosts.map((post) => ({
             ...post,
-            user_liked: post.likes.find((like) => like.user_id == userId),
-            user_bookmarked: post.bookmarks.find(
+            likes_length: post.likes.length,
+            bookmarks_length: post.bookmarks.length,
+            user_liked: post.likes.some((like) => like.user_id == userId),
+            user_bookmarked: post.bookmarks.some(
                 (bookmark) => bookmark.user_id === userId
             ),
         }));
     } else {
         serverPosts = userPosts.map((like) => ({
             ...like.post,
-            user_liked: like.post.likes.find((like) => like.user_id == userId),
-            user_bookmarked: like.post.bookmarks.find(
+            likes_length: like.post.likes.length,
+            bookmarks_length: like.post.bookmarks.length,
+            user_liked: like.post.likes.some((like) => like.user_id == userId),
+            user_bookmarked: like.post.bookmarks.some(
                 (bookmark) => bookmark.user_id === userId
             ),
         }));

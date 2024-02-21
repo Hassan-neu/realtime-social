@@ -27,8 +27,10 @@ export default async function StatusTweet({ post_id: id }) {
     const userId = await getUserId();
     const newPosts = {
         ...post,
-        user_liked: post.likes.find((like) => like.user_id === userId),
-        user_bookmarked: post.bookmarks.find(
+        likes_length: post.bookmarks.length,
+        bookmarks_length: post.bookmarks.length,
+        user_liked: post.likes.some((like) => like.user_id === userId),
+        user_bookmarked: post.bookmarks.some(
             (bookmark) => bookmark.user_id === userId
         ),
     };

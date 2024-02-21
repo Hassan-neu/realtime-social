@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { RxCross1, RxCross2 } from "react-icons/rx";
 import { Avatar } from "./avatar";
@@ -8,6 +8,7 @@ import { useCreateMedia } from "@/utils/mediaReplyHook";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 export const Compose = ({ avatar_url }) => {
+    const [openDialog, setOpenDialog] = useState(false);
     const {
         mediaSrc,
         size,
@@ -20,7 +21,13 @@ export const Compose = ({ avatar_url }) => {
         handlePost,
     } = useCreateMedia();
     return (
-        <Dialog onOpenChange={(state) => !state && onCancel()}>
+        <Dialog
+            open={openDialog}
+            onOpenChange={(state) => {
+                setOpenDialog(!openDialog);
+                !state && onCancel();
+            }}
+        >
             <DialogTrigger
                 asChild
                 className="text-white py-5 rounded-full mt-2"
@@ -92,7 +99,11 @@ export const Compose = ({ avatar_url }) => {
                                         className={
                                             "px-5 py-1 rounded-full font-semibold bg-slate-900 uppercase text-white"
                                         }
-                                        onClick={handlePost}
+                                        onClick={() => {
+                                            handlePost({ reply_to: null }).then(
+                                                () => setOpenDialog(false)
+                                            );
+                                        }}
                                         disabled={loading}
                                     >
                                         {loading ? "Sending..." : "Post"}

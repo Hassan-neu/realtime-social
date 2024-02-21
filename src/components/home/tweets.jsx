@@ -3,7 +3,12 @@ import React, { useEffect, useState } from "react";
 import { TweetCard } from "../shared/tweetCard";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useOptimistic } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "../ui/use-toast";
+import { Button } from "../ui/button";
+import { ToastAction } from "../ui/toast";
 const Tweets = ({ contents }) => {
+    const { refresh } = useRouter();
     const supabase = createClientComponentClient();
     const [newPosts, setNewPosts] = useState(contents);
     const [optimisticPosts, addOptimisticPost] = useOptimistic(
@@ -18,53 +23,31 @@ const Tweets = ({ contents }) => {
         }
     );
     useEffect(() => {
+        setNewPosts(contents);
+    }, [contents]);
+    useEffect(() => {
         const channel = supabase
             .channel("realtime-posts")
             .on(
                 "postgres_changes",
                 { event: "*", schema: "public", table: "posts" },
-                async (payload) => {
-                    const { new: newPost } = payload;
-                    console.log(payload);
-                    const oldPost = newPosts.find(
-                        (post) => post.id === newPost.id
-                    );
-                    if (payload.eventType === "DELETE") {
-                        return setNewPosts((prev) =>
-                            prev.filter((post) => post.id !== payload.old.id)
-                        );
-                    }
-                    if (oldPost) {
-                        setNewPosts((prev) =>
-                            prev.map((post) =>
-                                post.id === newPost.id
-                                    ? {
-                                          ...post,
-                                          ...newPost,
-                                      }
-                                    : post
-                            )
-                        );
-                    } else {
-                        const res = await fetch(
-                            `/api/auth/profile?id=${newPost.user_id}`
-                        );
-                        const user = await res.json();
-                        setNewPosts([
-                            {
-                                ...newPost,
-                                likes_length: 0,
-                                bookmarks_length: 0,
-                                user,
-                            },
-                            ...newPosts,
-                        ]);
-                    }
+                (payload) => {
+                    toast({
+                        description: "Load new posts",
+                        action: (
+                            <ToastAction
+                                altText="Refresh"
+                                onClick={() => refresh()}
+                            >
+                                Load new
+                            </ToastAction>
+                        ),
+                    });
                 }
             )
             .subscribe();
         return () => supabase.removeChannel(channel);
-    }, [supabase, newPosts]);
+    }, [supabase, refresh]);
 
     return (
         <div>
