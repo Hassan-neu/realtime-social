@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { startTransition } from "react";
 import { HiChatBubbleLeft } from "react-icons/hi2";
 import { GoHeartFill, GoBookmarkFill } from "react-icons/go";
 import Link from "next/link";
@@ -9,15 +9,15 @@ import { months } from "@/utils/months";
 import { TweetMedia } from "./tweetMedia";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
-export const TweetCard = ({ post }) => {
-    const { refresh, push } = useRouter();
+export const TweetCard = ({ post, addOptimisticPost, setNewPosts }) => {
+    // const { refresh, push } = useRouter();
     const supabase = createClientComponentClient();
     const {
         id,
         content,
         media_url,
-        likes,
-        bookmarks,
+        likes_length,
+        bookmarks_length,
         user_liked,
         user_bookmarked,
         created_at,
@@ -50,45 +50,78 @@ export const TweetCard = ({ post }) => {
         }
     };
     const handleLike = async () => {
-        const {
-            data: { user },
-        } = await supabase.auth.getUser();
-        if (user_liked) {
-            const res = await fetch(
-                `/api/like?post_id=${id}&user_id=${user.id}`,
-                {
-                    method: "DELETE",
-                }
+        try {
+            let optimisticUpdate;
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+            if (user_liked) {
+                optimisticUpdate = {
+                    ...post,
+                    user_liked: false,
+                    likes_length: likes_length - 1,
+                };
+                await supabase
+                    .from("likes")
+                    .delete()
+                    .match({ post_id: id, user_id: user.id });
+            } else {
+                optimisticUpdate = {
+                    ...post,
+                    user_liked: true,
+                    likes_length: likes_length + 1,
+                };
+                await supabase
+                    .from("likes")
+                    .insert({ post_id: id, user_id: user.id });
+            }
+            startTransition(() => addOptimisticPost(optimisticUpdate));
+            setNewPosts((prev) =>
+                prev.map((post) => (post.id === id ? optimisticUpdate : post))
             );
-        } else {
-            const res = await fetch("/api/like", {
-                method: "POST",
-                body: JSON.stringify({ post_id: id, user_id: user.id }),
-            });
+        } catch (error) {
+            setNewPosts((prev) =>
+                prev.map((old) => (old.id === id ? { ...old, ...post } : old))
+            );
+            console.error(error);
         }
-        refresh();
     };
     const handleBookmark = async () => {
-        const {
-            data: { user },
-        } = await supabase.auth.getUser();
-        const bookmarkExists = bookmarks.find(
-            (bookmark) => bookmark.user_id === user.id
-        );
-        if (bookmarkExists) {
-            const res = await fetch(
-                `/api/bookmark?post_id=${id}&user_id=${user.id}`,
-                {
-                    method: "DELETE",
-                }
+        try {
+            let optimisticUpdate;
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+            if (user_bookmarked) {
+                optimisticUpdate = {
+                    ...post,
+                    user_bookmarked: false,
+                    bookmarks_length: bookmarks_length - 1,
+                };
+                await supabase
+                    .from("bookmarks")
+                    .delete()
+                    .match({ post_id: id, user_id: user.id });
+            } else {
+                optimisticUpdate = {
+                    ...post,
+                    user_bookmarked: true,
+                    bookmarks_length: bookmarks_length + 1,
+                };
+                await supabase
+                    .from("bookmarks")
+                    .insert({ post_id: id, user_id: user.id });
+            }
+            startTransition(() => addOptimisticPost(optimisticUpdate));
+            setNewPosts((prev) =>
+                prev.map((post) => (post.id === id ? optimisticUpdate : post))
             );
-        } else {
-            const res = await fetch("/api/bookmark", {
-                method: "POST",
-                body: JSON.stringify({ post_id: id, user_id: user.id }),
-            });
+        } catch (error) {
+            setNewPosts((prev) =>
+                prev.map((old) => (old.id === id ? { ...old, ...post } : old))
+            );
+            console.error(error);
         }
-        refresh();
     };
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer hover:bg-slate-100">
@@ -132,7 +165,7 @@ export const TweetCard = ({ post }) => {
                             user_liked ? "text-red-500" : "text-black"
                         }`}
                     >
-                        {likes.length}
+                        {likes_length}
                     </span>
                 </Button>
                 <Button
@@ -150,7 +183,7 @@ export const TweetCard = ({ post }) => {
                         strokeWidth={1}
                         className="transition duration-500"
                     />
-                    <span className="text-xs">{bookmarks.length}</span>
+                    <span className="text-xs">{bookmarks_length}</span>
                 </Button>
             </div>
         </div>

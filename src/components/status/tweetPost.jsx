@@ -41,6 +41,9 @@ export function TweetPost({ serverPost }) {
         return dateString;
     }
     useEffect(() => {
+        setPost(serverPost);
+    }, [serverPost]);
+    useEffect(() => {
         const channel = supabase
             .channel("realtime-single-post")
             .on(

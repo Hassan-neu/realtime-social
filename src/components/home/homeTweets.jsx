@@ -29,8 +29,10 @@ export default async function HomeTweets() {
     const userId = await getUserId();
     const newContents = contents.map((content) => ({
         ...content,
-        user_liked: content.likes.find((like) => like.user_id === userId),
-        user_bookmarked: content.bookmarks.find(
+        likes_length: content.likes.length,
+        bookmarks_length: content.bookmarks.length,
+        user_liked: content.likes.some((like) => like.user_id === userId),
+        user_bookmarked: content.bookmarks.some(
             (bookmark) => bookmark.user_id === userId
         ),
     }));

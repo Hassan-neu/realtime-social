@@ -6,7 +6,9 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 export default function Replies({ serverReplies, reply_id }) {
     const supabase = createClientComponentClient();
     const [newReplies, setNewReplies] = useState(serverReplies);
-
+    useEffect(() => {
+        setNewReplies(serverReplies);
+    }, [serverReplies]);
     useEffect(() => {
         const channel = supabase
             .channel("realtime-post-replies")

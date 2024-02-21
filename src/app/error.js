@@ -10,7 +10,7 @@ export default function Error({ error: { message }, reset }) {
             <div>
                 <Button
                     onClick={() => reset()}
-                    className="text-white bg-blue-500 rounded-full py-1 px-3"
+                    className="text-white rounded-full"
                 >
                     Reset
                 </Button>

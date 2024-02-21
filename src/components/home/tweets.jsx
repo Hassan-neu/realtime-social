@@ -2,9 +2,21 @@
 import React, { useEffect, useState } from "react";
 import { TweetCard } from "../shared/tweetCard";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useOptimistic } from "react";
 const Tweets = ({ contents }) => {
     const supabase = createClientComponentClient();
     const [newPosts, setNewPosts] = useState(contents);
+    const [optimisticPosts, addOptimisticPost] = useOptimistic(
+        newPosts,
+        (currentPosts, newPost) => {
+            const newOptimisticPosts = [...currentPosts];
+            const indx = newOptimisticPosts.findIndex(
+                (post) => post.id === newPost.id
+            );
+            newOptimisticPosts[indx] = newPost;
+            return newOptimisticPosts;
+        }
+    );
     useEffect(() => {
         const channel = supabase
             .channel("realtime-posts")
@@ -39,7 +51,12 @@ const Tweets = ({ contents }) => {
                         );
                         const user = await res.json();
                         setNewPosts([
-                            { ...newPost, likes: [], bookmarks: [], user },
+                            {
+                                ...newPost,
+                                likes_length: 0,
+                                bookmarks_length: 0,
+                                user,
+                            },
                             ...newPosts,
                         ]);
                     }
@@ -51,8 +68,13 @@ const Tweets = ({ contents }) => {
 
     return (
         <div>
-            {newPosts?.map((content) => (
-                <TweetCard key={content.id} post={content} />
+            {optimisticPosts?.map((content) => (
+                <TweetCard
+                    key={content.id}
+                    post={content}
+                    addOptimisticPost={addOptimisticPost}
+                    setNewPosts={setNewPosts}
+                />
             ))}
         </div>
     );
