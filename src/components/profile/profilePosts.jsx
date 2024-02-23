@@ -45,5 +45,5 @@ export default async function ProfilePosts({ username, searchParams }) {
             ),
         }));
     }
-    return <UserPosts serverPosts={serverPosts} />;
+    return <UserPosts serverPosts={serverPosts} username={username} />;
 }

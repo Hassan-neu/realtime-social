@@ -36,16 +36,13 @@ export default async function UserBookmarks() {
 
     const userBookmarks = await getUserBookmarks();
     const serverBookmarks = userBookmarks.map((bookmark) => ({
-        ...bookmark,
-        post: {
-            ...bookmark.post,
-            user_liked: bookmark.post.likes.find(
-                (like) => like.user_id == userId
-            ),
-            user_bookmarked: bookmark.post.bookmarks.find(
-                (bookmark) => bookmark.user_id === userId
-            ),
-        },
+        ...bookmark.post,
+        likes_length: bookmark.post.likes.length,
+        bookmarks_length: bookmark.post.bookmarks.length,
+        user_liked: bookmark.post.likes.some((like) => like.user_id == userId),
+        user_bookmarked: bookmark.post.bookmarks.some(
+            (bookmark) => bookmark.user_id === userId
+        ),
     }));
     return <Bookmarks serverBookmarks={serverBookmarks} />;
 }

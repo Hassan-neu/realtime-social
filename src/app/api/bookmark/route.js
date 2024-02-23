@@ -71,6 +71,9 @@ export async function GET(req) {
                     },
                 },
             },
+            orderBy: {
+                created_at: "desc",
+            },
         });
         return NextResponse.json(bookmarks, { status: 200 });
     } catch (error) {

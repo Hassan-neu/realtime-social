@@ -1,9 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { startTransition, useEffect, useState } from "react";
 import { TweetCard } from "../shared/tweetCard";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useOptimistic } from "react";
-export default function UserPosts({ serverPosts }) {
+import { useRouter } from "next/navigation";
+import { ToastAction } from "../ui/toast";
+import { toast } from "../ui/use-toast";
+export default function UserPosts({ serverPosts, username }) {
+    const { refresh } = useRouter();
     const supabase = createClientComponentClient();
     const [userPosts, setUserPosts] = useState(serverPosts);
     const [optimisticPosts, addOptimisticPost] = useOptimistic(
@@ -18,50 +22,39 @@ export default function UserPosts({ serverPosts }) {
         }
     );
     useEffect(() => {
+        setUserPosts(serverPosts);
+        startTransition(() => addOptimisticPost(serverPosts));
+    }, [serverPosts, addOptimisticPost]);
+    useEffect(() => {
         const channel = supabase
-            .channel("realtime-user-posts")
+            .channel("realtime-userposts")
             .on(
                 "postgres_changes",
-                {
-                    event: "*",
-                    schema: "public",
-                    table: "posts",
-                    filter: `user_id=eq.${userPosts.user_id}`,
-                },
-                (payload) => {
-                    const { new: newPost } = payload;
-                    console.log(payload);
-                    const oldPost = userPosts.find(
-                        (post) => post.id === newPost.id
+                { event: "*", schema: "public", table: "posts" },
+                async (payload) => {
+                    const res = await fetch(
+                        `/api/auth/profile?username=${username}`
                     );
-                    if (payload.eventType === "DELETE") {
-                        return setUserPosts((prev) =>
-                            prev.filter((post) => post.id !== payload.old.id)
-                        );
-                    }
-                    if (oldPost) {
-                        setUserPosts((prev) =>
-                            prev.map((post) =>
-                                post.id === newPost.id
-                                    ? { ...post, ...newPost }
-                                    : post
-                            )
-                        );
-                    } else {
-                        setUserPosts([
-                            {
-                                ...newPost,
-                                likes_length: 0,
-                                bookmarks_length: 0,
-                            },
-                            ...userPosts,
-                        ]);
+                    const user = await res.json();
+                    const { new: newPost } = payload;
+                    if (newPost.user_id === user.id) {
+                        toast({
+                            description: "Load new posts",
+                            action: (
+                                <ToastAction
+                                    altText="Refresh"
+                                    onClick={() => refresh()}
+                                >
+                                    Load new
+                                </ToastAction>
+                            ),
+                        });
                     }
                 }
             )
             .subscribe();
         return () => supabase.removeChannel(channel);
-    }, [supabase, userPosts]);
+    }, [supabase, username, refresh]);
     return (
         <div className="flex flex-col">
             {optimisticPosts?.map((post) => (

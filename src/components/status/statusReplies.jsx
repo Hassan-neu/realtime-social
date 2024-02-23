@@ -9,8 +9,26 @@ export default async function StatusReplies({ post_id: id }) {
         const data = res.json();
         return data;
     };
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    const getUserId = async () => {
+        try {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+            return user.id;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const userId = await getUserId();
     const replies = await getReplies();
-
-    return <Replies serverReplies={replies} reply_id={id} />;
+    const newReplies = replies.map((reply) => ({
+        ...reply,
+        likes_length: reply.likes.length,
+        bookmarks_length: reply.bookmarks.length,
+        user_liked: reply.likes.some((like) => like.user_id === userId),
+        user_bookmarked: reply.bookmarks.some(
+            (bookmark) => bookmark.user_id === userId
+        ),
+    }));
+    return <Replies serverReplies={newReplies} reply_id={id} />;
 }

@@ -54,6 +54,9 @@ export async function GET(req) {
                     },
                 },
             },
+            orderBy: {
+                created_at: "desc",
+            },
         });
         return NextResponse.json(likes, { status: 200 });
     } catch (error) {

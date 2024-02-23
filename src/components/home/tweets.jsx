@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { startTransition, useEffect, useState } from "react";
 import { TweetCard } from "../shared/tweetCard";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useOptimistic } from "react";
@@ -24,7 +24,8 @@ const Tweets = ({ contents }) => {
     );
     useEffect(() => {
         setNewPosts(contents);
-    }, [contents]);
+        startTransition(() => addOptimisticPost(contents));
+    }, [contents, addOptimisticPost]);
     useEffect(() => {
         const channel = supabase
             .channel("realtime-posts")
@@ -32,6 +33,7 @@ const Tweets = ({ contents }) => {
                 "postgres_changes",
                 { event: "*", schema: "public", table: "posts" },
                 (payload) => {
+                    console.log(payload);
                     toast({
                         description: "Load new posts",
                         action: (
