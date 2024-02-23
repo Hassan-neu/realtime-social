@@ -1,12 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import { Button } from "../shared/btn";
+import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { validation } from "@/libs/signinValidation";
 import { useFormik } from "formik";
 import { PiEyeClosedLight } from "react-icons/pi";
 import { RxEyeOpen } from "react-icons/rx";
+import Link from "next/link";
 export const SignIn = () => {
     const formik = useFormik({
         initialValues: {
@@ -41,9 +42,9 @@ export const SignIn = () => {
     }
     return (
         <div className="w-screen h-screen flex flex-col justify-center items-center bg-slate-200">
-            <div className="flex justify-center items-center w-[600px] h-[650px] px-4 py-2 bg-white rounded-2xl">
-                <div className="flex flex-col items-center justify-center gap-3 w-3/5 h-4/5">
-                    <div className="text-2xl font-semibold self-start">
+            <div className="flex justify-center items-center w-4/5 max-w-[400px] h-[50vmin] px-4 py-2 bg-white rounded-xl">
+                <div className="flex flex-col items-center justify-center gap-3 w-4/5">
+                    <div className="text-xl font-semibold self-start">
                         <h2>Sign In to your account</h2>
                     </div>
                     <div className="flex flex-col gap-4 w-full">
@@ -57,7 +58,7 @@ export const SignIn = () => {
                                 type="email"
                                 name="email"
                                 id="email"
-                                className={`border-2 h-12 bg-transparent text-sm rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none  ${
+                                className={`border h-9 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none  ${
                                     formik.errors.email && formik.touched.email
                                         ? "border-red-400"
                                         : "border-slate-200"
@@ -80,7 +81,7 @@ export const SignIn = () => {
                                     }`}
                                     name="password"
                                     id="password"
-                                    className={`border-2 h-12 bg-transparent text-sm rounded px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none  ${
+                                    className={`border h-9 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none  ${
                                         formik.errors.password &&
                                         formik.touched.password
                                             ? "border-red-400"
@@ -104,19 +105,20 @@ export const SignIn = () => {
                             </div>
                         </label>
                         <Button
-                            className={`px-3 py-1 bg-blue-500 rounded-full self-stretch text-white h-10`}
+                            className={`px-3 py-1 rounded-full text-base self-stretch text-white h-9`}
                             onClick={formik.handleSubmit}
                             disabled={loading}
                         >
                             {loading ? "Loading..." : "Log In"}
                         </Button>
-                        <div className="flex text-sm gap-1 justify-center">
+                        <div className="flex text-sm gap-0.5 justify-center items-center">
                             <span>Don&apos;t have an account?</span>
                             <Button
-                                className="text-blue-500"
-                                onClick={() => push("/signup")}
+                                asChild
+                                className="text-slate-900 font-semibold p-2 hover:bg-transparent"
+                                variant="ghost"
                             >
-                                Sign up
+                                <Link href={"/signup"}>Sign up</Link>
                             </Button>
                         </div>
                     </div>
