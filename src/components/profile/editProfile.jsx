@@ -6,9 +6,11 @@ import { MdOutlineAddAPhoto } from "react-icons/md";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
+import { FiLoader } from "react-icons/fi";
 export const EditProfile = ({ profile }) => {
     const { avatar_url, username, bio, website, birth_date } = profile;
     const supabase = createClientComponentClient();
+    const [openDialog, setOpenDialog] = useState(false);
     const [user, setUser] = useState({
         username,
         avatar_url,
@@ -78,6 +80,7 @@ export const EditProfile = ({ profile }) => {
                 });
                 const data = await res.json();
                 console.log(data);
+                setOpenDialog(false);
             }
         } catch (error) {
             console.log(error);
@@ -86,7 +89,12 @@ export const EditProfile = ({ profile }) => {
         }
     };
     return (
-        <Dialog>
+        <Dialog
+            open={openDialog}
+            onOpenChange={(state) => {
+                setOpenDialog(!openDialog);
+            }}
+        >
             <DialogTrigger asChild className="rounded-full">
                 <Button> Edit Profile</Button>
             </DialogTrigger>
@@ -132,7 +140,7 @@ export const EditProfile = ({ profile }) => {
                     <div className="flex flex-col gap-4 w-full">
                         <label
                             htmlFor="username"
-                            className="border-slate-200 border-2 rounded flex flex-col"
+                            className="border-slate-200 border rounded-md flex flex-col"
                         >
                             <span className="text-xs font-semibold px-2 pt-1">
                                 Username
@@ -149,7 +157,7 @@ export const EditProfile = ({ profile }) => {
                         </label>
                         <label
                             htmlFor="bio"
-                            className="border-slate-200 border-2 rounded flex flex-col"
+                            className="border-slate-200 border rounded-md flex flex-col"
                         >
                             <span className="text-xs font-semibold px-2 pt-1">
                                 Bio
@@ -166,7 +174,7 @@ export const EditProfile = ({ profile }) => {
                         </label>
                         <label
                             htmlFor="website"
-                            className="border-slate-200 border-2 rounded flex flex-col"
+                            className="border-slate-200 border rounded-md flex flex-col"
                         >
                             <span className="text-xs font-semibold px-2 pt-1">
                                 Website
@@ -183,7 +191,7 @@ export const EditProfile = ({ profile }) => {
                         </label>
                         <label
                             htmlFor="birth_date"
-                            className="border-slate-200 border-2 rounded flex flex-col"
+                            className="border-slate-200 border rounded flex flex-col"
                         >
                             <span className="text-xs font-semibold px-2 pt-1">
                                 Date of Birth
@@ -198,10 +206,21 @@ export const EditProfile = ({ profile }) => {
                             />
                         </label>
                         <Button
-                            className={`px-3 py-1 rounded-full self-stretch h-9`}
+                            className={`px-3 py-1 rounded-full text-base self-stretch h-9`}
                             onClick={handleUpdate}
+                            disabled={loading}
                         >
-                            {loading ? "Saving..." : "Save"}
+                            {loading ? (
+                                <div className="flex gap-1 w-full items-center justify-center">
+                                    <FiLoader
+                                        size={20}
+                                        className="animate-spin"
+                                    />
+                                    Saving...
+                                </div>
+                            ) : (
+                                <div className="w-full">Save</div>
+                            )}
                         </Button>
                     </div>
                 </div>

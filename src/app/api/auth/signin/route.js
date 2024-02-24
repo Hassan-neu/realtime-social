@@ -16,10 +16,17 @@ export async function POST(req) {
             email,
             password,
         });
-        return NextResponse.json(
-            { message: "Login successful" },
-            { status: 200 }
-        );
+        if (user) {
+            return NextResponse.json(
+                { message: "Login successful" },
+                { status: 200 }
+            );
+        } else {
+            return NextResponse.json(
+                { message: "Invalid login credentials" },
+                { status: 400 }
+            );
+        }
     } catch (error) {
         return NextResponse.json(error, { status: 400 });
     }

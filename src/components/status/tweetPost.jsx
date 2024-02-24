@@ -51,7 +51,8 @@ export function TweetPost({ serverPost }) {
     }
     useEffect(() => {
         setPost(serverPost);
-    }, [serverPost]);
+        startTransition(() => addOptimisticPost(serverPost));
+    }, [serverPost, addOptimisticPost]);
     // useEffect(() => {
     //     const channel = supabase
     //         .channel("realtime-single-post")

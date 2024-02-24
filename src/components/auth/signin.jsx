@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 import { PiEyeClosedLight } from "react-icons/pi";
 import { RxEyeOpen } from "react-icons/rx";
 import Link from "next/link";
+import { FiLoader } from "react-icons/fi";
 export const SignIn = () => {
     const formik = useFormik({
         initialValues: {
@@ -41,8 +42,8 @@ export const SignIn = () => {
         }
     }
     return (
-        <div className="w-screen h-screen flex flex-col justify-center items-center bg-slate-200">
-            <div className="flex justify-center items-center w-4/5 max-w-[400px] h-[50vmin] px-4 py-2 bg-white rounded-xl">
+        <div className="w-screen h-screen flex flex-col justify-center items-center bg-slate-100/60">
+            <div className="flex justify-center items-center w-4/5 max-w-[400px] h-[50vmin] px-4 py-2 bg-white rounded-xl border">
                 <div className="flex flex-col items-center justify-center gap-3 w-4/5">
                     <div className="text-xl font-semibold self-start">
                         <h2>Sign In to your account</h2>
@@ -109,13 +110,24 @@ export const SignIn = () => {
                             onClick={formik.handleSubmit}
                             disabled={loading}
                         >
-                            {loading ? "Loading..." : "Log In"}
+                            {loading ? (
+                                <div className="flex gap-1 w-full items-center justify-center">
+                                    <FiLoader
+                                        size={20}
+                                        className="animate-spin"
+                                    />
+                                    Logging in...
+                                </div>
+                            ) : (
+                                <div className="w-full">Log In</div>
+                            )}
                         </Button>
                         <div className="flex text-sm gap-0.5 justify-center items-center">
                             <span>Don&apos;t have an account?</span>
                             <Button
+                                type="submit"
                                 asChild
-                                className="text-slate-900 font-semibold p-2 hover:bg-transparent"
+                                className="text-slate-90 font-semibold p-2 hover:bg-transparent"
                                 variant="ghost"
                             >
                                 <Link href={"/signup"}>Sign up</Link>

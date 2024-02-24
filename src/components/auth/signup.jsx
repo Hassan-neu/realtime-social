@@ -59,8 +59,8 @@ export const Signup = () => {
     }, [formik]);
 
     return (
-        <div className="w-screen h-screen flex justify-center items-center bg-slate-200">
-            <div className="flex flex-col w-4/5 max-w-[500px] h-4/5 max-h-[600px]  p-5 bg-white rounded-xl relative overflow-clip">
+        <div className="w-screen h-screen flex justify-center items-center bg-slate-100/60">
+            <div className="flex flex-col w-4/5 max-w-[500px] h-4/5 max-h-[600px]  p-5 bg-white rounded-xl relative overflow-clip border">
                 <div className="flex gap-1 items-center justify-between text-lg font-semibold w-4/5 self-center mt-8">
                     <Button
                         className="w-8 h-8 rounded-full p-1 flex justify-center items-center hover:bg-slate-200 disabled:hover:bg-transparent"
@@ -128,7 +128,7 @@ export const Signup = () => {
                                 <span className="block text-base font-semibold">
                                     Date of Birth
                                 </span>
-                                <span className="text-sm text-slate-500 block">
+                                <span className="text-xs text-slate-500 block">
                                     This will not be shown publicly. Confirm
                                     your own age, even if this account is for a
                                     business, a pet, or something else.

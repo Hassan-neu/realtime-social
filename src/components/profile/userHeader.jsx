@@ -1,5 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, {
+    startTransition,
+    useEffect,
+    useOptimistic,
+    useState,
+} from "react";
 import { Button } from "../ui/button";
 import { BsBalloon } from "react-icons/bs";
 import { IoCalendarOutline } from "react-icons/io5";
@@ -18,7 +23,10 @@ export const UserHeader = ({ serverProfile }) => {
     const path = usePathname();
     const { replace } = useRouter();
     const [profile, setProfile] = useState(serverProfile);
-    const [openEdit, setOpenEdit] = useState(false);
+    const [optimisticProfile, addOptimisticProfile] = useOptimistic(
+        profile,
+        (currentProfile, newProfile) => ({ ...currentProfile, ...newProfile })
+    );
     const {
         id,
         created_at,
@@ -28,11 +36,11 @@ export const UserHeader = ({ serverProfile }) => {
         full_name,
         username,
         website,
-        followers,
-        following,
+        followers_length,
+        following_length,
         user_followed,
         is_current_user,
-    } = profile;
+    } = optimisticProfile;
     const supabase = createClientComponentClient();
     function birthDate() {
         const date = new Date(birth_date);
@@ -56,33 +64,39 @@ export const UserHeader = ({ serverProfile }) => {
         params.toString();
         return replace(`${path}?${params}`, { scroll: false });
     }
+    useEffect(() => {
+        setProfile(serverProfile);
+        startTransition(() => addOptimisticProfile(serverProfile));
+    }, [serverProfile, addOptimisticProfile]);
     async function handleFollow() {
-        const {
-            data: { user },
-        } = await supabase.auth.getUser();
-        if (user_followed) {
-            const res = await fetch(
-                `/api/follow?following_id=${id}&follower_id=${user.id}`,
-                {
-                    method: "DELETE",
-                }
-            );
-            if (res.ok) {
-                const data = await res.json();
-                console.log(data);
+        try {
+            let optimisticUpdate;
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+            if (user_followed) {
+                optimisticUpdate = {
+                    user_followed: false,
+                    followers_length: followers_length - 1,
+                };
+                await supabase
+                    .from("follows")
+                    .delete()
+                    .match({ following_id: id, follower_id: user.id });
+            } else {
+                optimisticUpdate = {
+                    user_followed: true,
+                    followers_length: followers_length + 1,
+                };
+                await supabase
+                    .from("follows")
+                    .insert({ following_id: id, follower_id: user.id });
             }
-        } else {
-            const res = await fetch("/api/follow", {
-                method: "POST",
-                body: JSON.stringify({
-                    following_id: id,
-                    follower_id: user.id,
-                }),
-            });
-            if (res.ok) {
-                const data = await res.json();
-                console.log(data);
-            }
+            startTransition(() => addOptimisticProfile(optimisticUpdate));
+            setProfile((prev) => ({ ...prev, ...optimisticUpdate }));
+        } catch (error) {
+            setProfile((prev) => ({ ...prev, ...profile }));
+            console.log(error);
         }
     }
     useEffect(() => {
@@ -185,7 +199,7 @@ export const UserHeader = ({ serverProfile }) => {
                                     className="flex gap-1"
                                 >
                                     <span className="font-bold">
-                                        {following.length}
+                                        {following_length}
                                     </span>
                                     following
                                 </Link>
@@ -194,7 +208,7 @@ export const UserHeader = ({ serverProfile }) => {
                                     className="flex gap-1"
                                 >
                                     <span className="font-bold">
-                                        {followers.length}
+                                        {followers_length}
                                     </span>
                                     followers
                                 </Link>
