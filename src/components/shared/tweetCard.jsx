@@ -21,6 +21,7 @@ export const TweetCard = ({ post, addOptimisticPost, setNewPosts }) => {
         user_liked,
         user_bookmarked,
         created_at,
+        reply_length,
         user: { full_name, username, avatar_url },
     } = post;
     const getDate = () => {
@@ -146,8 +147,12 @@ export const TweetCard = ({ post, addOptimisticPost, setNewPosts }) => {
                 </div>
             </Link>
             <div className="flex gap-3 justify-between w-[calc(100%_-_3.75rem)] self-end">
-                <Button onClick={(e) => console.log(e.target)}>
+                <Button
+                    onClick={(e) => console.log(e.target)}
+                    className={"flex items-center gap-1"}
+                >
                     <HiChatBubbleLeft size={18} fill="none" strokeWidth={1} />
+                    <span className="text-xs">{reply_length}</span>
                 </Button>
                 <Button
                     onClick={handleLike}

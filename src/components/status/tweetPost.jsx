@@ -30,6 +30,7 @@ export function TweetPost({ serverPost }) {
         user_liked,
         user_bookmarked,
         created_at,
+        reply_length,
         user: { full_name, username, avatar_url },
     } = optimisticPost;
     function getTime() {
@@ -162,12 +163,13 @@ export function TweetPost({ serverPost }) {
                         <span>{getDate()}</span>
                     </div>
                     <div className="flex gap-3 justify-between border-y py-3">
-                        <Button>
+                        <Button className={"flex items-center gap-1"}>
                             <HiChatBubbleLeft
                                 size={18}
                                 fill="none"
                                 strokeWidth={1}
                             />
+                            <span className="text-xs">{reply_length}</span>
                         </Button>
                         <Button
                             onClick={handleLike}

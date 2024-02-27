@@ -13,6 +13,14 @@ export default async function StatusTweet({ post_id: id }) {
         const data = res.json();
         return data;
     };
+    const getReplies = async () => {
+        const res = await fetch(
+            `http://localhost:3000/api/content?reply_to=${id}`
+        );
+        const data = res.json();
+        return data;
+    };
+    const replies = await getReplies();
     const post = await getPost();
     const getUserId = async () => {
         try {
@@ -33,6 +41,7 @@ export default async function StatusTweet({ post_id: id }) {
         user_bookmarked: post.bookmarks.some(
             (bookmark) => bookmark.user_id === userId
         ),
+        reply_length: replies.length,
     };
     return <TweetPost serverPost={newPosts} />;
 }

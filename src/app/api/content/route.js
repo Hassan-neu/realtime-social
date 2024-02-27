@@ -40,6 +40,7 @@ export async function GET(req) {
     const reply_to = searchParams.get("reply_to");
     const user_id = searchParams.get("user_id");
     const media = searchParams.get("media_url");
+    const replies = searchParams.get("replies");
     try {
         if (user_id && !media) {
             const post = await prisma.post.findMany({
@@ -107,6 +108,21 @@ export async function GET(req) {
                 where: {
                     user_id,
                     media_url: { not: null },
+                },
+                orderBy: {
+                    created_at: "desc",
+                },
+                include: {
+                    user: true,
+                    likes: true,
+                    bookmarks: true,
+                },
+            });
+            return NextResponse.json(post, { status: 200 });
+        } else if (replies) {
+            const post = await prisma.post.findMany({
+                where: {
+                    reply_to: { not: null },
                 },
                 orderBy: {
                     created_at: "desc",
