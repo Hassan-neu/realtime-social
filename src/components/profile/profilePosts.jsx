@@ -33,17 +33,22 @@ export default async function ProfilePosts({ username, searchParams }) {
             user_bookmarked: post.bookmarks.some(
                 (bookmark) => bookmark.user_id === userId
             ),
+            is_current_user: post.user_id === userId,
         }));
     } else {
-        serverPosts = userPosts.map((like) => ({
-            ...like.post,
-            likes_length: like.post.likes.length,
-            bookmarks_length: like.post.bookmarks.length,
-            user_liked: like.post.likes.some((like) => like.user_id == userId),
-            user_bookmarked: like.post.bookmarks.some(
-                (bookmark) => bookmark.user_id === userId
-            ),
-        }));
+        serverPosts = userPosts.map((like) => {
+            const { post } = like;
+            return {
+                ...post,
+                likes_length: post.likes.length,
+                bookmarks_length: post.bookmarks.length,
+                user_liked: post.likes.some((like) => like.user_id == userId),
+                user_bookmarked: post.bookmarks.some(
+                    (bookmark) => bookmark.user_id === userId
+                ),
+                is_current_user: post.user_id === userId,
+            };
+        });
     }
     return <UserPosts serverPosts={serverPosts} username={username} />;
 }

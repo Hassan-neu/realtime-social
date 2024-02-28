@@ -42,6 +42,7 @@ export default async function StatusTweet({ post_id: id }) {
             (bookmark) => bookmark.user_id === userId
         ),
         reply_length: replies.length,
+        is_current_user: post.user_id === userId,
     };
     return <TweetPost serverPost={newPosts} />;
 }

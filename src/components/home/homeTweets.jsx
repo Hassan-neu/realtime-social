@@ -47,12 +47,12 @@ export default async function HomeTweets() {
         user_bookmarked: content.bookmarks.some(
             (bookmark) => bookmark.user_id === userId
         ),
+        is_current_user: content.user_id === userId,
         reply_length: replies.reduce(
             (acc, curr) => (curr.reply_to === content.id ? acc + 1 : acc),
             0
         ),
     }));
-    console.log(newContents);
 
     return <Tweets contents={newContents} />;
 }

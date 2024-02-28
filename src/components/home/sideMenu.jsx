@@ -109,16 +109,10 @@ export function SideMenu({ profile }) {
                     </ul>
                 </nav>
                 <Compose avatar_url={avatar_url} />
-                {/* <Button
-                    className="mt-2 bg-blue-400 font-bold text-white px-3 py-3 rounded-full text-center uppercase"
-                    onClick={() => setOpenCompose(true)}
-                >
-                    post
-                </Button> */}
                 <Popover>
                     <PopoverTrigger
                         asChild
-                        className="mt-auto border rounded-full pl-1 py-1 hover:cursor-pointer bg-slate-900 text-slate-50"
+                        className="mt-auto border rounded-full pl-1 py-1 hover:cursor-pointer"
                     >
                         <Button className="flex h-auto gap-3 items-center justify-start">
                             <Avatar

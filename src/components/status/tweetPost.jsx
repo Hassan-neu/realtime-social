@@ -14,6 +14,7 @@ import { months } from "@/utils/months";
 import { Reply } from "./reply";
 import { TweetMedia } from "../shared/tweetMedia";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import TweetDropdown from "../shared/tweetDropdown";
 export function TweetPost({ serverPost }) {
     const supabase = createClientComponentClient();
     const [post, setPost] = useState(serverPost);
@@ -31,6 +32,7 @@ export function TweetPost({ serverPost }) {
         user_bookmarked,
         created_at,
         reply_length,
+        is_current_user,
         user: { full_name, username, avatar_url },
     } = optimisticPost;
     function getTime() {
@@ -151,6 +153,10 @@ export function TweetPost({ serverPost }) {
                         <p className="text-xl font-bold">{full_name}</p>
                         <p className="text-sm">&#64;{username}</p>
                     </Link>
+                    <TweetDropdown
+                        username={username}
+                        is_current_user={is_current_user}
+                    />
                 </div>
                 <div className="flex flex-col gap-3 w-full">
                     <div className="flex flex-col gap-2">

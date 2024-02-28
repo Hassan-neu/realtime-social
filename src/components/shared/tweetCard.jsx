@@ -9,6 +9,7 @@ import { months } from "@/utils/months";
 import { TweetMedia } from "./tweetMedia";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
+import TweetDropdown from "./tweetDropdown";
 export const TweetCard = ({ post, addOptimisticPost, setNewPosts }) => {
     // const { refresh, push } = useRouter();
     const supabase = createClientComponentClient();
@@ -22,6 +23,7 @@ export const TweetCard = ({ post, addOptimisticPost, setNewPosts }) => {
         user_bookmarked,
         created_at,
         reply_length,
+        is_current_user,
         user: { full_name, username, avatar_url },
     } = post;
     const getDate = () => {
@@ -124,6 +126,20 @@ export const TweetCard = ({ post, addOptimisticPost, setNewPosts }) => {
             console.error(error);
         }
     };
+    const handleDelete = async () => {
+        try {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+            await supabase
+                .from("posts")
+                .delete()
+                .match({ id, user_id: user.id });
+        } catch (error) {
+            console.error(error);
+            throw new Error(error);
+        }
+    };
     return (
         <div className="w-full flex flex-col gap-3 px-4 py-2 border-[0.2px] cursor-pointer hover:bg-slate-100">
             <Link href={`/status/${id}`} className="flex gap-3 w-full">
@@ -138,6 +154,11 @@ export const TweetCard = ({ post, addOptimisticPost, setNewPosts }) => {
                             <p className="text-sm">&#64;{username}</p>
                             <span className="w-1 h-1 inline-block mx-0.5 rounded-full bg-black"></span>
                             <p className="text-sm">{getDate()}</p>
+                            <TweetDropdown
+                                is_current_user={is_current_user}
+                                username={username}
+                                handleDelete={handleDelete}
+                            />
                         </div>
                         <div className="flex flex-col gap-1">
                             <div className="text-sm text-pretty">{content}</div>

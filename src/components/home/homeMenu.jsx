@@ -19,7 +19,7 @@ export default async function HomeMenu() {
             const data = await res.json();
             return data;
         } catch (error) {
-            throw error;
+            throw new Error(error);
         }
     };
     await new Promise((resolve) => setTimeout(resolve, 10000));
