@@ -9,6 +9,7 @@ export function Follows({ follows }) {
                 <Avatar
                     className={"relative w-12 h-12 border shrink-0"}
                     url={avatar_url}
+                    viewable
                 />
                 <div className="flex flex-col gap-3 w-full">
                     <div className="flex flex-col gap-1">

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Spinner } from "./spinner";
 import { MediaView } from "./tweetMedia";
 
-export function Avatar({ url, className, ...props }) {
+export function Avatar({ url, className, viewable, ...props }) {
     const [avatarUrl, setAvatarUrl] = useState("");
     const supabase = createClientComponentClient();
     const [viewAvatar, setviewAvatar] = useState(false);
@@ -32,7 +32,10 @@ export function Avatar({ url, className, ...props }) {
                 className={`${
                     className || ""
                 } rounded-full bg-white overflow-clip`}
-                onClick={() => setviewAvatar(true)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setviewAvatar(true);
+                }}
             >
                 {avatarUrl ? (
                     <Image
@@ -52,7 +55,7 @@ export function Avatar({ url, className, ...props }) {
                     </div>
                 )}
             </div>
-            {viewAvatar && (
+            {viewAvatar && viewable && (
                 <MediaView
                     setView={setviewAvatar}
                     mediaSrc={avatarUrl}

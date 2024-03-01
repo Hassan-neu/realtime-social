@@ -33,7 +33,9 @@ const Tweets = ({ contents }) => {
                 "postgres_changes",
                 { event: "*", schema: "public", table: "posts" },
                 (payload) => {
-                    console.log(payload);
+                    if (payload.eventType === "DELETE") {
+                        return refresh();
+                    }
                     toast({
                         description: "Load new posts",
                         action: (

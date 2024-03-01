@@ -112,21 +112,23 @@ export function SideMenu({ profile }) {
                 <Popover>
                     <PopoverTrigger
                         asChild
-                        className="mt-auto border rounded-full pl-1 py-1 hover:cursor-pointer"
+                        className="flex h-auto gap-3 items-center justify-start mt-auto border rounded-full pl-1 py-1 hover:cursor-pointer bg-transparent text-slate-900 hover:bg-slate-900 hover:text-white shadow-none border-none"
                     >
-                        <Button className="flex h-auto gap-3 items-center justify-start">
+                        <Button>
                             <Avatar
                                 className={"relative w-12 h-12 border shrink-0"}
                                 url={avatar_url}
                             />
                             <div className="flex flex-col items-start text-sm">
-                                <span>{full_name}</span>
+                                <span className="uppercase font-semibold">
+                                    {full_name}
+                                </span>
                                 <span>{username}</span>
                             </div>
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent
-                        className="w-40 border overflow-clip rounded-full"
+                        className="w-40 border overflow-clip rounded-md hover:bg-slate-100"
                         align="end"
                         sideOffset={5}
                     >
@@ -135,7 +137,10 @@ export function SideMenu({ profile }) {
                             method="post"
                             className="w-full"
                         >
-                            <Button className="w-full justify-start gap-2">
+                            <Button
+                                variant={"outlibe"}
+                                className="w-full justify-start gap-2 text-red-500"
+                            >
                                 <TbLogout size={20} />
                                 Log out
                             </Button>

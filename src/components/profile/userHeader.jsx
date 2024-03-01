@@ -131,6 +131,7 @@ export const UserHeader = ({ serverProfile }) => {
                         <div className="flex justify-between">
                             <Avatar
                                 url={avatar_url}
+                                viewable
                                 className={
                                     "w-28 h-28 lg:w-40 lg:h-40 border-4 border-white absolute -translate-y-1/2 flex justify-center items-center"
                                 }

@@ -145,6 +145,7 @@ export function TweetPost({ serverPost }) {
                     <Avatar
                         className={"relative w-12 h-12 border shrink-0"}
                         url={avatar_url}
+                        viewable
                     />
                     <Link
                         href={`/profile/${username}`}

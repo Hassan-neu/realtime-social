@@ -30,17 +30,20 @@ export default function TweetDropdown({
                     />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-40" hideWhenDetached>
+            <DropdownMenuContent className="w-40">
                 {is_current_user ? (
                     <DropdownMenuItem
                         className="text-red-500 flex gap-2"
-                        onClick={handleDelete}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete();
+                        }}
                     >
                         <GoTrash size={20} />
                         Delete post
                     </DropdownMenuItem>
                 ) : (
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
                         <Link
                             href={`/profile/${username}`}
                             className="flex gap-2"
