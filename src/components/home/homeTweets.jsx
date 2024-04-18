@@ -9,21 +9,31 @@ export default async function HomeTweets() {
         cookies: () => cookieStore,
     });
     const fetchContents = async () => {
-        const res = await fetch("http://localhost:3000/api/content", {
-            method: "GET",
-        });
-        const data = await res.json();
-        return data;
+        try {
+            const res = await fetch("http://localhost:3000/api/content", {
+                method: "GET",
+            });
+            const data = await res.json();
+            return data;
+        } catch (err) {
+            console.error(err);
+            throw new Error(err);
+        }
     };
     const fetchReplies = async () => {
-        const res = await fetch(
-            `http://localhost:3000/api/content?replies=${true}`,
-            {
-                method: "GET",
-            }
-        );
-        const data = await res.json();
-        return data;
+        try {
+            const res = await fetch(
+                `http://localhost:3000/api/content?replies=${true}`,
+                {
+                    method: "GET",
+                }
+            );
+            const data = await res.json();
+            return data;
+        } catch (err) {
+            console.log(err);
+            throw new Error(err);
+        }
     };
     const replies = await fetchReplies();
     const contents = await fetchContents();

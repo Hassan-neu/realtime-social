@@ -9,7 +9,12 @@ import { validation } from "@/libs/signupValidation";
 import { PiEyeClosedLight } from "react-icons/pi";
 import { RxEyeOpen } from "react-icons/rx";
 import Link from "next/link";
+import { months } from "@/utils/months";
+import BirthDate from "./birthDate";
 export const Signup = () => {
+    const selectYear = new Date().getFullYear();
+    const startYear = selectYear - 100;
+    const endYear = selectYear - 16;
     const { push } = useRouter();
     const [disableButton, setDisableButton] = useState(true);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -22,28 +27,31 @@ export const Signup = () => {
             cpassword: "",
             full_name: "",
             username: "",
-            birth_date: "",
+            birth_day: "",
+            birth_month: "",
+            birth_year: "",
         },
         validate: validation,
         onSubmit: handleSignUp,
     });
     const [loading, setLoading] = useState(false);
     async function handleSignUp(values) {
-        try {
-            setLoading(true);
-            const res = await fetch("/api/auth/signup", {
-                method: "POST",
-                body: JSON.stringify(values),
-            });
-            if (res.ok) {
-                const data = res.json();
-                console.log(data);
-            }
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }
+        console.log(values);
+        // try {
+        //     setLoading(true);
+        //     const res = await fetch("/api/auth/signup", {
+        //         method: "POST",
+        //         body: JSON.stringify(values),
+        //     });
+        //     if (res.ok) {
+        //         const data = res.json();
+        //         console.log(data);
+        //     }
+        // } catch (error) {
+        //     console.log(error);
+        // } finally {
+        //     setLoading(false);
+        // }
     }
     useEffect(() => {
         if (
@@ -51,8 +59,12 @@ export const Signup = () => {
             !formik.errors.full_name &&
             formik.values.email &&
             !formik.errors.email &&
-            formik.values.birth_date &&
-            !formik.errors.birth_date
+            formik.values.birth_day &&
+            !formik.errors.birth_day &&
+            formik.values.birth_month &&
+            !formik.errors.birth_month &&
+            formik.values.birth_year &&
+            !formik.errors.birth_year
         ) {
             setDisableButton(false);
         } else setDisableButton(true);
@@ -60,25 +72,61 @@ export const Signup = () => {
 
     return (
         <div className="w-screen h-screen flex justify-center items-center bg-slate-100/60">
-            <div className="flex flex-col w-4/5 max-w-[500px] h-4/5 max-h-[600px]  p-5 bg-white rounded-xl relative overflow-clip border">
-                <div className="flex gap-1 items-center justify-between text-lg font-semibold w-4/5 self-center mt-8">
-                    <Button
-                        className="w-8 h-8 rounded-full p-1 flex justify-center items-center hover:bg-slate-200 disabled:hover:bg-transparent"
-                        disabled={activeIndex === 0}
-                        onClick={() => setActiveIndex(activeIndex - 1)}
-                    >
-                        <IoArrowBack size={18} />
-                    </Button>
-                    <div className="text-base">Step {activeIndex + 1} of 2</div>
+            <div className="w-full h-full relative max-md:hidden">
+                <Image
+                    src={"/signup.jpg"}
+                    alt="signup image"
+                    fill
+                    className="object-cover"
+                />
+            </div>
+            <div className="flex flex-col w-1/2 h-full shrink-0  p-5 relative overflow-clip max-md:w-full">
+                <div className="flex gap-1 items-center justify-between text-lg font-semibold max-md:w-full w-4/5 self-center mt-8">
+                    <div className="flex gap-0.5 items-center w-full">
+                        <span
+                            className={`rounded-full border-grey border p-1 w-8 h-8 flex justify-center items-center shrink-0 hover:cursor-pointer ${
+                                activeIndex >= 0
+                                    ? "bg-black text-white"
+                                    : "bg-transparent text-black"
+                            }`}
+                            onClick={() => {
+                                if (!activeIndex) return;
+                                setActiveIndex(activeIndex - 1);
+                            }}
+                        >
+                            1
+                        </span>
+
+                        <span className="bg-slate-200 w-full h-1 rounded-sm flex overflow-clip">
+                            <span
+                                className={`block w-full h-full bg-black transition-[flex] duration-700 ${
+                                    activeIndex === 1 ? "basis-full" : "basis-0"
+                                }`}
+                            ></span>
+                        </span>
+                        <span
+                            className={`rounded-full border-grey border p-1 w-8 h-8 flex transition-[background,_color] duration-700 justify-center items-center shrink-0 hover:cursor-pointer ${
+                                activeIndex == 1
+                                    ? "bg-black text-white"
+                                    : "bg-transparent text-black"
+                            }`}
+                            onClick={() => {
+                                if (disableButton) return;
+                                setActiveIndex(1);
+                            }}
+                        >
+                            2
+                        </span>
+                    </div>
                 </div>
                 <div
-                    className={`flex flex-col items-center justify-center gap-3 w-3/4 h-3/5 absolute top-1/2 -translate-y-1/2  transition-[left,opacity] -translate-x-1/2 duration-1000 ${
+                    className={`flex flex-col items-center justify-center gap-3 max-md:w-full max-md:p-5 w-3/4 h-3/5 absolute top-1/2 -translate-y-1/2  transition-[left,opacity] -translate-x-1/2 duration-1000 ${
                         activeIndex == 0
                             ? "left-1/2 visible"
                             : "left-0 opacity-0 invisible"
                     }`}
                 >
-                    <div className="text-xl font-semibold self-start">
+                    <div className="text-2xl font-semibold self-start">
                         <h2>Create your account</h2>
                     </div>
                     <div className="flex flex-col gap-5 w-full">
@@ -94,7 +142,7 @@ export const Signup = () => {
                                 type="text"
                                 name="full_name"
                                 id="full_name"
-                                className={`border h-9 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none focus-visible:bg-transparent ${
+                                className={`border h-11 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none focus-visible:bg-transparent ${
                                     formik.errors.full_name &&
                                     formik.touched.full_name
                                         ? "border-red-400"
@@ -114,7 +162,7 @@ export const Signup = () => {
                                 type="email"
                                 name="email"
                                 id="email"
-                                className={`border h-9 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none focus-visible:bg-transparent ${
+                                className={`border h-11 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none focus-visible:bg-transparent ${
                                     formik.errors.email && formik.touched.email
                                         ? "border-red-400"
                                         : "border-slate-200"
@@ -123,41 +171,9 @@ export const Signup = () => {
                                 {...formik.getFieldProps("email")}
                             />
                         </label>
-                        <div className="flex flex-col gap-2">
-                            <div className="flex flex-col gap-1">
-                                <span className="block text-base font-semibold">
-                                    Date of Birth
-                                </span>
-                                <span className="text-xs text-slate-500 block">
-                                    This will not be shown publicly. Confirm
-                                    your own age, even if this account is for a
-                                    business, a pet, or something else.
-                                </span>
-                            </div>
-                            <label htmlFor="birth_date">
-                                {formik.errors.birth_date &&
-                                    formik.touched.birth_date && (
-                                        <span className="text-red-400 text-xs block mb-1">
-                                            {formik.errors.birth_date}
-                                        </span>
-                                    )}
-                                <input
-                                    type="date"
-                                    name="birth_date"
-                                    id="birth_date"
-                                    className={`border h-9 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none ${
-                                        formik.errors.birth_date &&
-                                        formik.touched.birth_date
-                                            ? "border-red-400"
-                                            : "border-slate-200"
-                                    }`}
-                                    placeholder="Birth date"
-                                    {...formik.getFieldProps("birth_date")}
-                                />
-                            </label>
-                        </div>
+                        <BirthDate formik={formik} />
                         <Button
-                            className={`px-3 py-1 text-base font-medium h-9 rounded-full self-stretch text-white`}
+                            className={`px-3 py-1 text-base font-medium h-12 rounded-full self-stretch text-white`}
                             disabled={disableButton}
                             onClick={() => setActiveIndex(1)}
                         >
@@ -176,13 +192,13 @@ export const Signup = () => {
                     </div>
                 </div>
                 <div
-                    className={`flex flex-col items-center justify-center gap-3 w-3/4 h-3/5 absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-[left,opacity] duration-1000 ${
+                    className={`flex flex-col items-center justify-center gap-3 max-md:w-full max-md:p-5  w-3/4 h-3/5 absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-[left,opacity] duration-1000 ${
                         activeIndex == 1
                             ? "left-1/2 visible"
                             : "left-full invisible opacity-0"
                     }`}
                 >
-                    <div className="text-xl font-semibold self-start">
+                    <div className="text-2xl font-semibold self-start">
                         <h2>Create your account</h2>
                     </div>
                     <div className="flex flex-col gap-4 w-full">
@@ -197,7 +213,7 @@ export const Signup = () => {
                                 type="text"
                                 name="username"
                                 id="username"
-                                className={`border h-9  bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none ${
+                                className={`border h-11  bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none ${
                                     formik.errors.username &&
                                     formik.touched.username
                                         ? "border-red-400"
@@ -221,7 +237,7 @@ export const Signup = () => {
                                     }`}
                                     name="password"
                                     id="password"
-                                    className={`border h-9 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none ${
+                                    className={`border h-11 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none ${
                                         formik.errors.password &&
                                         formik.touched.password
                                             ? "border-red-400"
@@ -258,7 +274,7 @@ export const Signup = () => {
                                     }`}
                                     name="cpassword"
                                     id="cpassword"
-                                    className={`border h-9 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none ${
+                                    className={`border h-11 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none ${
                                         formik.errors.cpassword &&
                                         formik.touched.cpassword
                                             ? "border-red-400"
@@ -282,7 +298,7 @@ export const Signup = () => {
                             </div>
                         </label>
                         <Button
-                            className={`px-3 py-1 text-base font-medium rounded-full self-stretch text-white h-9 mt-2`}
+                            className={`px-3 py-1 text-base font-medium rounded-full self-stretch text-white h-12 mt-2`}
                             onClick={formik.handleSubmit}
                             type="button"
                         >

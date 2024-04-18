@@ -16,8 +16,14 @@ export const validation = (values) => {
     else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
         errors.email = "Invalid email format. Please check and try again.";
     }
-    if (!values.birth_date) {
-        errors.birth_date = "Please select a birth date";
+    if (!values.birth_month) {
+        errors.birth_date = "Invalid birth date";
+    }
+    if (!values.birth_day) {
+        errors.birth_date = "Invalid birth date";
+    }
+    if (!values.birth_year) {
+        errors.birth_date = "Invalid birth date";
     }
     if (!values.password) {
         errors.password = "Please enter a password";

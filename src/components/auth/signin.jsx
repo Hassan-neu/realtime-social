@@ -9,6 +9,7 @@ import { PiEyeClosedLight } from "react-icons/pi";
 import { RxEyeOpen } from "react-icons/rx";
 import Link from "next/link";
 import { FiLoader } from "react-icons/fi";
+import Image from "next/image";
 export const SignIn = () => {
     const formik = useFormik({
         initialValues: {
@@ -42,10 +43,18 @@ export const SignIn = () => {
         }
     }
     return (
-        <div className="w-screen h-screen flex flex-col justify-center items-center bg-slate-100/60">
-            <div className="flex justify-center items-center w-4/5 max-w-[400px] h-[50vmin] px-4 py-2 bg-white rounded-xl border">
-                <div className="flex flex-col items-center justify-center gap-3 w-4/5">
-                    <div className="text-xl font-semibold self-start">
+        <div className="w-screen h-screen flex justify-center items-center">
+            <div className="w-full h-full relative max-md:hidden">
+                <Image
+                    src={"/phone-user.jpg"}
+                    fill
+                    alt="login door"
+                    className="object-cover"
+                />
+            </div>
+            <div className="flex justify-center items-center max-sm:w-[90%] max-md:w-full w-1/2 h-full  md:px-4 md:py-2 bg-white shrink-0">
+                <div className="flex flex-col items-center justify-center gap-3 max-md:w-full w-1/2">
+                    <div className="text-2xl font-semibold self-start">
                         <h2>Sign In to your account</h2>
                     </div>
                     <div className="flex flex-col gap-4 w-full">
@@ -59,7 +68,7 @@ export const SignIn = () => {
                                 type="email"
                                 name="email"
                                 id="email"
-                                className={`border h-9 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none  ${
+                                className={`border h-11 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none  ${
                                     formik.errors.email && formik.touched.email
                                         ? "border-red-400"
                                         : "border-slate-200"
@@ -82,7 +91,7 @@ export const SignIn = () => {
                                     }`}
                                     name="password"
                                     id="password"
-                                    className={`border h-9 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none  ${
+                                    className={`border h-11 bg-transparent text-sm rounded-md px-3 py-1 placeholder:text-slate-500 placeholder:text-sm w-full focus-visible:outline-none  ${
                                         formik.errors.password &&
                                         formik.touched.password
                                             ? "border-red-400"
@@ -106,7 +115,7 @@ export const SignIn = () => {
                             </div>
                         </label>
                         <Button
-                            className={`px-3 py-1 rounded-full text-base self-stretch text-white h-9`}
+                            className={`px-3 py-1 rounded-full text-base self-stretch text-white h-12`}
                             onClick={formik.handleSubmit}
                             disabled={loading}
                         >

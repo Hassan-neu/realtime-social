@@ -22,7 +22,6 @@ export default async function HomeMenu() {
             throw new Error(error);
         }
     };
-    await new Promise((resolve) => setTimeout(resolve, 10000));
     const profile = await getUser();
     return <SideMenu profile={profile} />;
 }
