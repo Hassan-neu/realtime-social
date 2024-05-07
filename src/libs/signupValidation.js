@@ -17,13 +17,13 @@ export const validation = (values) => {
         errors.email = "Invalid email format. Please check and try again.";
     }
     if (!values.birth_month) {
-        errors.birth_date = "Invalid birth date";
+        errors.birth_month = "Please select a birth month";
     }
     if (!values.birth_day) {
-        errors.birth_date = "Invalid birth date";
+        errors.birth_day = "Please select a birth day";
     }
     if (!values.birth_year) {
-        errors.birth_date = "Invalid birth date";
+        errors.birth_year = "Please select a birth year";
     }
     if (!values.password) {
         errors.password = "Please enter a password";

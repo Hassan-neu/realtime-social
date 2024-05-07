@@ -2,6 +2,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import React from "react";
 import { Bookmarks } from "./bookmarks";
+import { toast } from "../ui/use-toast";
 export const revalidate = 0;
 export default async function UserBookmarks() {
     const cookieStore = cookies();
@@ -12,8 +13,13 @@ export default async function UserBookmarks() {
         try {
             const {
                 data: { user },
+                error,
             } = await supabase.auth.getUser();
-            return user.id;
+            if (user) {
+                return user.id;
+            } else {
+                throw error;
+            }
         } catch (error) {
             console.log(error);
         }
@@ -27,10 +33,15 @@ export default async function UserBookmarks() {
             if (res.ok) {
                 const data = await res.json();
                 return data;
+            } else {
+                throw new Error("Unable to get bookmarks");
             }
         } catch (error) {
             console.log(error);
-            throw new Error("Unable to fetch user posts");
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
         }
     }
 

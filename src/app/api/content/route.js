@@ -24,7 +24,7 @@ export async function POST(req) {
             return NextResponse.json(post, { status: 201 });
         } else {
             return NextResponse.json(
-                { message: "Unable to send" },
+                { message: "Unable to create Post" },
                 { status: 403 }
             );
         }

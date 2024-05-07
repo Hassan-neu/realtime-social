@@ -12,14 +12,22 @@ export default async function HomeMenu() {
         try {
             const {
                 data: { user },
+                error,
             } = await supabase.auth.getUser();
-            const res = await fetch(
-                `http://localhost:3000/api/auth/profile?id=${user.id}`
-            );
-            const data = await res.json();
-            return data;
+            if (user) {
+                const res = await fetch(
+                    `http://localhost:3000/api/auth/profile?id=${user.id}`
+                );
+                const data = await res.json();
+                return data;
+            } else {
+                throw error;
+            }
         } catch (error) {
-            throw new Error(error);
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
         }
     };
     const profile = await getUser();

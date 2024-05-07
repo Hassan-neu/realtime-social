@@ -31,6 +31,8 @@ export async function POST(req) {
                 { message: "Sign up successful" },
                 { status: 201 }
             );
+        } else {
+            throw error;
         }
     } catch (error) {
         return NextResponse.json(error, { status: 400 });

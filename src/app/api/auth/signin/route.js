@@ -22,10 +22,7 @@ export async function POST(req) {
                 { status: 200 }
             );
         } else {
-            return NextResponse.json(
-                { message: "Invalid login credentials" },
-                { status: 400 }
-            );
+            throw error;
         }
     } catch (error) {
         return NextResponse.json(error, { status: 400 });

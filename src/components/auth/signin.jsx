@@ -10,6 +10,8 @@ import { RxEyeOpen } from "react-icons/rx";
 import Link from "next/link";
 import { FiLoader } from "react-icons/fi";
 import Image from "next/image";
+import { BsTwitterX } from "react-icons/bs";
+import { toast } from "../ui/use-toast";
 export const SignIn = () => {
     const formik = useFormik({
         initialValues: {
@@ -21,25 +23,25 @@ export const SignIn = () => {
     });
     const [showPassword, setShowPassword] = useState(false);
 
-    const [loading, setLoading] = useState(false);
     const { push } = useRouter();
 
     async function handleSignIn(values) {
         try {
-            setLoading(true);
             const res = await fetch("/api/auth/signin", {
                 method: "POST",
                 body: JSON.stringify(values),
             });
             if (res.ok) {
-                const data = await res.json();
-                console.log(data);
                 push("/home");
+            } else {
+                const error = await res.json();
+                throw error;
             }
         } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
         }
     }
     return (
@@ -52,8 +54,12 @@ export const SignIn = () => {
                     className="object-cover"
                 />
             </div>
-            <div className="flex justify-center items-center max-sm:w-[90%] max-md:w-full w-1/2 h-full  md:px-4 md:py-2 bg-white shrink-0">
-                <div className="flex flex-col items-center justify-center gap-3 max-md:w-full w-1/2">
+            <div className="flex justify-center items-center max-sm:w-[90%] max-md:w-full w-1/2 h-full md:px-4 md:py-2 bg-white shrink-0">
+                <div className="flex flex-col items-center justify-center gap-3 max-md:w-full w-3/4">
+                    <div className="self-center font-semibold mb-5 flex gap-2 items-center">
+                        <span className="text-4xl">NOT</span>
+                        <BsTwitterX className="inline text-3xl" />
+                    </div>
                     <div className="text-2xl font-semibold self-start">
                         <h2>Sign In to your account</h2>
                     </div>
@@ -115,11 +121,12 @@ export const SignIn = () => {
                             </div>
                         </label>
                         <Button
+                            type="button"
                             className={`px-3 py-1 rounded-full text-base self-stretch text-white h-12`}
                             onClick={formik.handleSubmit}
-                            disabled={loading}
+                            disabled={formik.isSubmitting}
                         >
-                            {loading ? (
+                            {formik.isSubmitting ? (
                                 <div className="flex gap-1 w-full items-center justify-center">
                                     <FiLoader
                                         size={20}
@@ -134,7 +141,7 @@ export const SignIn = () => {
                         <div className="flex text-sm gap-0.5 justify-center items-center">
                             <span>Don&apos;t have an account?</span>
                             <Button
-                                type="submit"
+                                type="button"
                                 asChild
                                 className="text-slate-90 font-semibold p-2 hover:bg-transparent"
                                 variant="ghost"

@@ -7,6 +7,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { FiLoader } from "react-icons/fi";
+import { toast } from "../ui/use-toast";
 export const EditProfile = ({ profile }) => {
     const { avatar_url, username, bio, website, birth_date } = profile;
     const supabase = createClientComponentClient();
@@ -71,6 +72,9 @@ export const EditProfile = ({ profile }) => {
                     method: "PUT",
                     body: JSON.stringify({ ...user, avatar_url: filePath }),
                 });
+                if (!res.ok) {
+                    throw new Error("Unable to update details");
+                }
                 const data = await res.json();
                 console.log(data);
             } else {
@@ -78,12 +82,19 @@ export const EditProfile = ({ profile }) => {
                     method: "PUT",
                     body: JSON.stringify(user),
                 });
+                if (!res.ok) {
+                    throw new Error("Unable to update details");
+                }
                 const data = await res.json();
                 console.log(data);
                 setOpenDialog(false);
             }
         } catch (error) {
             console.log(error);
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
         } finally {
             setLoading(false);
         }

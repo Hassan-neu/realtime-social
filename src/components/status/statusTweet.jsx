@@ -9,16 +9,41 @@ export default async function StatusTweet({ post_id: id }) {
         cookies: () => cookieStore,
     });
     const getPost = async () => {
-        const res = await fetch(`http://localhost:3000/api/content?id=${id}`);
-        const data = res.json();
-        return data;
+        try {
+            const res = await fetch(
+                `http://localhost:3000/api/content?id=${id}`
+            );
+            if (res.ok) {
+                const data = res.json();
+                return data;
+            } else {
+                throw new Error("Unable to fetch post");
+            }
+        } catch (error) {
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
+        }
     };
     const getReplies = async () => {
-        const res = await fetch(
-            `http://localhost:3000/api/content?reply_to=${id}`
-        );
-        const data = res.json();
-        return data;
+        try {
+            const res = await fetch(
+                `http://localhost:3000/api/content?reply_to=${id}`
+            );
+            if (res.ok) {
+                const data = res.json();
+                return data;
+            } else {
+                throw new Error("Unable to fetch replies");
+            }
+        } catch (error) {
+            console.log(error);
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
+        }
     };
     const replies = await getReplies();
     const post = await getPost();
@@ -26,10 +51,18 @@ export default async function StatusTweet({ post_id: id }) {
         try {
             const {
                 data: { user },
+                error,
             } = await supabase.auth.getUser();
-            return user.id;
+            if (user) {
+                return user.id;
+            } else {
+                throw error;
+            }
         } catch (error) {
-            console.log(error);
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
         }
     };
     const userId = await getUserId();

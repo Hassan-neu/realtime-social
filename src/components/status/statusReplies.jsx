@@ -9,18 +9,34 @@ export default async function StatusReplies({ post_id: id }) {
         cookies: () => cookieStore,
     });
     const getReplies = async () => {
-        const res = await fetch(
-            `http://localhost:3000/api/content?reply_to=${id}`
-        );
-        const data = res.json();
-        return data;
+        try {
+            const res = await fetch(
+                `http://localhost:3000/api/content?reply_to=${id}`
+            );
+            if (res.ok) {
+                const data = res.json();
+                return data;
+            } else {
+                throw new Error("Unable to fetch replies");
+            }
+        } catch (error) {
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
+        }
     };
     const getUserId = async () => {
         try {
             const {
                 data: { user },
+                error,
             } = await supabase.auth.getUser();
-            return user.id;
+            if (user) {
+                return user.id;
+            } else {
+                throw error;
+            }
         } catch (error) {
             console.log(error);
         }

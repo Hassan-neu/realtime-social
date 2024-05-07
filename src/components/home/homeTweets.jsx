@@ -2,6 +2,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import React from "react";
 import Tweets from "./tweets";
+import { toast } from "../ui/use-toast";
 export const revalidate = 0;
 export default async function HomeTweets() {
     const cookieStore = cookies();
@@ -10,29 +11,37 @@ export default async function HomeTweets() {
     });
     const fetchContents = async () => {
         try {
-            const res = await fetch("http://localhost:3000/api/content", {
-                method: "GET",
+            const res = await fetch("http://localhost:3000/api/content");
+            if (res.ok) {
+                const data = await res.json();
+                return data;
+            } else {
+                throw new Error("Unable to load new contents");
+            }
+        } catch (error) {
+            console.error(error);
+            toast({
+                description: error.message,
+                variant: "destructive",
             });
-            const data = await res.json();
-            return data;
-        } catch (err) {
-            console.error(err);
-            throw new Error(err);
         }
     };
     const fetchReplies = async () => {
         try {
             const res = await fetch(
-                `http://localhost:3000/api/content?replies=${true}`,
-                {
-                    method: "GET",
-                }
+                `http://localhost:3000/api/content?replies=${true}`
             );
-            const data = await res.json();
-            return data;
-        } catch (err) {
-            console.log(err);
-            throw new Error(err);
+            if (res.ok) {
+                const data = await res.json();
+                return data;
+            } else {
+                throw new Error("Unable to load replies");
+            }
+        } catch (error) {
+            console.log(error);
+            toast({
+                description: error.message,
+            });
         }
     };
     const replies = await fetchReplies();
@@ -41,10 +50,18 @@ export default async function HomeTweets() {
         try {
             const {
                 data: { user },
+                error,
             } = await supabase.auth.getUser();
-            return user.id;
+            if (user) {
+                return user.id;
+            } else {
+                throw error;
+            }
         } catch (error) {
-            console.log(error);
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
         }
     };
     const userId = await getUserId();

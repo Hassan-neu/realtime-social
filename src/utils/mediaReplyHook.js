@@ -19,7 +19,7 @@ export const useCreateMedia = () => {
         setMediaFile("");
         setMediaSrc("");
         setContent("");
-        mediaInput.current.value = "";
+        mediaInput.current.value = null;
     };
     const handlePost = async ({ reply_to }) => {
         try {

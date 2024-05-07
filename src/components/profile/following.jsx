@@ -1,3 +1,4 @@
+import { toast } from "../ui/use-toast";
 import { Follows as Following } from "./follows";
 export const revalidate = 0;
 export async function Followings({ username }) {
@@ -9,10 +10,15 @@ export async function Followings({ username }) {
             if (res.ok) {
                 const data = await res.json();
                 return data;
+            } else {
+                throw new Error("Unable to fetch user details");
             }
         } catch (error) {
             console.log(error);
-            throw new Error("Unable to fetch user profile");
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
         }
     }
     const user = await getProfile();
@@ -24,10 +30,15 @@ export async function Followings({ username }) {
             if (res.ok) {
                 const data = await res.json();
                 return data;
+            } else {
+                throw new Error("Unable to fetch user details");
             }
         } catch (error) {
             console.log(error);
-            throw new Error("Unable to fetch user profile");
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
         }
     }
     const follow = await getFollowing();

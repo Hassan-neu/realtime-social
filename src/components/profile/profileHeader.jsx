@@ -2,6 +2,7 @@ import React from "react";
 import { UserHeader } from "./userHeader";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import { toast } from "../ui/use-toast";
 export const revalidate = 0;
 export const ProfileHeader = async ({ username }) => {
     const cookieStore = cookies();
@@ -16,20 +17,34 @@ export const ProfileHeader = async ({ username }) => {
             if (res.ok) {
                 const data = await res.json();
                 return data;
+            } else {
+                throw new Error("Unable to fetch user profile");
             }
         } catch (error) {
             console.log(error);
-            throw new Error("Unable to fetch user profile");
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
         }
     }
     const getUserId = async () => {
         try {
             const {
                 data: { user },
+                error,
             } = await supabase.auth.getUser();
-            return user.id;
+            if (user) {
+                return user.id;
+            } else {
+                throw error;
+            }
         } catch (error) {
             console.log(error);
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
         }
     };
     const userId = await getUserId();

@@ -11,10 +11,14 @@ async function getAllPosts(userProfile) {
         if (res.ok) {
             const data = await res.json();
             return data;
+        } else {
+            throw new Error("Unable to fetch user posts");
         }
     } catch (error) {
-        console.log(error);
-        throw new Error("Unable to fetch user posts");
+        toast({
+            description: error.message,
+            variant: "destructive",
+        });
     }
 }
 
@@ -33,10 +37,15 @@ async function getUserMedia(userProfile) {
         if (res.ok) {
             const data = await res.json();
             return data;
+        } else {
+            throw new Error("Unable to fetch user media");
         }
     } catch (error) {
         console.log(error);
-        throw new Error("Unable to fetch user posts");
+        toast({
+            description: error.message,
+            variant: "destructive",
+        });
     }
 }
 async function getUserLikes(userProfile) {
@@ -52,10 +61,15 @@ async function getUserLikes(userProfile) {
         if (res.ok) {
             const data = await res.json();
             return data;
+        } else {
+            throw new Error("Unable to fetch user posts");
         }
     } catch (error) {
         console.log(error);
-        throw new Error("Unable to fetch user posts");
+        toast({
+            description: error.message,
+            variant: "destructive",
+        });
     }
 }
 
@@ -68,10 +82,15 @@ export const getUserPosts = async (username, view) => {
             if (res.ok) {
                 const data = await res.json();
                 return data;
+            } else {
+                throw new Error("Unable to fetch user posts");
             }
         } catch (error) {
             console.log(error);
-            throw new Error("Unable to fetch user profile");
+            toast({
+                description: error.message,
+                variant: "destructive",
+            });
         }
     }
     const userProfile = await getuserProfile();
